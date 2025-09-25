@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useLocation } from "react-router-dom";
 const Navbar = ({ user }) => {
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const location = useLocation();
   return (
     <nav className="fixed w-full z-50 top-0 mt-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,8 +16,10 @@ const Navbar = ({ user }) => {
             Taskopia
           </Link>
           <div
-            className="hidden md:flex  space-x-6 items-center px-8 py-1 rounded-4xl shadow-lg 
-            backdrop-blur-2xl bg-white/10 border border-white/20 text-white"
+            className={`hidden md:flex  space-x-8 items-center px-8 py-1 rounded-4xl shadow-lg 
+            backdrop-blur-2xl bg-white/10 border  border-white/10 ${
+              location.pathname === "/login" ? "text-black" : "text-white"
+            }`}
           >
             {!user && (
               <>
@@ -27,22 +29,16 @@ const Navbar = ({ user }) => {
                 <Link to="/about" className="hover:text-blue-500">
                   About
                 </Link>
-                <Link
-                  to="/login"
-                  className="px-4 py-2 text-white rounded-xl  transition"
-                >
+                <Link to="/login" className=" py-2  rounded-xl  transition">
                   Login
                 </Link>
-                <Link
-                  to="/signup"
-                  className="px-4 py-2  text-white rounded-xl  transition"
-                >
+                <Link to="/signup" className=" py-2   rounded-xl  transition">
                   Join Now
                 </Link>
               </>
             )}
 
-            {user?.type === "worker" && (
+            {user === "worker" && (
               <>
                 <Link to="/worker-dashboard" className="hover:text-blue-500">
                   Jobs
@@ -64,7 +60,7 @@ const Navbar = ({ user }) => {
               </>
             )}
 
-            {user?.type === "owner" && (
+            {user === "owner" && (
               <>
                 <Link to="/post-job" className="hover:text-blue-500">
                   Post Job
@@ -88,10 +84,12 @@ const Navbar = ({ user }) => {
           </div>
 
           {/* Right - Mobile Menu Button */}
-          <div className="md:hidden flex items-center absolute right-4">
+          <div className="md:hidden flex items-center absolute right-4  p-1 rounded-4xl bg-white/20">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="cursor-pointer text-white focus:outline-none"
+              className={`cursor-pointer ${
+                location.pathname === "/login" ? "text-black" : "text-white"
+              }  focus:outline-none`}
             >
               <svg
                 className="w-7 h-7"
@@ -105,8 +103,8 @@ const Navbar = ({ user }) => {
                   strokeWidth={2}
                   d={
                     menuOpen
-                      ? "M6 18L18 6M6 6l12 12" // X
-                      : "M4 6h16M4 12h16M4 18h16" // ☰
+                      ? "M6 18L18 6M6 6l12 12" // close
+                      : "M4 6h16M4 12h16M4 18h16" // open
                   }
                 />
               </svg>
@@ -117,31 +115,29 @@ const Navbar = ({ user }) => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden backdrop-blur-md bg-white/30 border border-white/40 px-4 pt-3 pb-6 space-y-2 shadow-lg rounded-lg mx-4 mt-2">
+        <div
+          className={`md:hidden backdrop-blur-md bg-white/30 border ${
+            location.pathname === "/login" ? "text-black" : "text-white"
+          }  border-white/40 px-4 pt-3 pb-6 space-y-2 shadow-lg rounded-lg mx-4 mt-2`}
+        >
           {!user && (
             <>
-              <Link to="/" className="block py-2 hover:text-blue-500">
+              <Link to="/" className="block py-2 ">
                 Home
               </Link>
-              <Link to="/about" className="block py-2 hover:text-blue-500">
+              <Link to="/about" className="block py-2 ">
                 About
               </Link>
-              <Link
-                to="/login"
-                className="block py-2 px-3  text-white rounded-lg  transition"
-              >
+              <Link to="/login" className="block py-2  rounded-lg  transition">
                 Login
               </Link>
-              <Link
-                to="/signup"
-                className="block py-2 px-3 text-white rounded-lg  transition"
-              >
+              <Link to="/signup" className="block py-2 rounded-lg  transition">
                 Join Now
               </Link>
             </>
           )}
 
-          {user?.type === "worker" && (
+          {user === "worker" && (
             <>
               <Link
                 to="/worker-dashboard"
@@ -169,7 +165,7 @@ const Navbar = ({ user }) => {
             </>
           )}
 
-          {user?.type === "owner" && (
+          {user === "owner" && (
             <>
               <Link to="/post-job" className="block py-2 hover:text-blue-500">
                 Post Job
