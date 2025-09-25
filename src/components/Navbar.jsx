@@ -18,21 +18,25 @@ const Navbar = ({ user }) => {
           <div
             className={`hidden md:flex  space-x-8 items-center px-8 py-1 rounded-4xl shadow-lg 
             backdrop-blur-2xl bg-white/10 border  border-white/10 ${
-              location.pathname === "/login" ? "text-black" : "text-white"
+              location.pathname === "/login" || "/signup" ? "text-black" : "text-white"
             }`}
           >
             {!user && (
               <>
-                <Link to="/" className="hover:text-blue-500">
+                <Link to="/"
+                className="hover:text-blue-500">
                   Home
                 </Link>
-                <Link to="/about" className="hover:text-blue-500">
+                <Link to="/about"
+                className="hover:text-blue-500">
                   About
                 </Link>
-                <Link to="/login" className=" py-2  rounded-xl  transition">
+                <Link to="/login"
+                className=" py-2  rounded-xl  transition">
                   Login
                 </Link>
-                <Link to="/signup" className=" py-2   rounded-xl  transition">
+                <Link to="/signup"
+                className=" py-2   rounded-xl  transition">
                   Join Now
                 </Link>
               </>
@@ -40,13 +44,16 @@ const Navbar = ({ user }) => {
 
             {user === "worker" && (
               <>
-                <Link to="/worker-dashboard" className="hover:text-blue-500">
+                <Link to="/worker-dashboard"
+                className="hover:text-blue-500">
                   Jobs
                 </Link>
-                <Link to="/applied-jobs" className="hover:text-blue-500">
+                <Link to="/applied-jobs"
+                className="hover:text-blue-500">
                   Applied Jobs
                 </Link>
-                <Link to="/profile" className="hover:text-blue-500">
+                <Link to="/profile"
+                className="hover:text-blue-500">
                   {user.name}
                 </Link>
                 <button
@@ -62,13 +69,16 @@ const Navbar = ({ user }) => {
 
             {user === "owner" && (
               <>
-                <Link to="/post-job" className="hover:text-blue-500">
+                <Link to="/post-job"
+                className="hover:text-blue-500">
                   Post Job
                 </Link>
-                <Link to="/posted-jobs" className="hover:text-blue-500">
+                <Link to="/posted-jobs"
+                className="hover:text-blue-500">
                   Posted Jobs
                 </Link>
-                <Link to="/profile" className="hover:text-blue-500">
+                <Link to="/profile"
+                className="hover:text-blue-500">
                   {user.name}
                 </Link>
                 <button
@@ -88,7 +98,7 @@ const Navbar = ({ user }) => {
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className={`cursor-pointer ${
-                location.pathname === "/login" ? "text-black" : "text-white"
+                location.pathname === "/login" || "/signup" ? "text-black" : "text-white"
               }  focus:outline-none`}
             >
               <svg
@@ -117,21 +127,29 @@ const Navbar = ({ user }) => {
       {menuOpen && (
         <div
           className={`md:hidden backdrop-blur-md bg-white/30 border ${
-            location.pathname === "/login" ? "text-black" : "text-white"
+            location.pathname === "/login" || "/signup" ? "text-black" : "text-white"
           }  border-white/40 px-4 pt-3 pb-6 space-y-2 shadow-lg rounded-lg mx-4 mt-2`}
         >
           {!user && (
             <>
-              <Link to="/" className="block py-2 ">
+              <Link to="/"
+              onClick={()=>setMenuOpen(false)}
+              className="block py-2 ">
                 Home
               </Link>
-              <Link to="/about" className="block py-2 ">
+              <Link to="/about"
+               onClick={()=>setMenuOpen(false)}
+              className="block py-2 ">
                 About
               </Link>
-              <Link to="/login" className="block py-2  rounded-lg  transition">
+              <Link to="/login"
+               onClick={()=>setMenuOpen(false)}
+              className="block py-2  rounded-lg  transition">
                 Login
               </Link>
-              <Link to="/signup" className="block py-2 rounded-lg  transition">
+              <Link to="/signup"
+               onClick={()=>setMenuOpen(false)}
+              className="block py-2 rounded-lg  transition">
                 Join Now
               </Link>
             </>
@@ -141,17 +159,21 @@ const Navbar = ({ user }) => {
             <>
               <Link
                 to="/worker-dashboard"
+                 onClick={()=>setMenuOpen(false)}
                 className="block py-2 hover:text-blue-500"
               >
                 Jobs
               </Link>
               <Link
                 to="/applied-jobs"
+                 onClick={()=>setMenuOpen(false)}
                 className="block py-2 hover:text-blue-500"
               >
                 Applied Jobs
               </Link>
-              <Link to="/profile" className="block py-2 hover:text-blue-500">
+              <Link to="/profile"
+               onClick={()=>setMenuOpen(false)}
+              className="block py-2 hover:text-blue-500">
                 {user.name}
               </Link>
               <button
@@ -167,16 +189,21 @@ const Navbar = ({ user }) => {
 
           {user === "owner" && (
             <>
-              <Link to="/post-job" className="block py-2 hover:text-blue-500">
+              <Link to="/post-job"
+               onClick={()=>setMenuOpen(false)}
+              className="block py-2 hover:text-blue-500">
                 Post Job
               </Link>
               <Link
                 to="/posted-jobs"
+                 onClick={()=>setMenuOpen(false)}
                 className="block py-2 hover:text-blue-500"
               >
                 Posted Jobs
               </Link>
-              <Link to="/profile" className="block py-2 hover:text-blue-500">
+              <Link to="/profile"
+               onClick={()=>setMenuOpen(false)}
+              className="block py-2 hover:text-blue-500">
                 {user.name}
               </Link>
               <button
