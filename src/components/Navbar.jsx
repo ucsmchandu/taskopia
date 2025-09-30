@@ -16,27 +16,28 @@ const Navbar = ({ user }) => {
         <div className="flex h-16 items-center justify-between relative">
           <Link
             to="/"
-            className="text-3xl font-extrabold text-blue-600 tracking-tight z-50"
+            className="text-3xl font-extrabold text-blue-700 tracking-tight z-50"
           >
             Taskopia
           </Link>
 
+          {/* DESKTOP NAV BAR - Restored glassy effect with high opacity white background */}
           <div
             className={`
               hidden md:flex space-x-2 items-center justify-center mx-auto 
               h-12 px-4 py-1 rounded-full shadow-xl z-10
-              backdrop-blur-xl bg-white/40 border border-gray-100 
+              backdrop-blur-xl bg-white/70 
             `}
           >
             {!user && (
               <>
-                {/* Standard Links */}
+                {/* Standard Links (dark text on light bg) */}
                 <Link
                   to="/"
                   className={`${linkBaseClasses} ${
                     isActive("/")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                      : "text-gray-700 hover:text-blue-700 hover:bg-white" 
                   }`}
                 >
                   Home
@@ -46,7 +47,7 @@ const Navbar = ({ user }) => {
                   className={`${linkBaseClasses} ${
                     isActive("/about")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                      : "text-gray-700 hover:text-blue-700 hover:bg-white" 
                   }`}
                 >
                   About
@@ -57,7 +58,7 @@ const Navbar = ({ user }) => {
                   className={`${linkBaseClasses} ${
                     isActive("/login")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                      : "text-gray-700 hover:text-blue-700 hover:bg-white" 
                   }`}
                 >
                   Login
@@ -80,7 +81,7 @@ const Navbar = ({ user }) => {
                   className={`${linkBaseClasses} ${
                     isActive("/worker-dashboard")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                      : "text-gray-700 hover:text-blue-700 hover:bg-white" 
                   }`}
                 >
                   Jobs
@@ -90,7 +91,7 @@ const Navbar = ({ user }) => {
                   className={`${linkBaseClasses} ${
                     isActive("/applied-jobs")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                      : "text-gray-700 hover:text-blue-700 hover:bg-white" 
                   }`}
                 >
                   Applied Jobs
@@ -100,7 +101,7 @@ const Navbar = ({ user }) => {
                   className={`${linkBaseClasses} ${
                     isActive("/profile")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                      : "text-gray-700 hover:text-blue-700 hover:bg-white" 
                   }`}
                 >
                   Profile
@@ -123,7 +124,7 @@ const Navbar = ({ user }) => {
                   className={`${linkBaseClasses} ${
                     isActive("/post-job")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                      : "text-gray-700 hover:text-blue-700 hover:bg-white" 
                   }`}
                 >
                   Post Job
@@ -133,7 +134,7 @@ const Navbar = ({ user }) => {
                   className={`${linkBaseClasses} ${
                     isActive("/posted-jobs")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                      : "text-gray-700 hover:text-blue-700 hover:bg-white" 
                   }`}
                 >
                   Posted Jobs
@@ -143,7 +144,7 @@ const Navbar = ({ user }) => {
                   className={`${linkBaseClasses} ${
                     isActive("/profile")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                      : "text-gray-700 hover:text-blue-700 hover:bg-white" 
                   }`}
                 >
                   Profile
@@ -159,12 +160,12 @@ const Navbar = ({ user }) => {
             )}
           </div>
 
-          {/* MOBILE MENU */}
+          {/* MOBILE MENU BUTTON - Using solid white background for high visibility */}
           <div className="md:hidden z-50">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 rounded-full text-gray-700 hover:text-blue-600 focus:outline-none 
-                         transition duration-200 bg-white/70 backdrop-blur-md border border-gray-200 shadow-md"
+              className="p-2 cursor-pointer rounded-full text-gray-700 hover:text-blue-700 focus:outline-none 
+              transition duration-200 bg-white border border-gray-400 shadow-md"
             >
               <svg
                 className="w-7 h-7"
@@ -188,7 +189,7 @@ const Navbar = ({ user }) => {
         </div>
       </div>
 
-      {/* MOBILE MENU DROPDOWN  */}
+      {/* MOBILE MENU DROPDOWN  */}
       {menuOpen && (
         <div
           className={`
@@ -196,7 +197,7 @@ const Navbar = ({ user }) => {
             px-4 pt-3 pb-4 space-y-2 shadow-xl rounded-xl mx-4 mt-4
           `}
         >
-          {/* UNLOGGED  */}
+          {/* UNLOGGED  */}
           {!user && (
             <>
               <Link
@@ -205,7 +206,7 @@ const Navbar = ({ user }) => {
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/")
                     ? "text-white bg-blue-600"
-                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700" 
                 }`}
               >
                 Home
@@ -216,7 +217,7 @@ const Navbar = ({ user }) => {
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/about")
                     ? "text-white bg-blue-600"
-                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700" 
                 }`}
               >
                 About
@@ -227,7 +228,7 @@ const Navbar = ({ user }) => {
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/login")
                     ? "text-white bg-blue-600"
-                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700" 
                 }`}
               >
                 Login
@@ -251,7 +252,7 @@ const Navbar = ({ user }) => {
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/worker-dashboard")
                     ? "text-white bg-blue-600"
-                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700" 
                 }`}
               >
                 Jobs
@@ -262,7 +263,7 @@ const Navbar = ({ user }) => {
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/applied-jobs")
                     ? "text-white bg-blue-600"
-                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700" 
                 }`}
               >
                 Applied Jobs
@@ -273,7 +274,7 @@ const Navbar = ({ user }) => {
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/profile")
                     ? "text-white bg-blue-600"
-                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700" 
                 }`}
               >
                 Profile
@@ -298,7 +299,7 @@ const Navbar = ({ user }) => {
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/post-job")
                     ? "text-white bg-blue-600"
-                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700" 
                 }`}
               >
                 Post Job
@@ -309,7 +310,7 @@ const Navbar = ({ user }) => {
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/posted-jobs")
                     ? "text-white bg-blue-600"
-                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700" 
                 }`}
               >
                 Posted Jobs
@@ -320,7 +321,7 @@ const Navbar = ({ user }) => {
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/profile")
                     ? "text-white bg-blue-600"
-                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700" 
                 }`}
               >
                 Profile
