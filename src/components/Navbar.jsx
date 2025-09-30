@@ -1,91 +1,157 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+
 const Navbar = ({ user }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
+  const currentPath = location.pathname;
+  const isActive = (path) => currentPath === path;
+  const linkBaseClasses =
+    "py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200";
+
   return (
-    <nav className="fixed w-full z-50 top-0 mt-4">
+    <nav className="fixed w-full z-50 top-0 pt-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-center relative">
-          {/*  Logo */}
+        <div className="flex h-16 items-center justify-between relative">
           <Link
             to="/"
-            className="text-2xl font-bold text-blue-600 absolute left-6"
+            className="text-3xl font-extrabold text-blue-600 tracking-tight z-50"
           >
             Taskopia
           </Link>
+
           <div
-            className={`hidden md:flex  space-x-8 items-center px-8 py-1 rounded-4xl shadow-lg 
-            backdrop-blur-2xl bg-white/10 border  border-white/10 ${
-              location.pathname === "/login" || "/signup" ? "text-black" : "text-white"
-            }`}
+            className={`
+              hidden md:flex space-x-2 items-center justify-center mx-auto 
+              h-12 px-4 py-1 rounded-full shadow-xl z-10
+              backdrop-blur-xl bg-white/40 border border-gray-100 
+            `}
           >
             {!user && (
               <>
-                <Link to="/"
-                className="hover:text-blue-500">
+                {/* Standard Links */}
+                <Link
+                  to="/"
+                  className={`${linkBaseClasses} ${
+                    isActive("/")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                  }`}
+                >
                   Home
                 </Link>
-                <Link to="/about"
-                className="hover:text-blue-500">
+                <Link
+                  to="/about"
+                  className={`${linkBaseClasses} ${
+                    isActive("/about")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                  }`}
+                >
                   About
                 </Link>
-                <Link to="/login"
-                className=" py-2  rounded-xl  transition">
+
+                <Link
+                  to="/login"
+                  className={`${linkBaseClasses} ${
+                    isActive("/login")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                  }`}
+                >
                   Login
                 </Link>
-                <Link to="/signup"
-                className=" py-2   rounded-xl  transition">
+
+                <Link
+                  to="/signup"
+                  className="px-5 py-2 text-sm font-semibold rounded-full text-white bg-blue-600 shadow-lg hover:bg-blue-700 transition transform hover:-translate-y-0.5"
+                >
                   Join Now
                 </Link>
               </>
             )}
 
+            {/* WORKER LINKS */}
             {user === "worker" && (
               <>
-                <Link to="/worker-dashboard"
-                className="hover:text-blue-500">
+                <Link
+                  to="/worker-dashboard"
+                  className={`${linkBaseClasses} ${
+                    isActive("/worker-dashboard")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                  }`}
+                >
                   Jobs
                 </Link>
-                <Link to="/applied-jobs"
-                className="hover:text-blue-500">
+                <Link
+                  to="/applied-jobs"
+                  className={`${linkBaseClasses} ${
+                    isActive("/applied-jobs")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                  }`}
+                >
                   Applied Jobs
                 </Link>
-                <Link to="/profile"
-                className="hover:text-blue-500">
-                  {user.name}
+                <Link
+                  to="/profile"
+                  className={`${linkBaseClasses} ${
+                    isActive("/profile")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                  }`}
+                >
+                  Profile
                 </Link>
+
                 <button
-                  onClick={() => {
-                    /* logout function */
-                  }}
-                  className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition"
+                  onClick={() => {}}
+                  className="px-4 py-2 text-sm font-medium bg-red-500 text-white rounded-full hover:bg-red-600 transition"
                 >
                   Logout
                 </button>
               </>
             )}
 
+            {/* OWNER LINKS */}
             {user === "owner" && (
               <>
-                <Link to="/post-job"
-                className="hover:text-blue-500">
+                <Link
+                  to="/post-job"
+                  className={`${linkBaseClasses} ${
+                    isActive("/post-job")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                  }`}
+                >
                   Post Job
                 </Link>
-                <Link to="/posted-jobs"
-                className="hover:text-blue-500">
+                <Link
+                  to="/posted-jobs"
+                  className={`${linkBaseClasses} ${
+                    isActive("/posted-jobs")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                  }`}
+                >
                   Posted Jobs
                 </Link>
-                <Link to="/profile"
-                className="hover:text-blue-500">
-                  {user.name}
+                <Link
+                  to="/profile"
+                  className={`${linkBaseClasses} ${
+                    isActive("/profile")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-white"
+                  }`}
+                >
+                  Profile
                 </Link>
+
                 <button
-                  onClick={() => {
-                    /* logout function */
-                  }}
-                  className="px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition"
+                  onClick={() => {}}
+                  className="px-4 py-2 text-sm font-medium bg-red-500 text-white rounded-full hover:bg-red-600 transition"
                 >
                   Logout
                 </button>
@@ -93,13 +159,12 @@ const Navbar = ({ user }) => {
             )}
           </div>
 
-          {/* Right - Mobile Menu Button */}
-          <div className="md:hidden flex items-center absolute right-4  p-1 rounded-4xl bg-white/20">
+          {/* MOBILE MENU */}
+          <div className="md:hidden z-50">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className={`cursor-pointer ${
-                location.pathname === "/login" || "/signup" ? "text-black" : "text-white"
-              }  focus:outline-none`}
+              className="p-2 rounded-full text-gray-700 hover:text-blue-600 focus:outline-none 
+                         transition duration-200 bg-white/70 backdrop-blur-md border border-gray-200 shadow-md"
             >
               <svg
                 className="w-7 h-7"
@@ -113,8 +178,8 @@ const Navbar = ({ user }) => {
                   strokeWidth={2}
                   d={
                     menuOpen
-                      ? "M6 18L18 6M6 6l12 12" // close
-                      : "M4 6h16M4 12h16M4 18h16" // open
+                      ? "M6 18L18 6M6 6l12 12"
+                      : "M4 6h16M4 12h16M4 18h16"
                   }
                 />
               </svg>
@@ -123,94 +188,148 @@ const Navbar = ({ user }) => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* MOBILE MENU DROPDOWN  */}
       {menuOpen && (
         <div
-          className={`md:hidden backdrop-blur-md bg-white/30 border ${
-            location.pathname === "/login" || "/signup" ? "text-black" : "text-white"
-          }  border-white/40 px-4 pt-3 pb-6 space-y-2 shadow-lg rounded-lg mx-4 mt-2`}
+          className={`
+            md:hidden bg-white/95 backdrop-blur-lg border border-gray-200 
+            px-4 pt-3 pb-4 space-y-2 shadow-xl rounded-xl mx-4 mt-4
+          `}
         >
+          {/* UNLOGGED  */}
           {!user && (
             <>
-              <Link to="/"
-              onClick={()=>setMenuOpen(false)}
-              className="block py-2 ">
+              <Link
+                to="/"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                }`}
+              >
                 Home
               </Link>
-              <Link to="/about"
-               onClick={()=>setMenuOpen(false)}
-              className="block py-2 ">
+              <Link
+                to="/about"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/about")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                }`}
+              >
                 About
               </Link>
-              <Link to="/login"
-               onClick={()=>setMenuOpen(false)}
-              className="block py-2  rounded-lg  transition">
+              <Link
+                to="/login"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/login")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                }`}
+              >
                 Login
               </Link>
-              <Link to="/signup"
-               onClick={()=>setMenuOpen(false)}
-              className="block py-2 rounded-lg  transition">
+              <Link
+                to="/signup"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 mt-2`}
+              >
                 Join Now
               </Link>
             </>
           )}
 
+          {/* WORKER LINKS */}
           {user === "worker" && (
             <>
               <Link
                 to="/worker-dashboard"
-                 onClick={()=>setMenuOpen(false)}
-                className="block py-2 hover:text-blue-500"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/worker-dashboard")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                }`}
               >
                 Jobs
               </Link>
               <Link
                 to="/applied-jobs"
-                 onClick={()=>setMenuOpen(false)}
-                className="block py-2 hover:text-blue-500"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/applied-jobs")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                }`}
               >
                 Applied Jobs
               </Link>
-              <Link to="/profile"
-               onClick={()=>setMenuOpen(false)}
-              className="block py-2 hover:text-blue-500">
-                {user.name}
+              <Link
+                to="/profile"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/profile")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                }`}
+              >
+                Profile
               </Link>
               <button
                 onClick={() => {
-                  /* logout function */
+                  setMenuOpen(false); /* logout logic */
                 }}
-                className="w-full text-left py-2 px-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                className="w-full text-left py-2 px-3 text-base font-medium bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-2"
               >
                 Logout
               </button>
             </>
           )}
 
+          {/* OWNER LINKS */}
           {user === "owner" && (
             <>
-              <Link to="/post-job"
-               onClick={()=>setMenuOpen(false)}
-              className="block py-2 hover:text-blue-500">
+              <Link
+                to="/post-job"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/post-job")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                }`}
+              >
                 Post Job
               </Link>
               <Link
                 to="/posted-jobs"
-                 onClick={()=>setMenuOpen(false)}
-                className="block py-2 hover:text-blue-500"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/posted-jobs")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                }`}
               >
                 Posted Jobs
               </Link>
-              <Link to="/profile"
-               onClick={()=>setMenuOpen(false)}
-              className="block py-2 hover:text-blue-500">
-                {user.name}
+              <Link
+                to="/profile"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/profile")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-600"
+                }`}
+              >
+                Profile
               </Link>
               <button
                 onClick={() => {
-                  /* logout function */
+                  setMenuOpen(false); /* logout logic */
                 }}
-                className="w-full text-left py-2 px-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                className="w-full text-left py-2 px-3 text-base font-medium bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-2"
               >
                 Logout
               </button>
