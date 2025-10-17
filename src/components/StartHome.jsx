@@ -1,5 +1,4 @@
 import React from "react";
-import img from "../assests/img.png"; // Currently unused, remove if not needed
 import Button from "../components/styles/button/Button";
 import LightRays from "../background/LightRays";
 
