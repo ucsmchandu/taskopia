@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "../components/styles/button/Button";
-import LightRays from "../background/LightRays";
-
+import LightRays from "../animations/LightRays";
+import BlurText from "../animations/BlurText;";
 const StartHome = () => {
   const user = null; // Replace with actual auth logic if needed
 
@@ -28,31 +28,48 @@ const StartHome = () => {
         <div className="flex flex-col items-center space-y-7 max-w-2xl">
           {/* Heading */}
           <h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight"
-            style={{ lineHeight: "0.95" }}
+            className="font-extrabold tracking-tight leading-[1.1] text-center"
+            style={{ lineHeight: "1.1" }}
           >
-            <span className="text-white">Find Quick</span>
-            <br />
             <span
-              className="inline-block text-teal-400 hover:text-teal-300 transition-all duration-300 cursor-pointer transform hover:scale-105 text-5xl sm:text-6xl md:text-7xl lg:text-8xl lg:w-[2000px]"
+              className="block text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+              style={{ textShadow: "2px 2px 6px rgba(0,0,0,0.6)" }}
+            >
+              Find Quick
+            </span>
+            <div
+              className="mt-6 text-center cursor-pointer text-transparent bg-clip-text
+    bg-gradient-to-r from-[#cfd9ff] via-[#aab4ff] to-[#8c9eff] lg:w-[750px]
+    text-5xl sm:text-6xl md:text-7xl lg:text-8xl
+    transition-transform duration-300 ease-in-out hover:scale-105 hover:brightness-110"
               style={{
-                WebkitTextStroke: "3px #fff",
-                textShadow: "6px 6px 0px rgba(100,255,255,0.4)",
-                letterSpacing: "-3px",
+                WebkitTextStroke: "0.8px #000",
+                textShadow: `
+      0 0 8px rgba(173, 216, 255, 0.5),
+      0 0 15px rgba(138, 180, 255, 0.6),
+      0 0 25px rgba(100, 149, 237, 0.7)
+    `,
+                letterSpacing: "-1.2px",
               }}
             >
-              Local Gigs Now
-            </span>
+              <BlurText
+                text="Local Gigs Now"
+                delay={200}
+                animateBy="words"
+                direction="top"
+                className="mb-8"
+              />
+            </div>
           </h1>
 
           {/* Description */}
-          <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-md">
+          <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-md italic">
             Students and locals can find instant short-term jobs, and business
-            owners can hire on demand — all on one secure, simple platform.
+            owners can hire on demand all on one secure, simple platform.
           </p>
 
           {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-4">
+          <div className="flex flex-col sm:flex-row gap-4 mt-10">
             {user ? (
               <Button text="Go to Dashboard" />
             ) : (
