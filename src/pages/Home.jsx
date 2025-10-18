@@ -2,7 +2,7 @@ import React from "react";
 import Cards from "../components/HomeComponents/Cards";
 import StartHome from "../components/HomeComponents/StartHome";
 import { motion } from "framer-motion";
-import { Briefcase, Users, CheckCircle, Target, Sparkles } from "lucide-react";
+import { Target, Sparkles } from "lucide-react";
 
 const Home = () => {
   const user = null;
@@ -15,10 +15,10 @@ const Home = () => {
       <Cards />
 
       {/* why choose taskopia */}
-      <section className="py-20 px-6 bg-gradient-to-b from-[#1B3C53] to-[#8D5F8C]">
+      <section className="py-20 px-6 bg-gradient-to-b from-white to-[#8D5F8C]">
         <div className="max-w-5xl mx-auto text-center">
           <motion.h2
-            className="text-3xl font-semibold mb-6 text-yellow-300"
+            className="text-3xl font-semibold mb-6 text-[#6B3F69]"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -26,7 +26,7 @@ const Home = () => {
             Why Choose Taskopia?
           </motion.h2>
           <motion.p
-            className="text-white mb-10"
+            className="text-[#131D4F] mb-10"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -35,29 +35,48 @@ const Home = () => {
             easiest way for students to find flexible work and for owners to get
             reliable help.
           </motion.p>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-[#292fa6]">
             {[
-              "Quick Jobs — Work when you’re free",
-              "No Long Commitments — One-day tasks only",
-              "Flexible Timings — You decide when to work",
-              "Trusted Network — Verified local users",
+              {
+                text: "Quick Jobs Work when you’re free",
+                from: "#0D1164",
+                to: "#292fa6",
+              },
+              {
+                text: "No Long Commitments One-day tasks only",
+                from: "#641B2E",
+                to: "#c14c6b",
+              },
+              {
+                text: "Flexible Timings You decide when to work",
+                from: "#3D365C",
+                to: "#645a90",
+              },
+              {
+                text: "Trusted Network Verified local users",
+                from: "#3F72AF",
+                to: "#5a8cc9",
+              },
             ].map((text, index) => (
               <motion.div
                 key={index}
-                className="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition border border-sky-100"
+                className="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition  "
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                style={{
+                  background: `linear-gradient(135deg, ${text.from} 0%, ${text.to} 100%)`,
+                }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.2 }}
               >
-                <Sparkles className="w-8 h-8 text-indigo-500 mx-auto mb-3" />
-                <p className="text-gray-700">{text}</p>
+                <Sparkles className="w-8 h-8 text-white mx-auto mb-3" />
+                <p className="text-gray-100">{text.text}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
-      
+
       {/* Our mission */}
       <section className="py-20 px-6 bg-gradient-to-b from-[#8D5F8C] to-[#6B3F69] text-white text-center">
         <motion.div
@@ -118,32 +137,33 @@ const Home = () => {
           ))}
         </div>
       </section>
-      
-      {/* ready to experince */}
-      <section className="py-20 bg-gradient-to-r from-[#E5989B] to-[#B5828C] text-white text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl font-bold mb-6">
-            Ready to Experience the Future of Micro Work?
-          </h2>
-          <p className="text-lg mb-8 text-sky-100">
-            Join Taskopia today and start your journey — whether you’re an owner
-            or a student.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <button className="px-6 py-3 bg-white text-emerald-700 rounded-xl font-semibold shadow hover:bg-sky-50 transition">
-              Join as Student
-            </button>
-            <button className="px-6 py-3 bg-emerald-700 text-white rounded-xl font-semibold shadow hover:bg-emerald-800 transition">
-              Join as Owner
-            </button>
-          </div>
-        </motion.div>
-      </section>
 
+      {/* ready to experince */}
+      <div className="flex justify-center p-6 ">
+        <section className="py-20 w-6xl rounded-xl p-2 flex justify-center bg-gradient-to-r from-[#7286D3] to-[#8EA7E9] text-white text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="text-4xl font-bold mb-6">
+              Ready to Experience the Future of Micro Work?
+            </h2>
+            <p className="text-lg mb-8 text-sky-100">
+              Join Taskopia today and start your journey whether you’re an
+              owner or a student.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <button className="px-6 py-3 bg-white text-emerald-700 rounded-xl font-semibold shadow hover:bg-sky-50 transition">
+                Join as Student
+              </button>
+              <button className="px-6 py-3 bg-emerald-700 text-white rounded-xl font-semibold shadow hover:bg-emerald-800 transition">
+                Join as Owner
+              </button>
+            </div>
+          </motion.div>
+        </section>
+      </div>
     </>
   );
 };

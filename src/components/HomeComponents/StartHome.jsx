@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../styles/button/Button";
 import LightRays from "../../animations/LightRays";
 import BlurText from "../../animations/BlurText";
+
 const StartHome = () => {
   const user = null; // Replace with actual auth logic if needed
 
@@ -32,24 +33,25 @@ const StartHome = () => {
             style={{ lineHeight: "1.1" }}
           >
             <span
-              className="block text-[#FFE100] text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+              className="block text-[#FFE31A] text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
               style={{ textShadow: "2px 2px 6px rgba(0,0,0,0.6)" }}
             >
               Find Quick
             </span>
-            <div className="text-4xl sm:text-7xl md:text-7xl lg:text-7xl" >
-              <BlurText
+            <div className="text-white font-extrabold text-4xl sm:text-7xl md:text-7xl lg:text-7xl">
+                <BlurText
                 text="Local Gigs Now"
-                delay={300}
-                animateBy="words"
+                delay={120}
+                animateBy="letters"
                 direction="top"
                 className="mb-8"
               />
+             
             </div>
           </h1>
 
           {/* Description */}
-          <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-md italic">
+          <p className=" lg:w-2xl sm:text-lg md:text-xl text-[#68D2E8] italic">
             Students and locals can find instant short-term jobs, and business
             owners can hire on demand all on one secure, simple platform.
           </p>
