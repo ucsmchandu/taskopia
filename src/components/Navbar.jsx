@@ -21,7 +21,6 @@ const Navbar = ({ user }) => {
             Taskopia
           </Link>
 
-          {/* DESKTOP NAV BAR - Restored glassy effect with high opacity white background */}
           <div
             className={`
               hidden md:flex space-x-2 items-center justify-center mx-auto 
@@ -31,7 +30,6 @@ const Navbar = ({ user }) => {
           >
             {!user && (
               <>
-                {/* Standard Links (dark text on light bg) */}
                 <Link
                   to="/"
                   className={`${linkBaseClasses} ${
@@ -160,7 +158,6 @@ const Navbar = ({ user }) => {
             )}
           </div>
 
-          {/* MOBILE MENU BUTTON - Using solid white background for high visibility */}
           <div className="md:hidden z-50">
             <button
               onClick={() => setMenuOpen(!menuOpen)}

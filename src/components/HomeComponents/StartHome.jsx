@@ -1,24 +1,24 @@
 import React from "react";
-import Button from "../components/styles/button/Button";
-import LightRays from "../animations/LightRays";
-import BlurText from "../animations/BlurText;";
+import Button from "../styles/button/Button";
+import LightRays from "../../animations/LightRays";
+import BlurText from "../../animations/BlurText";
 const StartHome = () => {
   const user = null; // Replace with actual auth logic if needed
 
   return (
-    <div className="relative w-full min-h-screen bg-black text-white overflow-hidden">
+    <div className="relative w-full min-h-screen bg-gradient-to-b from-black to-gray-800 text-white overflow-hidden">
       {/* Background Light Rays */}
       <div className="absolute top-0 left-0 w-screen h-screen z-0 pointer-events-none select-none">
         <LightRays
           raysOrigin="top-center"
           raysColor="#E6E6FA"
-          raysSpeed={4}
-          lightSpread={10}
-          rayLength={30}
+          raysSpeed={3}
+          lightSpread={20}
+          rayLength={25}
           followMouse={true}
           mouseInfluence={0.3}
           noiseAmount={0.1}
-          distortion={0.00}
+          distortion={0.001}
           className="w-full h-full"
         />
       </div>
@@ -32,26 +32,12 @@ const StartHome = () => {
             style={{ lineHeight: "1.1" }}
           >
             <span
-              className="block text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl"
+              className="block text-[#FFE100] text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
               style={{ textShadow: "2px 2px 6px rgba(0,0,0,0.6)" }}
             >
               Find Quick
             </span>
-            <div
-              className="mt-6 text-center cursor-pointer text-transparent bg-clip-text
-    bg-gradient-to-r from-[#cfd9ff] via-[#aab4ff] to-[#8c9eff] lg:w-[750px]
-    text-4xl sm:text-6xl md:text-7xl lg:text-8xl
-    transition-transform duration-300 ease-in-out hover:scale-105 hover:brightness-110"
-              style={{
-                WebkitTextStroke: "0.8px #000",
-                textShadow: `
-      0 0 8px rgba(173, 216, 255, 0.5),
-      0 0 15px rgba(138, 180, 255, 0.6),
-      0 0 25px rgba(100, 149, 237, 0.7)
-    `,
-                letterSpacing: "-1.2px",
-              }}
-            >
+            <div className="text-4xl sm:text-7xl md:text-7xl lg:text-7xl" >
               <BlurText
                 text="Local Gigs Now"
                 delay={300}
