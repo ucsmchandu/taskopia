@@ -2,12 +2,12 @@ import React from 'react'
 
 const Cards = () => {
   return (
-    <div className="px-4 md:px-8 lg:px-16">
+    <div className="px-4 md:px-8 lg:px-16 bg-gray-700">
        <div className="px-6 md:px-12 lg:px-20 py-16 md:py-24">
-        <h2 className="text-4xl md:text-5xl font-extrabold text-center text-gray-900 mb-6">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-center text-white mb-6">
           The Smart Way to Work
         </h2>
-        <p className="text-xl text-center text-gray-500 mb-16 max-w-3xl mx-auto">
+        <p className="text-xl text-center text-gray-400 mb-16 max-w-3xl mx-auto">
           We connect local talent with local opportunity, instantly.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
