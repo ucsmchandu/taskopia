@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import GoogleAuth from '../components/Authentication/GoogleAuth'
 const Login = () => {
   const [data, setData] = useState({
     email: "",
@@ -40,7 +40,7 @@ const Login = () => {
       </div>
 
       {/* Right Side Login Form */}
-      <div className="flex flex-col -ml-20 justify-center items-center w-full lg:w-1/2 bg-white px-8 sm:px-16">
+      <div className="flex flex-col lg:-ml-20 justify-center items-center w-full lg:w-1/2 bg-white px-8 sm:px-16">
         <div className="w-full max-w-md border p-6 rounded-2xl border-gray-500">
           <h2 className="text-3xl font-bold mb-2 text-gray-800">Sign in</h2>
           <p className="text-gray-600 mb-8">
@@ -53,7 +53,7 @@ const Login = () => {
             </Link>
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5 ">
             <div>
               <label
                 htmlFor="email"
@@ -97,6 +97,8 @@ const Login = () => {
               Sign in
             </button>
           </form>
+          <p className="flex justify-center text-gray-500 ">or</p>
+          <GoogleAuth/>
         </div>
       </div>
     </div>
