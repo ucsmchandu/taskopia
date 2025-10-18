@@ -12,13 +12,13 @@ const StartHome = () => {
         <LightRays
           raysOrigin="top-center"
           raysColor="#E6E6FA"
-          raysSpeed={2}
-          lightSpread={2}
-          rayLength={20}
+          raysSpeed={4}
+          lightSpread={10}
+          rayLength={30}
           followMouse={true}
-          mouseInfluence={0.1}
+          mouseInfluence={0.3}
           noiseAmount={0.1}
-          distortion={0.05}
+          distortion={0.00}
           className="w-full h-full"
         />
       </div>
@@ -40,7 +40,7 @@ const StartHome = () => {
             <div
               className="mt-6 text-center cursor-pointer text-transparent bg-clip-text
     bg-gradient-to-r from-[#cfd9ff] via-[#aab4ff] to-[#8c9eff] lg:w-[750px]
-    text-5xl sm:text-6xl md:text-7xl lg:text-8xl
+    text-4xl sm:text-6xl md:text-7xl lg:text-8xl
     transition-transform duration-300 ease-in-out hover:scale-105 hover:brightness-110"
               style={{
                 WebkitTextStroke: "0.8px #000",
@@ -54,7 +54,7 @@ const StartHome = () => {
             >
               <BlurText
                 text="Local Gigs Now"
-                delay={200}
+                delay={300}
                 animateBy="words"
                 direction="top"
                 className="mb-8"
@@ -81,7 +81,6 @@ const StartHome = () => {
       </div>
 
       {/* Divider */}
-      <hr className="my-10 border-gray-600 w-3/4 mx-auto z-10 relative" />
     </div>
   );
 };
