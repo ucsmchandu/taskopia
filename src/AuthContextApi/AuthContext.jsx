@@ -17,7 +17,8 @@ const AuthContextProvider = ({children}) => {
     const unsubcribe=onAuthStateChanged(auth,async(user)=>{
       if(user){
         const docRef=await getDoc(doc(firestore,"users",user.uid));
-        if(docRef.exists())
+        // console.log(user)
+        if(docRef.exists() && user.emailVerified) //email verified is for the manual signin i.e that the user clicks the link or not
           setCurrentUser(user);
       }else{
         setCurrentUser(null);

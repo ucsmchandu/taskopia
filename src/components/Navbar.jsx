@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-
-const Navbar = ({ user }) => {
+import {useAuth} from '../AuthContextApi/AuthContext'
+import { firestore } from "../Firebase/Firebase";
+import { getDoc,doc } from "firebase/firestore";
+const Navbar = () => {
+  const user=null;
+  const x=useAuth();
+  // console.log(x)
+  
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
   const currentPath = location.pathname;

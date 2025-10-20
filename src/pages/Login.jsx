@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import GoogleAuth from '../components/Authentication/GoogleAuth'
+import GoogleAuth from "../components/Authentication/GoogleAuth";
+import { auth } from "../Firebase/Firebase";
+import { signInWithEmailAndPassword } from "firebase/auth"; 
+import { useNavigate } from "react-router-dom";
 const Login = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -13,7 +18,7 @@ const Login = () => {
     setData({ ...data, [name]: value.trim() });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!data.email || !data.password) {
       toast.warn("All fields are required!", { position: "top-left" });
@@ -25,11 +30,34 @@ const Login = () => {
       });
       return;
     }
-    console.log(data);
+    // console.log(data);
+    setLoading(true);
+    try {
+      // logging using the email and password
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+      
+      const user = userCredential.user;
+      if (!user.emailVerified) {
+        toast.warning("Please verify your email before logging in.");
+        return;
+      }
+      toast.success("Login successful!");
+    } catch (err) {
+      console.log(err);
+      toast.error("Invalid credentials!");
+      return;
+    } finally {
+      setLoading(false);
+    }
+    navigate("/");
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen mt-10">
       {/* Left Side Image */}
       <div className="hidden lg:block lg:w-4xl lg:h-4xl ">
         <img
@@ -41,8 +69,8 @@ const Login = () => {
 
       {/* Right Side Login Form */}
       <div className="flex flex-col lg:-ml-20 justify-center items-center w-full lg:w-1/2 bg-white px-8 sm:px-16">
-        <div className="w-full max-w-md border p-6 rounded-2xl border-gray-500">
-          <h2 className="text-3xl font-bold mb-2 text-gray-800">Sign in</h2>
+        <div className="w-full max-w-md border p-6 rounded-2xl shadow-md border-gray-200">
+          <h2 className="text-3xl font-bold mb-2 text-gray-800">Login</h2>
           <p className="text-gray-600 mb-8">
             or{" "}
             <Link
@@ -90,15 +118,19 @@ const Login = () => {
               />
             </div>
 
-            <button
-              type="submit"
-              className="w-full py-2 text-lg bg-blue-600 text-white rounded-md mt-4 hover:bg-blue-700 transition"
-            >
-              Sign in
-            </button>
+            {loading ? (
+              <div className="w-6 mt-4 h-6 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin mx-auto"></div>
+            ) : (
+              <button
+                type="submit"
+                className="w-full py-1 cursor-pointer text-lg bg-blue-600 text-white rounded-md mt-4 hover:bg-blue-700 transition"
+              >
+                Sign in
+              </button>
+            )}
           </form>
-          <p className="flex justify-center text-gray-500 ">or</p>
-          <GoogleAuth/>
+          <p className="flex justify-center text-gray-500 mb-2 mt-3 ">or</p>
+          <GoogleAuth />
         </div>
       </div>
     </div>
