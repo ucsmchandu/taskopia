@@ -3,7 +3,7 @@ import React from 'react';
 const EmailButton = ({text}) => {
   return (
     <div
-      className="mt-10 group cursor-pointer relative inline-flex items-center justify-center w-full h-10 lg:h-11 sm:w-[200px] md:w-[220px] lg:w-[240px] xl:w-[260px] rounded-xl font-semibold text-white text-base leading-none -tracking-[0.02em] outline outline-1 outline-white/10 hover:outline-white/20 transition-all duration-500 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-blue-400/50 max-w-[300px]"
+      className="mt-10 group cursor-pointer relative inline-flex items-center justify-center w-full h-10 lg:h-11 sm:w-[200px] md:w-[220px] lg:w-[240px] xl:w-[260px] rounded-xl font-semibold text-white text-base leading-none -tracking-[0.02em] outline outline-white/10 hover:outline-white/20 transition-all duration-500 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-blue-400/50 max-w-[300px]"
     >
       {/* Background layers */}
       <span
