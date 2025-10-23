@@ -1,38 +1,55 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContextApi/AuthContext";
 import { firestore } from "../Firebase/Firebase";
 import { getDoc, doc } from "firebase/firestore";
+
 const Navbar = () => {
   const { currentUser } = useAuth();
-  // console.log(user)
-  // console.log(user.uid);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState({});
-  // console.log(currentUser)
-  console.log(user);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const location = useLocation();
   const currentPath = location.pathname;
   const isActive = (path) => currentPath === path;
+
   const linkBaseClasses =
     "py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200";
 
-  //getting the user details from the firebase
+  // Fetch user details safely
   const getUserDetails = async () => {
-    if (currentUser) {
-      const docRef = await getDoc(doc(firestore, "users", currentUser.uid));
-      // console.log(docRef.data());
-      setUser(docRef.data());
-    } else {
-      console.log("user does not exists");
+    if (!currentUser) {
+      setUser(null);
+      setLoading(false);
       return;
+    }
+
+    try {
+      const userRef = doc(firestore, "users", currentUser.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        setUser(userSnap.data());
+      } else {
+        console.log("User document not found in Firestore");
+        setUser(null);
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     getUserDetails();
-  }, []);
+  }, [currentUser]);
+
+  // Prevent flicker while loading
+  if (loading) {
+    return null;
+  }
 
   return (
     <nav className="fixed w-full z-50 top-0 pt-6">
@@ -45,13 +62,13 @@ const Navbar = () => {
             Taskopia
           </Link>
 
+          {/* Desktop Menu */}
           <div
-            className={`
-              hidden md:flex space-x-2 items-center justify-center mx-auto 
+            className={`hidden md:flex space-x-2 items-center justify-center mx-auto 
               h-12 px-4 py-1 rounded-full shadow-xl z-10
-              backdrop-blur-xl bg-white/70 
-            `}
+              backdrop-blur-xl bg-white/70`}
           >
+            {/* Not logged in */}
             {!currentUser && (
               <>
                 <Link
@@ -74,7 +91,6 @@ const Navbar = () => {
                 >
                   About
                 </Link>
-
                 <Link
                   to="/login"
                   className={`${linkBaseClasses} ${
@@ -85,18 +101,11 @@ const Navbar = () => {
                 >
                   Login
                 </Link>
-
-                {/* <Link
-                  to="/signup"
-                  className="px-5 py-2 text-sm font-semibold rounded-full text-white bg-blue-600 shadow-lg hover:bg-blue-700 transition transform hover:-translate-y-0.5"
-                >
-                  Join Now
-                </Link> */}
               </>
             )}
 
-            {/* WORKER LINKS */}
-            {user.userType === "worker" && (
+            {/* Worker Links */}
+            {user?.userType === "worker" && (
               <>
                 <Link
                   to="/worker-dashboard"
@@ -128,18 +137,11 @@ const Navbar = () => {
                 >
                   Profile
                 </Link>
-
-                <button
-                  onClick={() => {}}
-                  className="px-4 py-2 text-sm font-medium bg-red-500 text-white rounded-full hover:bg-red-600 transition"
-                >
-                  Logout
-                </button>
               </>
             )}
 
-            {/* OWNER LINKS */}
-            {user.userType === "owner" && (
+            {/* Owner Links */}
+            {user?.userType === "owner" && (
               <>
                 <Link
                   to="/post-job"
@@ -171,17 +173,11 @@ const Navbar = () => {
                 >
                   Profile
                 </Link>
-
-                <button
-                  onClick={() => {}}
-                  className="px-4 py-2 text-sm font-medium bg-red-500 text-white rounded-full hover:bg-red-600 transition"
-                >
-                  Logout
-                </button>
               </>
             )}
           </div>
 
+          {/* Mobile Menu Button */}
           <div className="md:hidden z-50">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
@@ -210,15 +206,12 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* MOBILE MENU DROPDOWN  */}
+      {/* Mobile Dropdown Menu */}
       {menuOpen && (
         <div
-          className={`
-            md:hidden bg-white/95 backdrop-blur-lg border border-gray-200 
-            px-4 pt-3 pb-4 space-y-2 shadow-xl rounded-xl mx-4 mt-4
-          `}
+          className={`md:hidden bg-white/95 backdrop-blur-lg border border-gray-200 
+          px-4 pt-3 pb-4 space-y-2 shadow-xl rounded-xl mx-4 mt-4`}
         >
-          {/* UNLOGGED  */}
           {!currentUser && (
             <>
               <Link
@@ -254,18 +247,10 @@ const Navbar = () => {
               >
                 Login
               </Link>
-              {/* <Link
-                to="/signup"
-                onClick={() => setMenuOpen(false)}
-                className={`block px-3 py-2 text-base font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 mt-2`}
-              >
-                Join Now
-              </Link> */}
             </>
           )}
 
-          {/* WORKER LINKS */}
-          {user.userType === "worker" && (
+          {user?.userType === "worker" && (
             <>
               <Link
                 to="/worker-dashboard"
@@ -300,19 +285,10 @@ const Navbar = () => {
               >
                 Profile
               </Link>
-              <button
-                onClick={() => {
-                  setMenuOpen(false); /* logout logic */
-                }}
-                className="w-full text-left py-2 px-3 text-base font-medium bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-2"
-              >
-                Logout
-              </button>
             </>
           )}
 
-          {/* OWNER LINKS */}
-          {user.userType === "owner" && (
+          {user?.userType === "owner" && (
             <>
               <Link
                 to="/post-job"
@@ -347,14 +323,6 @@ const Navbar = () => {
               >
                 Profile
               </Link>
-              <button
-                onClick={() => {
-                  setMenuOpen(false); /* logout logic */
-                }}
-                className="w-full text-left py-2 px-3 text-base font-medium bg-red-500 text-white rounded-lg hover:bg-red-600 transition mt-2"
-              >
-                Logout
-              </button>
             </>
           )}
         </div>
