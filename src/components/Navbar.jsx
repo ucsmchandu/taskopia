@@ -1,20 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import {useAuth} from '../AuthContextApi/AuthContext'
+import { useAuth } from "../AuthContextApi/AuthContext";
 import { firestore } from "../Firebase/Firebase";
-import { getDoc,doc } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 const Navbar = () => {
-  const user=null;
-  const x=useAuth();
-  // console.log(x)
-  
+  const { currentUser } = useAuth();
+  // console.log(user)
+  // console.log(user.uid);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState({});
+  console.log(user);
   const location = useLocation();
   const currentPath = location.pathname;
   const isActive = (path) => currentPath === path;
   const linkBaseClasses =
     "py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200";
+
+  //getting the user details from the firebase
+  const getUserDetails = async () => {
+    if (user) {
+      const docRef = await getDoc(doc(firestore, "users", currentUser.uid));
+      // console.log(docRef.data());
+      setUser(docRef.data());
+    } else {
+      console.log("user does not exists");
+      return;
+    }
+  };
+
+  useEffect(() => {
+    getUserDetails();
+  }, []);
 
   return (
     <nav className="fixed w-full z-50 top-0 pt-6">
@@ -78,7 +95,7 @@ const Navbar = () => {
             )}
 
             {/* WORKER LINKS */}
-            {user === "worker" && (
+            {user.userType === "worker" && (
               <>
                 <Link
                   to="/worker-dashboard"
@@ -121,7 +138,7 @@ const Navbar = () => {
             )}
 
             {/* OWNER LINKS */}
-            {user === "owner" && (
+            {user.userType === "owner" && (
               <>
                 <Link
                   to="/post-job"
@@ -247,7 +264,7 @@ const Navbar = () => {
           )}
 
           {/* WORKER LINKS */}
-          {user === "worker" && (
+          {user.userType === "worker" && (
             <>
               <Link
                 to="/worker-dashboard"
@@ -294,7 +311,7 @@ const Navbar = () => {
           )}
 
           {/* OWNER LINKS */}
-          {user === "owner" && (
+          {user.userType === "owner" && (
             <>
               <Link
                 to="/post-job"

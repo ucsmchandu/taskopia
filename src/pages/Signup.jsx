@@ -153,7 +153,7 @@ const Signup = () => {
                 onChange={handleData}
               >
                 <option value="">select user type</option>
-                <option value="student">Student</option>
+                <option value="worker">Worker</option>
                 <option value="owner">Owner</option>
               </select>
             </div>
