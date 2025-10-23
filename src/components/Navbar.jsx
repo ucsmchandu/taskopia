@@ -10,6 +10,7 @@ const Navbar = () => {
   // console.log(user.uid);
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState({});
+  // console.log(currentUser)
   console.log(user);
   const location = useLocation();
   const currentPath = location.pathname;
@@ -19,7 +20,7 @@ const Navbar = () => {
 
   //getting the user details from the firebase
   const getUserDetails = async () => {
-    if (user) {
+    if (currentUser) {
       const docRef = await getDoc(doc(firestore, "users", currentUser.uid));
       // console.log(docRef.data());
       setUser(docRef.data());
@@ -51,7 +52,7 @@ const Navbar = () => {
               backdrop-blur-xl bg-white/70 
             `}
           >
-            {!user && (
+            {!currentUser && (
               <>
                 <Link
                   to="/"
@@ -218,7 +219,7 @@ const Navbar = () => {
           `}
         >
           {/* UNLOGGED  */}
-          {!user && (
+          {!currentUser && (
             <>
               <Link
                 to="/"
@@ -253,13 +254,13 @@ const Navbar = () => {
               >
                 Login
               </Link>
-              <Link
+              {/* <Link
                 to="/signup"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 mt-2`}
               >
                 Join Now
-              </Link>
+              </Link> */}
             </>
           )}
 

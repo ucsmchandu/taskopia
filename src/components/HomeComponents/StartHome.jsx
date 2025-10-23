@@ -2,7 +2,7 @@ import React from "react";
 import Button from "../styles/button/Button";
 import LightRays from "../../animations/LightRays";
 import BlurText from "../../animations/BlurText";
-
+import { Link } from "react-router-dom";
 const StartHome = () => {
   const user = null; // Replace with actual auth logic if needed
 
@@ -61,7 +61,7 @@ const StartHome = () => {
             {user ? (
               <Button text="Go to Dashboard" />
             ) : (
-              <Button text="Sign Up / Login" />
+             <Link to="/login"> <Button text="Sign Up / Login" /></Link>
             )}
             <Button text="Post a Job" />
           </div>
