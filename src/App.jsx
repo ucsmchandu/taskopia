@@ -7,7 +7,8 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import JobPosting from "./pages/JobPosting";
 import AuthContextProvider from "./AuthContextApi/AuthContext";
-
+import WorkerProfile from './pages/WorkerProfile'
+import OwnerProfile from './pages/OwnerProfile'
 const App = () => {
   return (
     <AuthContextProvider>
@@ -18,6 +19,8 @@ const App = () => {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="post/job" element={<JobPosting/>} />
+            <Route path='profile/worker' element={<WorkerProfile/>}/>
+            <Route path="profile/owner" element={<OwnerProfile/>} />
           </Route>
         </Routes>
         <ToastContainer/>
