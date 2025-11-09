@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContextApi/AuthContext";
 import { firestore } from "../Firebase/Firebase";
 import { getDoc, doc } from "firebase/firestore";
-
+import { auth } from "../Firebase/Firebase";
 const Navbar = () => {
   const { currentUser } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
   const isActive = (path) => currentPath === path;
-
+  console.log(currentUser);
   const linkBaseClasses =
     "py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200";
 
@@ -45,6 +45,11 @@ const Navbar = () => {
   useEffect(() => {
     getUserDetails();
   }, [currentUser]);
+
+  // for logout
+  const logout = async () => {
+    await auth.signOut();
+  };
 
   // Prevent flicker while loading
   if (loading) {
@@ -128,14 +133,21 @@ const Navbar = () => {
                   Applied Jobs
                 </Link>
                 <Link
-                  to="/profile"
+                  to="/profile/worker"
                   className={`${linkBaseClasses} ${
-                    isActive("/profile")
+                    isActive("/profile/worker")
                       ? "text-white bg-blue-600 shadow-md"
                       : "text-gray-700 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
                   Profile
+                </Link>
+                <Link
+                  to="/"
+                  className="text-red-700 hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
+                  onClick={() => logout()}
+                >
+                  Logout
                 </Link>
               </>
             )}
@@ -164,7 +176,7 @@ const Navbar = () => {
                   Posted Jobs
                 </Link>
                 <Link
-                  to="/profile"
+                  to="/profile/owner"
                   className={`${linkBaseClasses} ${
                     isActive("/profile")
                       ? "text-white bg-blue-600 shadow-md"
@@ -172,6 +184,13 @@ const Navbar = () => {
                   }`}
                 >
                   Profile
+                </Link>
+                <Link
+                  to="/"
+                  className="text-red-700 hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
+                  onClick={() => logout()}
+                >
+                  Logout
                 </Link>
               </>
             )}
@@ -250,6 +269,7 @@ const Navbar = () => {
             </>
           )}
 
+          {/* worker */}
           {user?.userType === "worker" && (
             <>
               <Link
@@ -275,7 +295,7 @@ const Navbar = () => {
                 Applied Jobs
               </Link>
               <Link
-                to="/profile"
+                to="/profile/worker"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/profile")
@@ -285,6 +305,13 @@ const Navbar = () => {
               >
                 Profile
               </Link>
+               <Link
+                  to="/"
+                  className="text-red-700 block hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
+                  onClick={()=>logout()}
+                >
+                  Logout
+                </Link>
             </>
           )}
 
@@ -313,7 +340,7 @@ const Navbar = () => {
                 Posted Jobs
               </Link>
               <Link
-                to="/profile"
+                to="/profile/owner"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/profile")
@@ -323,6 +350,13 @@ const Navbar = () => {
               >
                 Profile
               </Link>
+               <Link
+                  to="/"
+                  className="text-red-700 block hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
+                  onClick={()=>logout()}
+                >
+                  Logout
+                </Link>
             </>
           )}
         </div>

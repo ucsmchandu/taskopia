@@ -57,7 +57,7 @@ const OwnerProfile = () => {
 
         <div className="flex-1 min-w-[200px] bg-white border border-gray-200 rounded-2xl shadow-md text-center p-6 hover:shadow-lg transition">
           {/* total hires */}
-          <p className="text-gray-500 text-sm">Total Hires</p>
+          <p className="text-gray-500 text-sm">Total Hir es</p>
           <h1 className="text-3xl font-bold text-blue-600 mt-2">12</h1>
         </div>
       </div>
