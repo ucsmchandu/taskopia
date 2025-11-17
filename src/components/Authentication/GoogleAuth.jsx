@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, getDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { firestore } from "../../Firebase/Firebase";
 import { auth } from "../../Firebase/Firebase";
 import { useLocation, useNavigate } from "react-router-dom";
 const GoogleAuth = () => {
   const [userType, setUserType] = useState("");
-  console.log(userType)
+  console.log(userType);
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
   const handleGoogleSignin = async () => {
     // checking the user type
-    if(!userType){
+    if (!userType) {
       toast.warning("Please select User type!");
       return;
     }
@@ -22,14 +22,31 @@ const GoogleAuth = () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      // console.log("user :",user); here comes the user details, means at this the user is already logged in
+
+      // here we are checking the user already exists or not
+      const userRef = doc(firestore, "users", user.uid); //getting the user details by using the uid
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const savedRole = userSnap.data().userType;
+        if (userType !== savedRole) {
+          //checking the current user type with already stored usertype
+          toast.error(
+            `This email is already registered as ${savedRole}. You cannot login as ${userType}`,
+            {
+              position: "top-right",
+            }
+          );
+          return;
+        }
+      }
+
       if (user) {
         // storing all four main data points
         await setDoc(doc(firestore, "users", user.uid), {
           userId: user.uid,
           email: user.email,
           userName: user.displayName,
-          userType:userType
+          userType: userType,
         });
         toast.success("User login SuccessFull", {
           position: "top-right",
@@ -60,7 +77,7 @@ const GoogleAuth = () => {
             name="userType"
             id="userType"
             value={userType.userType}
-            onChange={(e)=>setUserType(e.target.value)}
+            onChange={(e) => setUserType(e.target.value)}
           >
             <option value="">select user type</option>
             <option value="worker">Worker</option>

@@ -72,6 +72,13 @@ const Signup = () => {
       });
     } catch (err) {
       console.log(err);
+      console.log("message :",err.message);
+      if(err.message=="Firebase: Error (auth/email-already-in-use)."){
+        toast.error("Email is already in use. Try another email!",{
+          position:"top-right"
+        });
+        return;
+      }
       toast.error("Registration Failed", {
         position: "top-right",
       });
