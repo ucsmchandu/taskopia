@@ -1,6 +1,8 @@
 import React from "react";
-
+import {useAuth} from '../AuthContextApi/AuthContext'
 const WorkerProfile = () => {
+  const {currentUser}=useAuth();
+  console.log(currentUser);
   return (
     <div className="min-h-screen bg-gray-50 px-6 md:px-20 py-10">
       <div className="flex flex-col md:flex-row gap-10 mt-20">
@@ -8,14 +10,14 @@ const WorkerProfile = () => {
         <div className="md:w-1/3 bg-white shadow-lg rounded-2xl p-6 flex flex-col items-center">
           {/* Profile Picture */}
           <img
-            src="https://res.cloudinary.com/dllvcgpsk/image/upload/v1751351857/mu60yo8pyqt9unksaaop.png"
+            src={currentUser.photoURL}
             alt="profile"
             className="h-32 w-32 rounded-full shadow-md"
           />
 
           {/* Basic Info */}
           <div className="text-center mt-4 space-y-1">
-            <h1 className="text-2xl font-semibold text-gray-800">Chandu</h1>
+            <h1 className="text-2xl font-semibold text-gray-800">{currentUser.displayName}</h1>
             <p className="text-gray-500">19, Vizag</p>
             <p className="text-gray-500">B.Tech, 3rd Year</p>
           </div>
