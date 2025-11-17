@@ -13,7 +13,7 @@ const Navbar = () => {
   const location = useLocation();
   const currentPath = location.pathname;
   const isActive = (path) => currentPath === path;
-  console.log(currentUser);
+  // console.log(currentUser);
   const linkBaseClasses =
     "py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200";
 
