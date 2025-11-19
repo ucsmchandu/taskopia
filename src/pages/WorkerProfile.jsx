@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useAuth } from "../AuthContextApi/AuthContext";
 
 const WorkerProfile = () => {
+  //user details from the login
   const { currentUser } = useAuth();
-
+  console.log(currentUser.photoURL)
   const [userData, setUserData] = useState({
-    userName: "",
+    userName: currentUser?.displayName || "",
     age: "",
     city: "",
     study: "",
@@ -13,6 +14,7 @@ const WorkerProfile = () => {
     skills: [],
     availability: "",
   });
+  const [skillsInput,setSkillsInput]=useState("");
   //for editing
   const [isEditing, setIsEditing] = useState(false);
 
@@ -24,12 +26,16 @@ const WorkerProfile = () => {
   //data handleing
   const handleData = (e) => {
     const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
+    setUserData((prev)=>({ ...prev, [name]: value }));
   };
 
   //handling submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    setUserData(prev=>({
+      ...prev,
+      skills:skillsInput.split(",").map(s=>s.trim()).filter(Boolean),
+    }));
     console.log(userData);
     setIsEditing(false);
   };
@@ -48,9 +54,9 @@ const WorkerProfile = () => {
               <button
                 type="button"
                 onClick={handleCancel}
-                className="text-gray-700 text-xl hover:text-black cursor-pointer"
+                className="text-gray-700 text-md hover:text-red-500 cursor-pointer"
               >
-                ✕
+                close
               </button>
             </div>
 
@@ -127,7 +133,7 @@ const WorkerProfile = () => {
                 />
               </div>
 
-              {/* Skills + Availability */}
+              {/* Skills */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-800 mb-1">
@@ -136,25 +142,14 @@ const WorkerProfile = () => {
                   <input
                     type="text"
                     name="skills"
-                    value={
-                      Array.isArray(userData.skills)
-                        ? userData.skills.join(", ")
-                        : ""
-                    }
-                    onChange={(e) =>
-                      setUserData((prev) => ({
-                        ...prev,
-                        skills: e.target.value
-                          .split(",")
-                          .map((s) => s.trim())
-                          .filter(Boolean),
-                      }))
-                    }
+                   value={skillsInput}
+                   onChange={(e)=>setSkillsInput(e.target.value)}
                     placeholder="e.g. Cashier, Delivery"
                     className="w-full border border-gray-400 rounded-md px-3 py-2 bg-white/1 backdrop-blur-md outline-0"
                   />
                 </div>
-
+                
+                {/* Availability */}
                 <div>
                   <label className="block text-sm font-medium text-gray-800 mb-1">
                     Availability
@@ -179,7 +174,7 @@ const WorkerProfile = () => {
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="px-4 py-2 rounded-md bg-gray-300 text-gray-900 hover:bg-gray-400 cursor-pointer"
+                  className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -203,7 +198,7 @@ const WorkerProfile = () => {
             <div className="md:w-1/3 bg-white shadow-lg rounded-2xl p-6 flex flex-col items-center">
               <img
                 src={currentUser.photoURL}
-                alt="profile"
+                alt="Profile"
                 className="h-32 w-32 rounded-full shadow-md"
               />
 
@@ -212,13 +207,14 @@ const WorkerProfile = () => {
                   {userData.userName || currentUser.displayName}
                 </h1>
                 <p className="text-gray-500">{currentUser.email}</p>
-                <p className="text-gray-500">19, Vizag</p>
-                <p className="text-gray-500">B.Tech, 3rd Year</p>
+                <p className="text-gray-500">{userData.age},{userData.city}</p>
+                <p className="text-gray-500">{userData.study}</p>
               </div>
 
               <p className="mt-4 text-gray-600 text-center">
-                I'm a B.Tech student looking for weekend work opportunities to
-                earn and gain experience.
+                {/* I'm a B.Tech student looking for weekend work opportunities to
+                earn and gain experience. */}
+                {userData.description}
               </p>
 
               <div className="mt-6 w-full text-center">
@@ -226,7 +222,7 @@ const WorkerProfile = () => {
                   Skills & Interests
                 </h2>
                 <div className="flex flex-wrap justify-center gap-2">
-                  {["Cashier", "Delivery", "Cleaning", "Teamwork"].map(
+                  {(Array.isArray(userData.skills) ? userData.skills : []).map(
                     (skill, index) => (
                       <span
                         key={index}
@@ -241,7 +237,7 @@ const WorkerProfile = () => {
                 <h2 className="font-semibold text-gray-800 mt-6 mb-2">
                   Availability
                 </h2>
-                <p className="text-gray-600">Weekends, 4–6 PM</p>
+                <p className="text-gray-600">{userData.availability}</p>
               </div>
 
               <button
