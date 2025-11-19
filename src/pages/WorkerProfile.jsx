@@ -4,7 +4,7 @@ import { useAuth } from "../AuthContextApi/AuthContext";
 const WorkerProfile = () => {
   //user details from the login
   const { currentUser } = useAuth();
-  console.log(currentUser.photoURL)
+  console.log(currentUser.photoURL);
   const [userData, setUserData] = useState({
     userName: currentUser?.displayName || "",
     age: "",
@@ -14,7 +14,8 @@ const WorkerProfile = () => {
     skills: [],
     availability: "",
   });
-  const [skillsInput,setSkillsInput]=useState("");
+  // for skills
+  const [skillsInput, setSkillsInput] = useState("");
   //for editing
   const [isEditing, setIsEditing] = useState(false);
 
@@ -26,15 +27,18 @@ const WorkerProfile = () => {
   //data handleing
   const handleData = (e) => {
     const { name, value } = e.target;
-    setUserData((prev)=>({ ...prev, [name]: value }));
+    setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
   //handling submit
   const handleSubmit = (e) => {
     e.preventDefault();
-    setUserData(prev=>({
+    setUserData((prev) => ({
       ...prev,
-      skills:skillsInput.split(",").map(s=>s.trim()).filter(Boolean),
+      skills: skillsInput
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean),
     }));
     console.log(userData);
     setIsEditing(false);
@@ -42,7 +46,7 @@ const WorkerProfile = () => {
 
   return (
     <>
-    {/* if editing is enabled */}
+      {/* if editing is enabled */}
       {isEditing && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/1 backdrop-blur-md animate-fadeIn p-4">
           <div className="w-full max-w-lg md:max-w-3xl bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl p-6 md:p-8 overflow-y-auto max-h-[90vh]">
@@ -142,13 +146,13 @@ const WorkerProfile = () => {
                   <input
                     type="text"
                     name="skills"
-                   value={skillsInput}
-                   onChange={(e)=>setSkillsInput(e.target.value)}
+                    value={skillsInput}
+                    onChange={(e) => setSkillsInput(e.target.value)}
                     placeholder="e.g. Cashier, Delivery"
                     className="w-full border border-gray-400 rounded-md px-3 py-2 bg-white/1 backdrop-blur-md outline-0"
                   />
                 </div>
-                
+
                 {/* Availability */}
                 <div>
                   <label className="block text-sm font-medium text-gray-800 mb-1">
@@ -207,7 +211,9 @@ const WorkerProfile = () => {
                   {userData.userName || currentUser.displayName}
                 </h1>
                 <p className="text-gray-500">{currentUser.email}</p>
-                <p className="text-gray-500">{userData.age},{userData.city}</p>
+                <p className="text-gray-500">
+                  {userData.age},{userData.city}
+                </p>
                 <p className="text-gray-500">{userData.study}</p>
               </div>
 
