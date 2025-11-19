@@ -1,10 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../styles/button/Button";
 import LightRays from "../../animations/LightRays";
 import BlurText from "../../animations/BlurText";
 import { Link } from "react-router-dom";
+import {useAuth} from "../../AuthContextApi/AuthContext"
+import { firestore } from "../../Firebase/Firebase";
+// import { auth } from "../../Firebase/Firebase";
+import { getDoc,doc } from "firebase/firestore";
 const StartHome = () => {
-  const user = null; // Replace with actual auth logic if needed
+  const {currentUser}=useAuth();
+  const [user,setUser]=useState(null);
+  // console.log(currentUser)
+
+  // fetching user details to check weather the user is worker or owner
+  const getDetails=async()=>{
+    try{
+      const userRef=doc(firestore,"users",currentUser.uid);
+      const userSnap=await getDoc(userRef);
+      if(userSnap.exists()){
+        setUser(userSnap.data());
+      }else{
+        console.log("user not found");
+        setUser(null);
+      }
+    }catch(err){
+      console.log(err);
+      console.log(err.message);
+      return;
+    }
+  }
+
+  useEffect(()=>{
+    getDetails();
+  },[currentUser]);
+  // console.log(user.userType);
+
 
   return (
     <div className="relative w-full min-h-screen bg-gradient-to-b from-black to-gray-800 text-white overflow-hidden">
@@ -58,12 +88,29 @@ const StartHome = () => {
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-10">
-            {user ? (
+
+            {
+              !user && (
+                  <Link to="/login"> <Button text="Sign Up / Login" /></Link>
+              )
+            }
+            {
+              user && user.userType==="worker" && (
+                <><Button text="Go to Dashboard" />   <Link to="/apply/job"><Button text="Apply a Job" /></Link></>
+              )
+            }
+            {
+              user && user.userType==="owner" && (
+                <><Button text="Go to Dashboard" />  <Link to="/post/job"><Button text="Post a Job" /></Link></>
+              )
+            }
+
+            {/* {user ? (
               <Button text="Go to Dashboard" />
             ) : (
              <Link to="/login"> <Button text="Sign Up / Login" /></Link>
             )}
-            <Button text="Post a Job" />
+            <Link to="/post/job"><Button text="Post a Job" /></Link> */}
           </div>
         </div>
       </div>

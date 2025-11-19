@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../AuthContextApi/AuthContext";
+import PostTaskButton from "../components/JobPostingComponents/PostTaskButton";
 
 const JobPosting = () => {
   const { currentUser } = useAuth();
@@ -83,8 +84,8 @@ const JobPosting = () => {
   };
 
   return (
-    <div className="min-h-screen mt-20 px-4 lg:px-12 py-10 bg-gray-50">
-      <section className="py-6 bg-secondary/30 mb-8 rounded-xl">
+    <div className="min-h-screen  px-4 lg:px-12 py-10 bg-gray-50">
+      <section className="py-6 bg-secondary/30 mb-8 mt-20 rounded-xl">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-4xl font-bold mb-2">Post a Task</h1>
           <p className="text-gray-600 text-lg">
@@ -93,17 +94,17 @@ const JobPosting = () => {
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8">
+      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 rounded-2xl bg-gradient-to-r from-[#f7d7d7] to-[#fababa] p-4">
         <form onSubmit={handleSubmit} className="flex-1 space-y-6">
-          <div className="bg-white shadow-md rounded-2xl p-6 space-y-4">
-            <div className="font-semibold text-lg mb-2">Basic Information</div>
+          <div className=" shadow-md rounded-2xl p-6 space-y-4 bg-gradient-to-r from-[#BADFDB] to-[#7dd9d0]">
+            <div className="font-semibold text-lg text-gray-700 mb-2">Basic Information</div>
             <input
               type="text"
               name="title"
               placeholder="Task Title"
               value={taskData.title}
               onChange={handleData}
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full p-2 border-2 border-white rounded-md outline-0 placeholder:text-gray-600"
             />
             {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
             <input
@@ -112,14 +113,14 @@ const JobPosting = () => {
               placeholder="Description of the task"
               value={taskData.taskDescription}
               onChange={handleData}
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full p-2 border-2 border-white rounded-md outline-0"
             />
             {errors.taskDescription && <p className="text-red-500 text-sm">{errors.taskDescription}</p>}
             <select
               name="taskCategory"
               value={taskData.taskCategory}
               onChange={handleData}
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full p-2 border-2 rounded-md outline-0 border-white"
             >
               <option value="">Select Category</option>
               {categories.map((c, i) => <option key={i}>{c}</option>)}
@@ -127,15 +128,16 @@ const JobPosting = () => {
             {errors.taskCategory && <p className="text-red-500 text-sm">{errors.taskCategory}</p>}
           </div>
 
-          <div className="bg-white shadow-md rounded-2xl p-6 space-y-4">
-            <div className="font-semibold text-lg mb-2">Job Details</div>
+          <div className= " bg-gradient-to-r from-[#f8e994] to-[#edd342] shadow-md rounded-2xl p-6 space-y-4">
+            <div className="font-semibold text-lg text-gray-700 mb-2">Job Details</div>
             <input
               type="number"
               name="amount"
               placeholder="Budget"
               value={taskData.amount}
               onChange={handleData}
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              min="0"
+              className="w-full p-2 border-2 rounded-md outline-0 border-neutral-400 "
             />
             {errors.amount && <p className="text-red-500 text-sm">{errors.amount}</p>}
             <input
@@ -144,14 +146,14 @@ const JobPosting = () => {
               placeholder="Location"
               value={taskData.location}
               onChange={handleData}
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full p-2 border-2 rounded-md border-neutral-400  outline-0"
             />
             {errors.location && <p className="text-red-500 text-sm">{errors.location}</p>}
             <select
               name="urgencyLevel"
               value={taskData.urgencyLevel}
               onChange={handleData}
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full p-2 border-2 rounded-md outline-0 border-neutral-400 "
             >
               <option value="">Select Urgency</option>
               <option value="urgent">Urgent</option>
@@ -160,14 +162,14 @@ const JobPosting = () => {
             {errors.urgencyLevel && <p className="text-red-500 text-sm">{errors.urgencyLevel}</p>}
           </div>
 
-          <div className="bg-white shadow-md rounded-2xl p-6 space-y-4">
-            <div className="font-semibold text-lg mb-2">Dates & Working Hours</div>
+          <div className="bg-gradient-to-r from-[#8CA9FF] to-[#6188fc] shadow-md rounded-2xl p-6 space-y-4">
+            <div className="font-semibold text-lg text-gray-900 mb-2">Dates & Working Hours</div>
             <input
               type="date"
               name="startingDate"
               value={taskData.startingDate}
               onChange={handleData}
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full p-2 border-2 rounded-md outline-0 border-white "
             />
             {errors.startingDate && <p className="text-red-500 text-sm">{errors.startingDate}</p>}
             <input
@@ -175,7 +177,7 @@ const JobPosting = () => {
               name="endingDate"
               value={taskData.endingDate}
               onChange={handleData}
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full p-2 border-2 rounded-md border-white outline-0 "
             />
             {errors.endingDate && <p className="text-red-500 text-sm">{errors.endingDate}</p>}
             <input
@@ -183,7 +185,7 @@ const JobPosting = () => {
               name="postRemovingDate"
               value={taskData.postRemovingDate}
               onChange={handleData}
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full p-2 border-2 rounded-md border-white outline-0 "
             />
             {errors.postRemovingDate && <p className="text-red-500 text-sm">{errors.postRemovingDate}</p>}
             <input
@@ -192,19 +194,19 @@ const JobPosting = () => {
               placeholder="Working Hours per Day"
               value={taskData.workingHours}
               onChange={handleData}
-              className="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full p-2 border-2 rounded-md border-white outline-0 "
             />
             {errors.workingHours && <p className="text-red-500 text-sm">{errors.workingHours}</p>}
           </div>
 
-          <div className="bg-white shadow-md rounded-2xl p-6">
-            <div className="font-semibold text-lg mb-2">Attachments (optional)</div>
+          <div className="bg-gradient-to-r from-[#f3a065] to-[#f4802d] shadow-md rounded-2xl p-6">
+            <div className="font-semibold text-lg text-white mb-2">Attachments (optional)</div>
             <input
               type="file"
               name="attachments"
               accept="image/*,.pdf,.doc,.docx"
               onChange={handleData}
-              className="w-full border rounded-md p-2"
+              className="w-full border-2 outline-0 border-amber-700 rounded-md p-2"
             />
           </div>
 
@@ -212,17 +214,17 @@ const JobPosting = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`px-6 py-3 rounded-lg text-white font-semibold ${
-                loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+              className={` cursor-pointer px-6 py-3 rounded-lg text-white font-semibold ${
+                loading ? "bg-gray-400 cursor-not-allowed" : ""
               }`}
             >
-              {loading ? "Posting..." : "Post Task"}
+              {loading ? <PostTaskButton text={"Posting..."}/> : <PostTaskButton text={"Post Job"}/>}
             </button>
           </div>
         </form>
 
         <div className="flex-1 flex flex-col gap-6 lg:sticky lg:top-20">
-          <div className="bg-white shadow-md rounded-2xl p-6 space-y-4">
+          <div className=" shadow-md rounded-2xl p-6 space-y-4 bg-gradient-to-r from-[#DDF6D2] to-[#a2ea86]">
             <h2 className="font-semibold text-lg text-center">Task Preview</h2>
             <div className="text-center space-y-2">
               <p className="text-sm text-gray-500">Title</p>
@@ -234,9 +236,9 @@ const JobPosting = () => {
             </div>
           </div>
 
-          <div className="bg-white shadow-md rounded-2xl p-6 space-y-3">
-            <h2 className="font-semibold text-lg text-center">Tips for Success</h2>
-            <ul className="list-disc list-inside text-gray-600 space-y-1">
+          <div className=" shadow-md rounded-2xl p-6 space-y-3 bg-gradient-to-r from-[#f59393] to-[#dc5757] ">
+            <h2 className="font-semibold text-lg text-white text-center">Tips for Success</h2>
+            <ul className="list-disc list-inside text-gray-080 space-y-1">
               <li>Write a clear, detailed description</li>
               <li>Set a fair budget for quality work</li>
               <li>Be specific about requirements</li>
