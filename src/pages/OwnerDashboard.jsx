@@ -75,19 +75,19 @@ const OwnerDashboard = () => {
         >
           <button 
           onClick={()=>{setComponents("activeTasks")}}
-          className="border border-gray-300 rounded-lg px-6 py-2 w-full text-sm hover:bg-gray-100 transition">
+          className="border border-gray-300 rounded-lg px-6 py-2 w-full text-sm hover:bg-gray-100 transition cursor-pointer">
             Active Task
           </button>
 
           <button 
           onClick={()=>{setComponents("completedTasks")}}
-          className="border border-gray-300 rounded-lg px-6 py-2 w-full text-sm hover:bg-gray-100 transition">
+          className="border border-gray-300 rounded-lg px-6 py-2 w-full text-sm hover:bg-gray-100 transition cursor-pointer">
             Completed Tasks
           </button>
 
           <button 
           onClick={()=>{setComponents("analytics")}}
-          className="border border-gray-300 rounded-lg px-6 py-2 w-full text-sm hover:bg-gray-100 transition">
+          className="border border-gray-300 rounded-lg px-6 py-2 w-full text-sm hover:bg-gray-100 transition cursor-pointer">
             Analytics
           </button>
         </div>
