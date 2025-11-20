@@ -101,7 +101,7 @@ const StartHome = () => {
             }
             {
               user && user.userType==="owner" && (
-                <><Button text="Go to Dashboard" />  <Link to="/post/job"><Button text="Post a Job" /></Link></>
+                <><Link to="/owner/dashboard"><Button text="Go to Dashboard" /></Link>  <Link to="/post/job"><Button text="Post a Job" /></Link></>
               )
             }
 
