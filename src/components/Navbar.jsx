@@ -12,6 +12,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+  //custom hook to check the current location
   const isActive = (path) => currentPath === path;
   // console.log(currentUser);
   const linkBaseClasses =
@@ -49,6 +50,7 @@ const Navbar = () => {
   // for logout
   const logout = async () => {
     await auth.signOut();
+    window.location.reload();
   };
 
   // Prevent flicker while loading
@@ -158,7 +160,7 @@ const Navbar = () => {
                 <Link
                   to="/post-job"
                   className={`${linkBaseClasses} ${
-                    isActive("/post-job")
+                    isActive("/post/job")
                       ? "text-white bg-blue-600 shadow-md"
                       : "text-gray-700 hover:text-blue-700 hover:bg-white"
                   }`}
@@ -166,14 +168,14 @@ const Navbar = () => {
                   Post Job
                 </Link>
                 <Link
-                  to="/posted-jobs"
+                  to="/owner/dashboard"
                   className={`${linkBaseClasses} ${
-                    isActive("/posted-jobs")
+                    isActive("/owner/dashboard")
                       ? "text-white bg-blue-600 shadow-md"
                       : "text-gray-700 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
-                  Posted Jobs
+                  Dashboard
                 </Link>
                 <Link
                   to="/profile/owner"
@@ -318,7 +320,7 @@ const Navbar = () => {
           {user?.userType === "owner" && (
             <>
               <Link
-                to="/post-job"
+                to="/post/job"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/post-job")
@@ -329,15 +331,15 @@ const Navbar = () => {
                 Post Job
               </Link>
               <Link
-                to="/posted-jobs"
+                to="/owner/dashboard"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
-                  isActive("/posted-jobs")
+                  isActive("/owner/dashboard")
                     ? "text-white bg-blue-600"
                     : "text-gray-800 hover:bg-gray-100 hover:text-blue-700"
                 }`}
               >
-                Posted Jobs
+                Dashboard
               </Link>
               <Link
                 to="/profile/owner"
