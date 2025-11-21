@@ -8,16 +8,15 @@ import { Target, Sparkles } from "lucide-react";
 
 const Home = () => {
   const user = null;
-   useEffect(() => {
+  useEffect(() => {
     const lenis = new Lenis({
-      duration: 0.9, // smooth but not too slow
+      duration: 0.6,
       smooth: true,
-      direction: "vertical",
-      easing: (t) => t, // responsive ease-out
-      wheelMultiplier: 1.4, // increases responsiveness
-      touchMultiplier: 1.2, // mobile faster reaction
-      smoothTouch: true,
+      easing: (t) => t,
+      smoothTouch: false, // IMPORTANT: mobile lag fix
+      wheelMultiplier: 1.1,
     });
+
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
@@ -167,13 +166,11 @@ const Home = () => {
               Ready to Experience the Future of Micro Work?
             </h2>
             <p className="text-lg mb-8 text-sky-100">
-              Join Taskopia today and start your journey whether you’re an
-              owner or a student.
+              Join Taskopia today and start your journey whether you’re an owner
+              or a student.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <button 
-              
-              className="px-6 py-3 bg-white text-emerald-700 rounded-xl font-semibold shadow hover:bg-sky-50 transition">
+              <button className="px-6 py-3 bg-white text-emerald-700 rounded-xl font-semibold shadow hover:bg-sky-50 transition">
                 Join
               </button>
               {/* <button className="px-6 py-3 bg-emerald-700 text-white rounded-xl font-semibold shadow hover:bg-emerald-800 transition">
