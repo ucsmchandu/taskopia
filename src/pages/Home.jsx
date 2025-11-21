@@ -1,7 +1,6 @@
 import React from "react";
 import useReveal from "../components/HomeComponents/UseReveal";
 import { useEffect } from "react";
-import Lenis from "@studio-freight/lenis";
 import Cards from "../components/HomeComponents/Cards";
 import StartHome from "../components/HomeComponents/StartHome";
 import { Target, Sparkles } from "lucide-react";
@@ -9,23 +8,8 @@ import { Target, Sparkles } from "lucide-react";
 const Home = () => {
   // const ref=useReveal();
   const user = null;
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 0.6,
-      smooth: true,
-      easing: (t) => t,
-      smoothTouch: false, // IMPORTANT: mobile lag fix
-      wheelMultiplier: 1.1,
-    });
-
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-  }, []);
   return (
-    <>
+    <div className="scroll-smooth">
       {/* animated home content */}
       <StartHome />
       {/* information content */}
@@ -154,7 +138,7 @@ const Home = () => {
           </div>
         </section>
       </div>
-    </>
+    </div>
   );
 };
 
