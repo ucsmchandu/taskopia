@@ -1,5 +1,5 @@
 import React from "react";
-import { Radar, CheckCheck, Coins, UserRoundPen } from "lucide-react";
+import { CheckCheck, BotMessageSquare , UserRoundPen,LogOut } from "lucide-react";
 
 const OwnerActiveTasks = () => {
   return (
@@ -32,7 +32,7 @@ const OwnerActiveTasks = () => {
             {/* for the down elements */}
             <div className="mt-4">
               <p className="text-lg font-medium">Logo Design for Coffee Shop</p>
-              <p className="text-sm text-gray-500">Posted by Sarah Johnson</p>
+              {/* <p className="text-sm text-gray-500">Posted by Sarah Johnson</p> */}
             </div>
 
             <div className="flex justify-center mt-8">
@@ -63,7 +63,7 @@ const OwnerActiveTasks = () => {
             {/* for the down elements */}
             <div className="mt-4">
               <p className="text-lg font-medium">Logo Design for Coffee Shop</p>
-              <p className="text-sm text-gray-500">Posted by Sarah Johnson</p>
+              {/* <p className="text-sm text-gray-500">Posted by Sarah Johnson</p> */}
             </div>
 
             <div className="flex justify-center mt-8">
@@ -79,7 +79,11 @@ const OwnerActiveTasks = () => {
 
           <div className="flex flex-col mt-4 gap-3">
             <button className="flex gap-3 items-center border border-gray-400 rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition">
-              <Radar size={18} /> Find New Tasks
+              <UserRoundPen size={18} /> Update Profile
+            </button>
+
+            <button className="flex gap-3 items-center border border-gray-400 rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition">
+              <BotMessageSquare  size={18} /> AI
             </button>
 
             <button className="flex gap-3 items-center border border-gray-400 rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition">
@@ -87,12 +91,9 @@ const OwnerActiveTasks = () => {
             </button>
 
             <button className="flex gap-3 items-center border border-gray-400 rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition">
-              <Coins size={18} /> View Earnings
+              <LogOut size={18} /> Logout
             </button>
 
-            <button className="flex gap-3 items-center border border-gray-400 rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition">
-              <UserRoundPen size={18} /> Update Profile
-            </button>
           </div>
         </div>
       </div>

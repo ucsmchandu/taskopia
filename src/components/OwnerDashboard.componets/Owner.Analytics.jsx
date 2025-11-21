@@ -9,7 +9,7 @@ const OwnerAnalytics = () => {
         <div className="flex flex-col justify-center items-center mt-10 mb-10">
           <p>Chart visualization would go here</p>
           <p>$2850</p>
-          <p>Total Lifetime Earnings</p>
+          <p>Total Lifetime Investment</p>
         </div>
       </div>
 

@@ -9,7 +9,7 @@ const OwnerCompletedTasks = () => {
           <CircleCheckBig color="green" />
           <div className="">
             <p>Data Entry Project</p>
-            <p className="text-sm text-gray-400">Task Completed</p>
+            <p className="text-sm text-gray-400">Task assigned</p>
           </div>
         </div>
         <div>
@@ -23,7 +23,7 @@ const OwnerCompletedTasks = () => {
           <CircleCheckBig color="green" />
           <div className="">
             <p>Data Entry Project</p>
-            <p className="text-sm text-gray-400">Task Completed</p>
+            <p className="text-sm text-gray-400">Task assigned</p>
           </div>
         </div>
         <div>

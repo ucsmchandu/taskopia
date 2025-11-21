@@ -6,7 +6,7 @@ import { Star } from "lucide-react";
 // importing the active task, completed tasks, analytics components 
 import OwnerActiveTask from "../components/OwnerDashboard.componets/Owner.ActiveTask";
 import OwnerAnalytics from "../components/OwnerDashboard.componets/Owner.Analytics";
-import OwnerCompletedTasks from "../components/OwnerDashboard.componets/Owner.CompletedTasks";
+import OwnerCompletedTasks from "../components/OwnerDashboard.componets/Owner.History";
 const OwnerDashboard = () => {
     const [components,setComponents]=useState("");
   return (
@@ -35,7 +35,7 @@ const OwnerDashboard = () => {
           <TrendingUp className="text-gray-700" size={28} />
           <div className="flex flex-col text-center">
             <p className="text-xl font-semibold">$200</p>
-            <p className="text-gray-500 text-sm">Total Earnings</p>
+            <p className="text-gray-500 text-sm">Total Investment</p>
           </div>
         </div>
 
@@ -43,7 +43,7 @@ const OwnerDashboard = () => {
           <SquareCheckBig className="text-gray-700" size={28} />
           <div className="flex flex-col text-center">
             <p className="text-xl font-semibold">23</p>
-            <p className="text-gray-500 text-sm">Completed Tasks</p>
+            <p className="text-gray-500 text-sm">Tasks Posted</p>
           </div>
         </div>
 
@@ -51,7 +51,7 @@ const OwnerDashboard = () => {
           <ClockArrowUp className="text-gray-700" size={28} />
           <div className="flex flex-col text-center">
             <p className="text-xl font-semibold">5</p>
-            <p className="text-gray-500 text-sm">Active Proposals</p>
+            <p className="text-gray-500 text-sm">Active Tasks</p>
           </div>
         </div>
 
@@ -82,7 +82,7 @@ const OwnerDashboard = () => {
           <button 
           onClick={()=>{setComponents("completedTasks")}}
           className="border border-gray-300 rounded-lg px-6 py-2 w-full text-sm hover:bg-gray-100 transition cursor-pointer">
-            Completed Tasks
+            History
           </button>
 
           <button 
