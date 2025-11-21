@@ -3,19 +3,19 @@ import { TrendingUp } from "lucide-react";
 import { SquareCheckBig } from "lucide-react";
 import { ClockArrowUp } from "lucide-react";
 import { Star } from "lucide-react";
-// importing the active task, completed tasks, analytics components 
+// importing the active task, completed tasks, analytics components
 import OwnerActiveTask from "../components/OwnerDashboard.componets/Owner.ActiveTask";
 import OwnerAnalytics from "../components/OwnerDashboard.componets/Owner.Analytics";
 import OwnerCompletedTasks from "../components/OwnerDashboard.componets/Owner.History";
 const OwnerDashboard = () => {
-    const [components,setComponents]=useState("");
+  const [components, setComponents] = useState("activeTasks");
   return (
     <div className="mt-20 lg:mt-30 p-8 text-gray-800 lg:m-30">
       {/* for the top bar section heading */}
       <div className="flex flex-col md:flex-row justify-between md:items-center">
         {/* left heading */}
         <div>
-          <h1 className="text-4xl font-semibold">Dashboard</h1>
+          <h1 className="text-4xl font-semibold">Owner Dashboard</h1>
           <h2 className="text-gray-500">
             Welcome back! Here's your performance overview
           </h2>
@@ -73,21 +73,42 @@ const OwnerDashboard = () => {
   flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4
 "
         >
-          <button 
-          onClick={()=>{setComponents("activeTasks")}}
-          className="border border-gray-300 rounded-lg px-6 py-2 w-full text-sm hover:bg-gray-100 transition cursor-pointer">
+          <button
+            onClick={() => {
+              setComponents("activeTasks");
+            }}
+            className={`border border-gray-300 rounded-lg px-6 py-2 w-full text-sm transition cursor-pointer
+    ${
+      components === "activeTasks" ? "bg-black text-white" : "hover:bg-gray-100"
+    }
+  `}
+          >
             Active Task
           </button>
 
-          <button 
-          onClick={()=>{setComponents("completedTasks")}}
-          className="border border-gray-300 rounded-lg px-6 py-2 w-full text-sm hover:bg-gray-100 transition cursor-pointer">
+          <button
+            onClick={() => {
+              setComponents("completedTasks");
+            }}
+            className={`border border-gray-300 rounded-lg px-6 py-2 w-full text-sm transition cursor-pointer
+    ${
+      components === "completedTasks"
+        ? "bg-black text-white"
+        : "hover:bg-gray-100"
+    }
+  `}
+          >
             History
           </button>
 
-          <button 
-          onClick={()=>{setComponents("analytics")}}
-          className="border border-gray-300 rounded-lg px-6 py-2 w-full text-sm hover:bg-gray-100 transition cursor-pointer">
+          <button
+            onClick={() => {
+              setComponents("analytics");
+            }}
+            className={`border border-gray-300 rounded-lg px-6 py-2 w-full text-sm transition cursor-pointer
+    ${components === "analytics" ? "bg-black text-white" : "hover:bg-gray-100"}
+  `}
+          >
             Analytics
           </button>
         </div>
@@ -95,23 +116,13 @@ const OwnerDashboard = () => {
         {/* here comes the three diff components  */}
 
         <div>
-            {
-                components==="activeTasks" && (
-                    <OwnerActiveTask/>
-                ) || components==="completedTasks" && (
-                    <OwnerCompletedTasks/>
-                ) || components==="analytics" && (
-                    <OwnerAnalytics/>
-                ) || (
-                    <OwnerActiveTask/>
-                )
-            }
+          {(components === "activeTasks" && <OwnerActiveTask />) ||
+            (components === "completedTasks" && <OwnerCompletedTasks />) ||
+            (components === "analytics" && <OwnerAnalytics />) || (
+              <OwnerActiveTask />
+            )}
         </div>
-
-
       </div>
-
-
     </div>
   );
 };
