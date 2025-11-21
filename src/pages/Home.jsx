@@ -1,12 +1,13 @@
 import React from "react";
+import useReveal from "../components/HomeComponents/UseReveal";
 import { useEffect } from "react";
 import Lenis from "@studio-freight/lenis";
 import Cards from "../components/HomeComponents/Cards";
 import StartHome from "../components/HomeComponents/StartHome";
-import { motion } from "framer-motion";
 import { Target, Sparkles } from "lucide-react";
 
 const Home = () => {
+  // const ref=useReveal();
   const user = null;
   useEffect(() => {
     const lenis = new Lenis({
@@ -33,24 +34,16 @@ const Home = () => {
       {/* why choose taskopia */}
       <section className="py-20 px-6 bg-gradient-to-b from-white to-[#8D5F8C]">
         <div className="max-w-5xl mx-auto text-center">
-          <motion.h2
-            className="text-3xl font-semibold mb-6 text-[#6B3F69]"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <h2
+            ref={useReveal()}
+            className="reveal text-3xl font-semibold mb-6 text-[#6B3F69]"
           >
             Why Choose Taskopia?
-          </motion.h2>
-          <motion.p
-            className="text-[#131D4F] mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          </h2>
+          <p ref={useReveal()} className="reveal text-[#131D4F] mb-10">
             Taskopia bridges the gap between opportunity and talent. It’s the
-            easiest way for students to find flexible work and for owners to get
-            reliable help.
-          </motion.p>
+            easiest way for students to find flexible work...
+          </p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-[#292fa6]">
             {[
               {
@@ -74,20 +67,17 @@ const Home = () => {
                 to: "#5a8cc9",
               },
             ].map((text, index) => (
-              <motion.div
+              <div
                 key={index}
-                className="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition  "
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                ref={useReveal()}
+                className="reveal p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition"
                 style={{
                   background: `linear-gradient(135deg, ${text.from} 0%, ${text.to} 100%)`,
                 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
               >
                 <Sparkles className="w-8 h-8 text-white mx-auto mb-3" />
                 <p className="text-gray-100">{text.text}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -95,32 +85,23 @@ const Home = () => {
 
       {/* Our mission */}
       <section className="py-20 px-6 bg-gradient-to-b from-[#8D5F8C] to-[#6B3F69] text-white text-center">
-        <motion.div
-          className="flex flex-col items-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
+        <div ref={useReveal()} className="reveal flex flex-col items-center">
           <Target className="w-12 h-12 mb-4 text-emerald-100" />
           <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
           <p className="text-lg max-w-3xl text-sky-100">
-            To empower students with real-world earning opportunities and help
-            small business owners get reliable help easily building a smarter,
-            connected, and supportive community.
+            To empower students with real-world earning opportunities...
           </p>
-        </motion.div>
+        </div>
       </section>
 
       {/* What our users saying  */}
       <section className="py-20 px-6 bg-white text-center">
-        <motion.h2
-          className="text-3xl font-semibold mb-10 text-sky-700"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+        <h2
+          ref={useReveal()}
+          className="reveal text-3xl font-semibold mb-10 text-sky-700"
         >
           What Our Users Say 💬
-        </motion.h2>
+        </h2>
         <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
           {[
             {
@@ -139,17 +120,14 @@ const Home = () => {
               name: "Meena, College Student",
             },
           ].map((t, i) => (
-            <motion.div
+            <div
               key={i}
-              className="p-6 bg-sky-50 rounded-2xl shadow border border-sky-100"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.3 }}
+              ref={useReveal()}
+              className="reveal p-6 bg-sky-50 rounded-2xl shadow border border-sky-100"
             >
               <p className="text-gray-700 italic mb-3">“{t.quote}”</p>
               <p className="text-emerald-700 font-semibold">{t.name}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </section>
@@ -157,11 +135,7 @@ const Home = () => {
       {/* ready to experince */}
       <div className="flex justify-center p-6 ">
         <section className="py-20 w-6xl rounded-xl p-2 flex justify-center bg-gradient-to-r from-[#7286D3] to-[#8EA7E9] text-white text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
+          <div ref={useReveal()}>
             <h2 className="text-4xl font-bold mb-6">
               Ready to Experience the Future of Micro Work?
             </h2>
@@ -177,7 +151,7 @@ const Home = () => {
                 Join as Owner
               </button> */}
             </div>
-          </motion.div>
+          </div>
         </section>
       </div>
     </>
