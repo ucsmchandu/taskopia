@@ -1,4 +1,6 @@
 import React from "react";
+import { useEffect } from "react";
+import Lenis from "@studio-freight/lenis";
 import Cards from "../components/HomeComponents/Cards";
 import StartHome from "../components/HomeComponents/StartHome";
 import { motion } from "framer-motion";
@@ -6,7 +8,22 @@ import { Target, Sparkles } from "lucide-react";
 
 const Home = () => {
   const user = null;
-
+   useEffect(() => {
+    const lenis = new Lenis({
+      duration: 0.9, // smooth but not too slow
+      smooth: true,
+      direction: "vertical",
+      easing: (t) => t, // responsive ease-out
+      wheelMultiplier: 1.4, // increases responsiveness
+      touchMultiplier: 1.2, // mobile faster reaction
+      smoothTouch: true,
+    });
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  }, []);
   return (
     <>
       {/* animated home content */}
@@ -154,12 +171,14 @@ const Home = () => {
               owner or a student.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <button className="px-6 py-3 bg-white text-emerald-700 rounded-xl font-semibold shadow hover:bg-sky-50 transition">
-                Join as Student
+              <button 
+              
+              className="px-6 py-3 bg-white text-emerald-700 rounded-xl font-semibold shadow hover:bg-sky-50 transition">
+                Join
               </button>
-              <button className="px-6 py-3 bg-emerald-700 text-white rounded-xl font-semibold shadow hover:bg-emerald-800 transition">
+              {/* <button className="px-6 py-3 bg-emerald-700 text-white rounded-xl font-semibold shadow hover:bg-emerald-800 transition">
                 Join as Owner
-              </button>
+              </button> */}
             </div>
           </motion.div>
         </section>

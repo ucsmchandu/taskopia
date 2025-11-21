@@ -4,7 +4,7 @@ import { Briefcase, Users, CheckCircle, Sparkles } from "lucide-react";
 
 const Cards = () => {
   return (
-    <section className="py-20 px-6 bg-white  ">
+    <section className="py-20 px-6 bg-white scroll-smooth ">
       <h2 className="text-3xl font-semibold text-center mb-12 text-[#0F4C75]">
         How Taskopia Works
       </h2>

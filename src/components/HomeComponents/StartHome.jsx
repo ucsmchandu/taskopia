@@ -37,7 +37,7 @@ const StartHome = () => {
   // console.log(user.userType);
 
   return (
-    <div className="relative w-full min-h-screen bg-gradient-to-b from-black to-gray-800 text-white overflow-hidden">
+    <div className="scroll-smooth relative w-full min-h-screen bg-gradient-to-b from-black to-gray-800 text-white overflow-hidden">
       {/* Background Light Rays */}
       <div className="absolute top-0 left-0 h-screen w-screen ">
         <FloatingLines

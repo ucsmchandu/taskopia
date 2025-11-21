@@ -158,7 +158,7 @@ const Navbar = () => {
             {user?.userType === "owner" && (
               <>
                 <Link
-                  to="/post-job"
+                  to="/post/job"
                   className={`${linkBaseClasses} ${
                     isActive("/post/job")
                       ? "text-white bg-blue-600 shadow-md"
