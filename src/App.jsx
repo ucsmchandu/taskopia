@@ -10,10 +10,12 @@ import AuthContextProvider from "./AuthContextApi/AuthContext";
 import WorkerProfile from "./pages/WorkerProfile";
 import OwnerProfile from "./pages/OwnerProfile";
 import OwnerDashboard from "./pages/OwnerDashboard";
+import Scroll from "./components/Scroll";
 const App = () => {
   return (
     <AuthContextProvider>
       <Router>
+        <Scroll/>
         <Routes>
           <Route path="/*" element={<Layout />}>
             <Route index element={<Home />} />

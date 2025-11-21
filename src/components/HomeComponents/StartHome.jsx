@@ -36,6 +36,10 @@ const StartHome = () => {
   }, [currentUser]);
   // console.log(user.userType);
 
+  const scrollTop=()=>{
+    window.scrollTo(0,0);
+  }
+
   return (
     <div className="scroll-smooth relative w-full min-h-screen bg-gradient-to-b from-black to-gray-800 text-white overflow-hidden">
       {/* Background Light Rays */}
@@ -47,7 +51,7 @@ const StartHome = () => {
           // Array - specify line distance per wave; Number - same distance for all waves
           lineDistance={[280, 50, 280]}
           bendRadius={1.0}
-          bendStrength={-0.5}
+          bendStrength={-0.3}
           interactive={true}
           parallax={true}
         />

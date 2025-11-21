@@ -94,7 +94,7 @@ const JobPosting = () => {
         </div>
       </section>
 
-      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 rounded-2xl bg-gradient-to-r from-[#f7d7d7] to-[#fababa] p-4">
+      <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 rounded-2xl bg-gradient-to-r from-[#f6f5f5] to-[#f6f5f5] shadow-md p-4">
         <form onSubmit={handleSubmit} className="flex-1 space-y-6">
           <div className=" shadow-md rounded-2xl p-6 space-y-4 bg-gradient-to-r from-[#BADFDB] to-[#7dd9d0]">
             <div className="font-semibold text-lg text-gray-700 mb-2">Basic Information</div>
