@@ -9,6 +9,7 @@ import JobPosting from "./pages/JobPosting";
 import AuthContextProvider from "./AuthContextApi/AuthContext";
 import WorkerProfile from "./pages/WorkerProfile";
 import OwnerProfile from "./pages/OwnerProfile";
+import WorkerDashboard from "./pages/WorkerDashboard";
 import OwnerDashboard from "./pages/OwnerDashboard";
 import Scroll from "./components/Scroll";
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
             <Route path="profile/worker" element={<WorkerProfile />} />
             <Route path="profile/owner" element={<OwnerProfile />} />
             <Route path="owner/dashboard" element={<OwnerDashboard />} />
+            <Route path="worker/dashboard" element={<WorkerDashboard/>} />
           </Route>
         </Routes>
         <ToastContainer />
