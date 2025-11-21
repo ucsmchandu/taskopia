@@ -3,7 +3,11 @@ import React from 'react'
 const WorkerDashboard = () => {
   return (
     <div>
-        hello
+       <div>
+        <h1>
+            Worker Dashboard
+        </h1>
+       </div>
     </div>
   )
 }
