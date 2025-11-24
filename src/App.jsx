@@ -13,6 +13,7 @@ import WorkerDashboard from "./pages/WorkerDashboard";
 import OwnerDashboard from "./pages/OwnerDashboard";
 import Scroll from "./components/Scroll";
 import JobApply from "./pages/JobApply";
+import JobListings from "./pages/JobListings";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
             <Route path="owner/dashboard" element={<OwnerDashboard />} />
             <Route path="worker/dashboard" element={<WorkerDashboard/>} />
             <Route path="apply/job" element={<JobApply/>} />
+            <Route path="job/listings" element={<JobListings/>} />
           </Route>
         </Routes>
         <ToastContainer />

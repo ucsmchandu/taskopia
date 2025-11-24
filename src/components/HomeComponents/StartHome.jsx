@@ -3,38 +3,7 @@ import Button from "../styles/button/Button";
 import FloatingLines from "../../animations/HomeBackground";
 import BlurText from "../../animations/BlurText";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../AuthContextApi/AuthContext";
-import { firestore } from "../../Firebase/Firebase";
-// import { auth } from "../../Firebase/Firebase";
-import { getDoc, doc } from "firebase/firestore";
 const StartHome = ({user}) => {
-  // const { currentUser } = useAuth();
-  // const [user, setUser] = useState(null);
-  // // console.log(currentUser)
-
-  // // fetching user details to check weather the user is worker or owner
-  // const getDetails = async () => {
-  //   try {
-  //     const userRef = doc(firestore, "users", currentUser.uid);
-  //     const userSnap = await getDoc(userRef);
-  //     if (userSnap.exists()) {
-  //       setUser(userSnap.data());
-  //     } else {
-  //       console.log("user not found");
-  //       setUser(null);
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //     console.log(err.message);
-  //     return;
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getDetails();
-  // }, [currentUser]);
-  // console.log(user.userType);
-
 
   return (
     <div className="scroll-smooth relative w-full min-h-screen bg-gradient-to-b from-black to-gray-800 text-white overflow-hidden">
@@ -97,7 +66,7 @@ const StartHome = ({user}) => {
               <Link to="/worker/dashboard" className="pointer-events-auto" >
                 <Button text="Go to Dashboard" />
               </Link>{" "}
-                <Link to="/apply/job" className="pointer-events-auto">
+                <Link to="/job/listings" className="pointer-events-auto">
                   <Button text="Apply a Job" />
                 </Link>
               </>
