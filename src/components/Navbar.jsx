@@ -115,7 +115,7 @@ const Navbar = () => {
             {user?.userType === "worker" && (
               <>
                 <Link
-                  to="/worker-dashboard"
+                  to="/job/listings"
                   className={`${linkBaseClasses} ${
                     isActive("/worker-dashboard")
                       ? "text-white bg-blue-600 shadow-md"
@@ -275,10 +275,10 @@ const Navbar = () => {
           {user?.userType === "worker" && (
             <>
               <Link
-                to="/worker-dashboard"
+                to="/job/listings"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
-                  isActive("/worker-dashboard")
+                  isActive("/job/listings")
                     ? "text-white bg-blue-600"
                     : "text-gray-800 hover:bg-gray-100 hover:text-blue-700"
                 }`}

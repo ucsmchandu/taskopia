@@ -14,6 +14,7 @@ import OwnerDashboard from "./pages/OwnerDashboard";
 import Scroll from "./components/Scroll";
 import JobApply from "./pages/JobApply";
 import JobListings from "./pages/JobListings";
+import WorkerAppliedJobs from "./pages/Worker.AppliedJobs";
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
             <Route path="worker/dashboard" element={<WorkerDashboard/>} />
             <Route path="apply/job" element={<JobApply/>} />
             <Route path="job/listings" element={<JobListings/>} />
+            <Route path="applied-jobs" element={<WorkerAppliedJobs/>} />
           </Route>
         </Routes>
         <ToastContainer />
