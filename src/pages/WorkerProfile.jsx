@@ -4,8 +4,7 @@ import { auth } from "../Firebase/Firebase";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 const WorkerProfile = () => {
-
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   //user details from the login
   const { currentUser } = useAuth();
   // console.log(currentUser.photoURL);
@@ -49,15 +48,15 @@ const WorkerProfile = () => {
   };
 
   // logout function
-  const logout=async()=>{
-    let userConfirmation=confirm("Do you want to logout?");
-    if(userConfirmation){
+  const logout = async () => {
+    let userConfirmation = confirm("Do you want to logout?");
+    if (userConfirmation) {
       await auth.signOut();
-       navigate('/');
+      navigate("/");
     }
     return;
     // navigate("/profile/worker")
-  }
+  };
 
   return (
     <>
@@ -262,22 +261,22 @@ const WorkerProfile = () => {
                 <p className="text-gray-600">{userData.availability}</p>
               </div>
 
-            {/* login button and edit profile button */}
-             <div className="flex flex-col gap-6">
-               <button
-                onClick={() => setIsEditing(true)}
-                className="mt-8 bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-full transition"
-              >
-                Edit Profile
-              </button>
+              {/* login button and edit profile button */}
+              <div className="flex flex-col gap-6">
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="mt-8 bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-full transition"
+                >
+                  Edit Profile
+                </button>
 
-              <button
-                className="text-white block cursor-pointer text-center bg-red-500 hover:bg-red-600 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
-                onClick={() => logout()}
-              >
-                Logout
-              </button>
-             </div>
+                <button
+                  className="text-white block cursor-pointer text-center bg-red-500 hover:bg-red-600 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
+                  onClick={() => logout()}
+                >
+                  Logout
+                </button>
+              </div>
             </div>
 
             {/* Right Section */}
