@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const WorkerSuggestions = () => {
   return (
@@ -46,9 +47,9 @@ const WorkerSuggestions = () => {
 
       {/* Button */}
       <div className='mt-8 text-center'>
-        <button className='bg-white cursor-pointer text-black font-medium px-6 py-2 rounded-full shadow hover:bg-gray-200 transition'>
+        <Link to="/job/listings" className='bg-white cursor-pointer text-black font-medium px-6 py-2 rounded-full shadow hover:bg-gray-200 transition'>
           View More
-        </button>
+        </Link>
       </div>
      </div>
 

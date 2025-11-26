@@ -9,18 +9,18 @@ const JobListings = () => {
         {/* LEFT  */}
         <div className="w-64 hidden md:block">
           <div className="flex flex-col gap-3 bg-white shadow-sm p-5 rounded-xl">
-            <div className="flex items-center gap-4 text-gray-700 text-sm cursor-pointer hover:bg-gray-100 p-2 rounded-lg">
+            <Link to="/" className="flex items-center gap-4 text-gray-700 text-sm cursor-pointer hover:bg-gray-100 p-2 rounded-lg">
               <HouseIcon size={20} />
               <p>Home</p>
-            </div>
-            <div className="flex items-center gap-4 text-gray-700 text-sm cursor-pointer hover:bg-gray-100 p-2 rounded-lg">
+            </Link>
+            <Link to="/worker/dashboard" className="flex items-center gap-4 text-gray-700 text-sm cursor-pointer hover:bg-gray-100 p-2 rounded-lg">
               <List size={20} />
-              <p>My Tasks</p>
-            </div>
-            <div className="flex items-center gap-4 text-gray-700 text-sm cursor-pointer hover:bg-gray-100 p-2 rounded-lg">
+              <p>Dashboard</p>
+            </Link>
+            <Link to="/profile/worker" className="flex items-center gap-4 text-gray-700 text-sm cursor-pointer hover:bg-gray-100 p-2 rounded-lg">
               <UserRound size={20} />
               <p>Profile</p>
-            </div>
+            </Link>
           </div>
         </div>
 
@@ -73,6 +73,7 @@ const JobListings = () => {
                 <p className="text-gray-600 text-sm">
                   Pick up groceries from the store and deliver to my house.
                 </p>
+                <p className="text-gray-600 text-sm">Location: Vizag</p>
                 <p className="mt-3 font-semibold px-5 py-1 bg-indigo-100 text-indigo-900 rounded-full w-fit shadow-sm">
                   $25
                 </p>

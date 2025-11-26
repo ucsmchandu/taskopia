@@ -1,5 +1,5 @@
 import React from "react";
-
+import {CalendarDays } from 'lucide-react'
 const WorkerActiveTasks = () => {
   const activeTasks = [
     {
@@ -50,7 +50,7 @@ const WorkerActiveTasks = () => {
             {/* Details Row */}
             <div className="mt-2 flex items-center justify-between text-sm text-gray-600">
               <p>📍 {task.location}</p>
-              <p>📅 {task.date}</p>
+              <p className="flex flex-row justify-center items-center gap-1"><CalendarDays size={16} /> {task.date}</p>
             </div>
 
             {/* Bottom Row */}
@@ -58,7 +58,7 @@ const WorkerActiveTasks = () => {
               <p className="text-lg font-semibold text-gray-800">
                 ₹{task.price}
               </p>
-              <button className="px-4 py-2 bg-black text-white rounded-md text-sm hover:bg-gray-900 transition">
+              <button className="px-4 cursor-pointer py-2 bg-black text-white rounded-md text-sm hover:bg-gray-900 transition">
                 View Details
               </button>
             </div>

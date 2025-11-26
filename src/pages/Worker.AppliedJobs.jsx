@@ -1,5 +1,6 @@
 import React from "react";
 import { MapPin, Calendar, Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const WorkerAppliedJobs = () => {
   return (
@@ -39,26 +40,27 @@ const WorkerAppliedJobs = () => {
           </div>
 
           {/* MOBILE QUICK ACTIONS */}
-          <div className="lg:hidden flex flex-col gap-3 border border-gray-200 p-5 shadow-sm rounded-2xl bg-white">
-            <h3 className="font-semibold text-gray-900 mb-1">Quick Actions</h3>
-            <button className="w-full px-4 py-2.5 text-sm font-medium rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100 cursor-pointer transition shadow-sm">
-              Apply New Task
-            </button>
-            <button className="w-full px-4 py-2.5 text-sm font-medium rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100 cursor-pointer border border-gray-200 transition">
+          <div className="lg:hidden ">
+            <div className="flex flex-row  gap-2">
+              <Link to="/job/listings" className="w-full text-center px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-l from-gray-800 to-gray-600 text-white hover:scale-95 cursor-pointer transition shadow-md">
+              Apply Task
+            </Link>
+            <Link to="/worker/dashboard" className="w-full text-center px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-l from-gray-800 to-gray-600 text-white hover:scale-95 cursor-pointer transition shadow-md">
               Dashboard
-            </button>
-            <button className="w-full px-4 py-2.5 text-sm font-medium rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100 cursor-pointer border border-gray-200 transition">
+            </Link>
+            <Link to="/profile/worker" className="w-full text-center px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-l from-gray-800 to-gray-600 text-white hover:scale-95 cursor-pointer transition shadow-md">
               View Profile
-            </button>
+            </Link>
+            </div>
           </div>
 
           {/* MOBILE NOTIFICATIONS */}
-          <div className="lg:hidden border border-gray-200 bg-white shadow-sm rounded-2xl p-5">
+          {/* <div className="lg:hidden border border-gray-200 bg-white shadow-sm rounded-2xl p-5">
             <h2 className="font-semibold text-gray-800">Notifications</h2>
             <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-dashed border-gray-300 text-center">
               <p className="text-sm text-gray-500">You have no new alerts.</p>
             </div>
-          </div>
+          </div> */}
 
           {/* Applied Task Cards */}
           <div className="flex flex-col gap-4 mt-4">
@@ -103,24 +105,24 @@ const WorkerAppliedJobs = () => {
         <div className="w-full lg:w-80 hidden lg:flex flex-col gap-6 sticky top-24 h-fit">
 
           {/* Desktop Quick Actions */}
-          <div className="flex flex-col gap-3 border border-gray-200 p-5 shadow-sm rounded-2xl bg-white">
-            <h3 className="font-semibold text-gray-900 mb-1">Quick Actions</h3>
-            <button className="w-full px-4 py-2.5 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition shadow-sm">
+          <div className="flex flex-col gap-3 p-5 shadow-sm rounded-2xl bg-[#690B22]">
+            <h3 className="font-semibold text-white mb-1">Quick Actions</h3>
+            <Link to="/job/listings" className="w-full hover:scale-95 text-center ease-in-out transition-all cursor-pointer px-4 py-2.5 text-sm font-medium rounded-lg bg-gray-50 text-gray-800 hover:bg-gray-100  shadow-sm">
               Apply New Task
-            </button>
-            <button className="w-full px-4 py-2.5 text-sm font-medium rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200 transition">
+            </Link>
+            <Link to="/worker/dashboard" className="w-full text-center hover:scale-95 ease-in-out transition-all cursor-pointer px-4 py-2.5 text-sm font-medium rounded-lg bg-gray-50 text-gray-800 hover:bg-gray-100 border border-gray-200 ">
               Dashboard
-            </button>
-            <button className="w-full px-4 py-2.5 text-sm font-medium rounded-lg bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200 transition">
+            </Link>
+            <Link to="/profile/worker" className="w-full text-center hover:scale-95 ease-in-out transition-all cursor-pointer px-4 py-2.5 text-sm font-medium rounded-lg bg-gray-50 text-gray-800 hover:bg-gray-100 border border-gray-200 ">
               View Profile
-            </button>
+            </Link>
           </div>
 
           {/* Notifications */}
-          <div className="border border-gray-200 bg-white shadow-sm rounded-2xl p-5">
-            <h2 className="font-semibold text-gray-800">Notifications</h2>
-            <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-dashed border-gray-300 text-center">
-              <p className="text-sm text-gray-500">You have no new alerts.</p>
+          <div className=" bg-[#00809D] shadow-sm rounded-2xl p-5">
+            <h2 className="font-semibold text-white">Notifications</h2>
+            <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-dashed border-gray-900 text-center">
+              <p className="text-sm text-red-600">You have no new alerts.</p>
             </div>
           </div>
 

@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContextApi/AuthContext";
 import { firestore } from "../Firebase/Firebase";
 import { getDoc, doc } from "firebase/firestore";
-import { auth } from "../Firebase/Firebase";
+// import { auth } from "../Firebase/Firebase";
 const Navbar = () => {
   const { currentUser } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -48,10 +48,10 @@ const Navbar = () => {
   }, [currentUser]);
 
   // for logout
-  const logout = async () => {
-    await auth.signOut();
-    window.location.reload();
-  };
+  // const logout = async () => {
+  //   await auth.signOut();
+  //   window.location.reload();
+  // };
 
   // Prevent flicker while loading
   if (loading) {
@@ -83,7 +83,7 @@ const Navbar = () => {
                   className={`${linkBaseClasses} ${
                     isActive("/")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-700 hover:bg-white"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
                   Home
@@ -93,7 +93,7 @@ const Navbar = () => {
                   className={`${linkBaseClasses} ${
                     isActive("/about")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-700 hover:bg-white"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
                   About
@@ -103,7 +103,7 @@ const Navbar = () => {
                   className={`${linkBaseClasses} ${
                     isActive("/login")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-700 hover:bg-white"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
                   Login
@@ -119,7 +119,7 @@ const Navbar = () => {
                   className={`${linkBaseClasses} ${
                     isActive("/worker-dashboard")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-700 hover:bg-white"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
                   Jobs
@@ -129,7 +129,7 @@ const Navbar = () => {
                   className={`${linkBaseClasses} ${
                     isActive("/applied-jobs")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-700 hover:bg-white"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
                   Applied Jobs
@@ -139,18 +139,20 @@ const Navbar = () => {
                   className={`${linkBaseClasses} ${
                     isActive("/profile/worker")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-700 hover:bg-white"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
                   Profile
                 </Link>
-                <Link
+
+                {/* TODO: instead of this notification comes here */}
+                {/* <Link
                   to="/"
                   className="text-red-700 hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
                   onClick={() => logout()}
                 >
                   Logout
-                </Link>
+                </Link> */}
               </>
             )}
 
@@ -162,7 +164,7 @@ const Navbar = () => {
                   className={`${linkBaseClasses} ${
                     isActive("/post/job")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-700 hover:bg-white"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
                   Post Job
@@ -172,7 +174,7 @@ const Navbar = () => {
                   className={`${linkBaseClasses} ${
                     isActive("/owner/dashboard")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-700 hover:bg-white"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
                   Dashboard
@@ -182,18 +184,20 @@ const Navbar = () => {
                   className={`${linkBaseClasses} ${
                     isActive("/profile")
                       ? "text-white bg-blue-600 shadow-md"
-                      : "text-gray-700 hover:text-blue-700 hover:bg-white"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
                   Profile
                 </Link>
-                <Link
+
+                {/* TODO: instead of this notification comes here */}
+                {/* <Link
                   to="/"
                   className="text-red-700 hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
                   onClick={() => logout()}
                 >
                   Logout
-                </Link>
+                </Link> */}
               </>
             )}
           </div>
@@ -307,13 +311,15 @@ const Navbar = () => {
               >
                 Profile
               </Link>
-               <Link
-                  to="/"
-                  className="text-red-700 block hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
-                  onClick={()=>logout()}
-                >
-                  Logout
-                </Link>
+              
+              {/* TODO: instead of this notification comes here */}
+              {/* <Link
+                to="/"
+                className="text-red-700 block hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
+                onClick={() => logout()}
+              >
+                Logout
+              </Link> */}
             </>
           )}
 
@@ -352,13 +358,15 @@ const Navbar = () => {
               >
                 Profile
               </Link>
-               <Link
-                  to="/"
-                  className="text-red-700 block hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
-                  onClick={()=>logout()}
-                >
-                  Logout
-                </Link>
+              
+              {/* TODO: instead of this notification comes here */}
+              {/* <Link
+                to="/"
+                className="text-red-700 block hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
+                onClick={() => logout()}
+              >
+                Logout
+              </Link> */}
             </>
           )}
         </div>
