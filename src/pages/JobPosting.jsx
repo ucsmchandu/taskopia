@@ -211,7 +211,7 @@ const JobPosting = () => {
           </div>
 
           <div className="flex justify-center">
-            <button
+            <p
               type="submit"
               disabled={loading}
               className={` cursor-pointer px-6 py-3 rounded-lg text-white font-semibold ${
@@ -219,7 +219,7 @@ const JobPosting = () => {
               }`}
             >
               {loading ? <PostTaskButton text={"Posting..."}/> : <PostTaskButton text={"Post Job"}/>}
-            </button>
+            </p>
           </div>
         </form>
 

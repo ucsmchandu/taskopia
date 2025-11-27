@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const OwnerSuggestions = () => {
   return (
@@ -15,13 +16,13 @@ const OwnerSuggestions = () => {
 
       {/* Action Buttons */}
       <div className='flex gap-4 mb-6'>
-        <button className='bg-white/10 border cursor-pointer border-white/10 text-white px-5 py-2 rounded-xl hover:bg-white/20 transition'>
+        <Link to="/post/job" className='bg-white/10 border cursor-pointer border-white/10 text-white px-5 py-2 rounded-xl hover:bg-white/20 transition'>
           Post a Task
-        </button>
+        </Link>
 
-        <button className='bg-white/10 border cursor-pointer border-white/10 text-white px-5 py-2 rounded-xl hover:bg-white/20 transition'>
+        <Link to="/owner/dashboard" className='bg-white/10 border cursor-pointer border-white/10 text-white px-5 py-2 rounded-xl hover:bg-white/20 transition'>
           View Posted Tasks
-        </button>
+        </Link>
       </div>
 
       {/* Recent Tasks */}
@@ -49,9 +50,9 @@ const OwnerSuggestions = () => {
 
       {/* Footer Button */}
       <div className='mt-8 text-center'>
-        <button className='bg-white cursor-pointer text-black font-medium px-6 py-2 rounded-full shadow hover:bg-gray-200 transition'>
+        <Link to="/owner/dashboard" className='bg-white cursor-pointer text-black font-medium px-6 py-2 rounded-full shadow hover:bg-gray-200 transition'>
           View All My Tasks
-        </button>
+        </Link>
       </div>
       </div>
 

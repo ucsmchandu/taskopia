@@ -59,7 +59,7 @@ const Login = () => {
   return (
     <div className="flex min-h-screen ">
       {/* Left Side Image */}
-      <div className="hidden lg:block lg:w-4xl lg:h-4xl ">
+      <div className="hidden pointer-events-none lg:block lg:w-4xl lg:h-4xl ">
         <img
           src="https://res.cloudinary.com/dllvcgpsk/image/upload/v1760802096/retro-holiday-illustration_jdmlr0.jpg"
           alt="login visual"
