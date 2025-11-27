@@ -7,6 +7,7 @@ import {
   Sparkles,
   TrendingUp,
 } from "lucide-react";
+import { Link } from 'react-router-dom';
 const Path = () => {
   const [hoveredSide, setHoveredSide] = useState(null);
   return (
@@ -82,10 +83,10 @@ const Path = () => {
                 </div>
 
                 <div className="relative z-10 mt-10">
-                  <button className="w-full cursor-pointer py-4 rounded-xl bg-white text-indigo-900 font-bold text-sm tracking-wide hover:bg-indigo-50 transition-colors flex items-center justify-center group-hover:shadow-lg">
+                  <Link to="/login" className="w-full cursor-pointer py-4 rounded-xl bg-white text-indigo-900 font-bold text-sm tracking-wide hover:bg-indigo-50 transition-colors flex items-center justify-center group-hover:shadow-lg">
                     Join as Student{" "}
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -129,10 +130,10 @@ const Path = () => {
                 </div>
 
                 <div className="relative z-10 mt-10">
-                  <button className="w-full py-4 cursor-pointer rounded-xl bg-transparent border border-white/20 text-white font-bold text-sm tracking-wide hover:bg-white/10 transition-colors flex items-center justify-center group-hover:border-cyan-500/50">
+                  <Link to="/login" className="w-full py-4 cursor-pointer rounded-xl bg-transparent border border-white/20 text-white font-bold text-sm tracking-wide hover:bg-white/10 transition-colors flex items-center justify-center group-hover:border-cyan-500/50">
                     Post a Task{" "}
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

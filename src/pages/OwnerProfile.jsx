@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useAuth } from "../AuthContextApi/AuthContext";
+import { auth } from "../Firebase/Firebase";
+import { useNavigate } from "react-router-dom";
 const OwnerProfile = () => {
+  const navigate=useNavigate();
   const { currentUser } = useAuth();
   // console.log(currentUser.photoURL);
   const [userData, setUserData] = useState({
@@ -29,6 +32,16 @@ const OwnerProfile = () => {
     console.log(userData);
     setIsEdit(false);
   };
+
+  //logout 
+  const logout=async()=>{
+    const userConfirm=confirm("are you want to logout?");
+    if(userConfirm){
+      await auth.signOut();
+      navigate("/");
+    }
+    return;
+  }
 
   return (
     <>
@@ -145,9 +158,9 @@ const OwnerProfile = () => {
             <div className="relative top-12">
               <button
                 onClick={() => setIsEdit(true)}
-                className="cursor-pointer p-1 px-4 rounded-2xl text-sm bg-blue-500 hover:bg-blue-600 text-white"
+                className="cursor-pointer p-1 px-8 rounded-2xl text-sm bg-blue-500 hover:bg-blue-600 text-white"
               >
-                edit
+                Edit
               </button>
             </div>
           </div>
@@ -163,13 +176,21 @@ const OwnerProfile = () => {
               />
             </div>
 
-            <div className="flex flex-col justify-center">
+           <div className="flex flex-row justify-center items-center gap-10">
+             <div className="flex flex-col justify-center">
               <h1 className="text-xl font-semibold text-gray-800">
                 {/* Chandu */}
                 {userData.userName }
                 </h1>
               <p className="text-gray-500">Owner</p>
             </div>
+            <div className="">
+              <button
+              onClick={()=>logout()}
+              className="bg-red-500 text-white p-1 px-4 cursor-pointer hover:scale-95 shadow-md rounded-2xl"
+              >Logout</button>
+            </div>
+           </div>
           </div>
 
           {/* this for the jobs details. in this there are three cols */}
