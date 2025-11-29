@@ -21,6 +21,7 @@ const JobPosting = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
+  // TODO : need to implement the other related categories
   const categories = [
     "Design",
     "Writing",
