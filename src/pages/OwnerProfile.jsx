@@ -3,6 +3,7 @@ import { useAuth } from "../AuthContextApi/AuthContext";
 import { auth } from "../Firebase/Firebase";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 // this place holder is used when the actual image is not loaded
 const Placeholder = ({ className = "h-20 w-20 rounded-full bg-gray-200" }) => (
@@ -30,7 +31,7 @@ const Placeholder = ({ className = "h-20 w-20 rounded-full bg-gray-200" }) => (
 const OwnerProfile = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-
+  const [loaing,setLoading]=useState(false);
   // Profile state (console-only save)
   const [profile, setProfile] = useState({
     // firebaseUid: currentUser?.uid || "",
@@ -111,13 +112,32 @@ const OwnerProfile = () => {
     formData.append("description",profile.description);
     // console.log("Profile payload (console-only):", formData);
     try{
+      setLoading(true);
       // TODO : change the api after backend deployment
       const res=await axios.post("http://localhost:3000/taskopia/u1/api/owner-profile/upload/profile",formData);
       // console.log(res);
+      toast.success("Profile data is submitted",{
+        position:'top-left'
+      });
+      setProfile({
+            firstName:"",
+            lastName:"",
+            businessName:"",
+            phone:"",
+            gmail:"",
+            state:"",
+            city:"",
+            pincode:"",
+            address:"",
+            landmark:"",
+            description:""
+      });
     }catch(err){
       console.log(err);
       console.log(err.message);
       return;
+    }finally{
+      setLoading(false);
     }
     // close with animation
     setModalVisible(false);
