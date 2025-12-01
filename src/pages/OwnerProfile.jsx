@@ -2,29 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContextApi/AuthContext";
 import { auth } from "../Firebase/Firebase";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-/**
- Fields supported (state keys used in this component):
- - firebaseUid
- - userProfilePhotoUrl
- - businessProfilePhotoUrl
- - firstName
- - lastName
- - businessName
- - phone
- - gmail
- - adminVerify
- - rating
- - reviews
- - state
- - city
- - pincode
- - address
- - landmark
- - status
- - description
-*/
-
+// this place holder is used when the actual image is not loaded
 const Placeholder = ({ className = "h-20 w-20 rounded-full bg-gray-200" }) => (
   <div
     className={className + " flex items-center justify-center text-gray-400"}
@@ -46,15 +26,16 @@ const Placeholder = ({ className = "h-20 w-20 rounded-full bg-gray-200" }) => (
   </div>
 );
 
+
 const OwnerProfile = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
 
   // Profile state (console-only save)
   const [profile, setProfile] = useState({
-    firebaseUid: currentUser?.uid || "",
-    userProfilePhotoUrl: currentUser?.photoURL || "",
-    businessProfilePhotoUrl: "", // user supplied
+    // firebaseUid: currentUser?.uid || "",
+    userProfilePhotoUrl: currentUser?.photoURL || null,
+    businessProfilePhotoUrl: null, // user supplied
     firstName: currentUser?.displayName?.split?.(" ")?.[0] || "",
     lastName: currentUser?.displayName?.split?.(" ")?.[1] || "",
     businessName: "",
@@ -92,23 +73,52 @@ const OwnerProfile = () => {
     };
   }, [isEdit]);
 
-  // Image upload preview (uses given key names)
+  // Image upload  (uses given key names)
   const handleImageUpload = (e, key) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const url = URL.createObjectURL(file);
-    setProfile((p) => ({ ...p, [key]: url }));
+    // const url = URL.createObjectURL(file);
+    setProfile((p) => ({ ...p, [key]: file }));
   };
+
+  // image preview this is used to preview the image on the div container
+  const getPreview=(image)=>{
+    if(!image) return null;
+    return typeof image==="string" ? image:URL.createObjectURL(image);
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProfile((p) => ({ ...p, [name]: value }));
+      setProfile((p) => ({ ...p, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Console-only save per your request
-    console.log("Profile payload (console-only):", profile);
+    const formData=new FormData();
+    formData.append("firebaseUid",currentUser?.uid);
+    formData.append("userProfilePhotoUrl",profile.userProfilePhotoUrl ? profile.userProfilePhotoUrl:null);
+    formData.append("businessProfilePhotoUrl",profile.businessProfilePhotoUrl ? profile.businessProfilePhotoUrl : null);
+    formData.append("firstName",profile.firstName);
+    formData.append("lastName",profile.lastName);
+    formData.append("businessName",profile.businessName);
+    formData.append("phone",profile.phone);
+    formData.append("gmail",profile.gmail);
+    formData.append("state",profile.state);
+    formData.append("city",profile.city);
+    formData.append("pincode",profile.pincode);
+    formData.append("address",profile.address);
+    formData.append("landmark",profile.landmark);
+    formData.append("description",profile.description);
+    // console.log("Profile payload (console-only):", formData);
+    try{
+      // TODO : change the api after backend deployment
+      const res=await axios.post("http://localhost:3000/taskopia/u1/api/owner-profile/upload/profile",formData);
+      // console.log(res);
+    }catch(err){
+      console.log(err);
+      console.log(err.message);
+      return;
+    }
     // close with animation
     setModalVisible(false);
     // small delay to allow slide-down animation, then unmount modal
@@ -141,9 +151,9 @@ const OwnerProfile = () => {
               <div className="relative mt-25 md:mt-15 max-w-6xl mx-auto h-full flex items-center px-4 sm:px-6 lg:px-12">
                 <div className="flex  items-center justify-center gap-4 md:gap-6 ">
                   <div className="flex-shrink-0">
-                    {profile.businessProfilePhotoUrl ? (
+                    {profile?.businessProfilePhotoUrl ? (
                       <img
-                        src={profile.businessProfilePhotoUrl}
+                        src={profile?.businessProfilePhotoUrl}
                         alt="business"
                         className="h-20 w-20 sm:h-24 sm:w-24 md:h-38 md:w-38 rounded-2xl object-cover border-4 border-white shadow-lg"
                       />
@@ -504,7 +514,7 @@ const OwnerProfile = () => {
                   <div className="flex items-center gap-3">
                     {profile.userProfilePhotoUrl ? (
                       <img
-                        src={profile.userProfilePhotoUrl}
+                        src={getPreview(profile.userProfilePhotoUrl)}
                         alt="owner"
                         className="h-16 w-16 rounded-full object-cover border"
                       />
@@ -514,9 +524,8 @@ const OwnerProfile = () => {
                     <label className="text-sm text-sky-700 cursor-pointer bg-sky-50 px-3 py-1 rounded">
                       Upload
                       <input
-                        onChange={(e) =>
-                          handleImageUpload(e, "userProfilePhotoUrl")
-                        }
+                      name="userProfilePhotoUrl"
+                        onChange={(e)=>handleImageUpload(e,"userProfilePhotoUrl")}
                         accept="image/*"
                         type="file"
                         className="hidden"
@@ -532,7 +541,7 @@ const OwnerProfile = () => {
                   <div className="flex items-center gap-3">
                     {profile.businessProfilePhotoUrl ? (
                       <img
-                        src={profile.businessProfilePhotoUrl}
+                        src={getPreview(profile.businessProfilePhotoUrl)}
                         alt="business"
                         className="h-16 w-16 rounded-lg object-cover border"
                       />
@@ -557,9 +566,8 @@ const OwnerProfile = () => {
                     <label className="text-sm text-sky-700 cursor-pointer bg-sky-50 px-3 py-1 rounded">
                       Upload
                       <input
-                        onChange={(e) =>
-                          handleImageUpload(e, "businessProfilePhotoUrl")
-                        }
+                      name="businessProfilePhotoUrl"
+                        onChange={(e)=>handleImageUpload(e,"businessProfilePhotoUrl")}
                         accept="image/*"
                         type="file"
                         className="hidden"
