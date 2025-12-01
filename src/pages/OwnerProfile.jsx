@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../AuthContextApi/AuthContext";
 import { auth } from "../Firebase/Firebase";
 import { useNavigate } from "react-router-dom";
@@ -31,10 +32,20 @@ const Placeholder = ({ className = "h-20 w-20 rounded-full bg-gray-200" }) => (
 const OwnerProfile = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-  const [loaing,setLoading]=useState(false);
-  // Profile state (console-only save)
+  const firebaseId=currentUser?.uid;
+  const [loading,setLoading]=useState(false);
+  // get the profile data based on the firebase uid
+  const {data,isLoading,isError,refetch}=useQuery({
+    queryKey:['ownerProfile',firebaseId],
+    queryFn:async()=>{
+      const res=await axios.get(`http://localhost:3000/taskopia/u1/api/owner-profile/get/profile/${firebaseId}`);
+      return res.data.profileData;
+    },
+    enabled:!!firebaseId
+  });
+  console.log(data);
+
   const [profile, setProfile] = useState({
-    // firebaseUid: currentUser?.uid || "",
     userProfilePhotoUrl: currentUser?.photoURL || null,
     businessProfilePhotoUrl: null, // user supplied
     firstName: currentUser?.displayName?.split?.(" ")?.[0] || "",
@@ -93,6 +104,8 @@ const OwnerProfile = () => {
       setProfile((p) => ({ ...p, [name]: value }));
   };
 
+  
+  // submit the data 
   const handleSubmit = async(e) => {
     e.preventDefault();
     const formData=new FormData();
