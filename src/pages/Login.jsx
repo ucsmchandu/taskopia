@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import GoogleAuth from "../components/Authentication/GoogleAuth";
 import { auth } from "../Firebase/Firebase";
-import { signInWithEmailAndPassword } from "firebase/auth"; 
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 const Login = () => {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const Login = () => {
         data.email,
         data.password
       );
-      
+
       const user = userCredential.user;
       if (!user.emailVerified) {
         toast.warning("Please verify your email before logging in.");
@@ -116,6 +116,11 @@ const Login = () => {
                 onChange={handleData}
                 className="border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none w-full rounded-md p-2"
               />
+              <div className="flex justify-end">
+                <p className="hover:underline text-sm mt-1 text-gray-500 w-fit  hover:text-blue-700 cursor-pointer ">
+                  Forget password?
+                </p>
+              </div>
             </div>
 
             {loading ? (
