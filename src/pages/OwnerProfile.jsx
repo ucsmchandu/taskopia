@@ -33,12 +33,14 @@ const OwnerProfile = () => {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const firebaseId=currentUser?.uid;
+  // const [profileData,setProfileData]=useState([]);
   const [loading,setLoading]=useState(false);
   // get the profile data based on the firebase uid
   const {data,isLoading,isError,refetch}=useQuery({
     queryKey:['ownerProfile',firebaseId],
     queryFn:async()=>{
       const res=await axios.get(`http://localhost:3000/taskopia/u1/api/owner-profile/get/profile/${firebaseId}`);
+      // setProfileData(res.data.profileData);
       return res.data.profileData;
     },
     enabled:!!firebaseId
@@ -184,9 +186,9 @@ const OwnerProfile = () => {
               <div className="relative mt-25 md:mt-15 max-w-6xl mx-auto h-full flex items-center px-4 sm:px-6 lg:px-12">
                 <div className="flex  items-center justify-center gap-4 md:gap-6 ">
                   <div className="flex-shrink-0">
-                    {profile?.businessProfilePhotoUrl ? (
+                    {data?.businessProfilePhotoUrl ? (
                       <img
-                        src={profile?.businessProfilePhotoUrl}
+                        src={data?.businessProfilePhotoUrl}
                         alt="business"
                         className="h-20 w-20 sm:h-24 sm:w-24 md:h-38 md:w-38 rounded-2xl object-cover border-4 border-white shadow-lg"
                       />
@@ -199,22 +201,22 @@ const OwnerProfile = () => {
 
                   <div className="text-left">
                     <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold text-sky-900">
-                      {profile.businessName || "Your Business Name"}
+                      {data?.businessName || "Your Business Name"}
                     </h1>
                     <p className="text-xs sm:text-sm text-sky-700/80 mt-1">
-                      {profile.city || "City"}, {profile.state || "State"}
+                      {data?.addressDetails?.[0].city || "City"}, {data?.addressDetails?.[0].state || "State"}
                     </p>
 
                     <div className="mt-2 flex flex-wrap gap-2 items-center">
                       <div className="inline-flex items-center gap-2 bg-white/60 px-3 py-1 rounded-full shadow-sm">
                         <div className="text-yellow-500 text-sm">
-                          {renderStars(profile.rating)}
+                          {renderStars(data?.rating?.average)}
                         </div>
                         <span className="text-sm text-sky-800 font-medium">
-                          {profile.rating} · {profile.reviews} reviews
+                          {data?.rating?.average} · {data?.rating?.count} reviews
                         </span>
                       </div>
-                      {profile.adminVerify ? (
+                      {data?.adminVerify ? (
                         <span className="inline-flex items-center gap-2 bg-white/60 px-3 py-1 rounded-full text-sm text-sky-800">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -262,9 +264,9 @@ const OwnerProfile = () => {
             <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
                 <div>
-                  {profile.userProfilePhotoUrl ? (
+                  {data?.userProfilePhotoUrl ? (
                     <img
-                      src={profile.userProfilePhotoUrl}
+                      src={data?.userProfilePhotoUrl}
                       alt="owner"
                       className="h-20 w-20 rounded-full object-cover border"
                     />
@@ -275,13 +277,13 @@ const OwnerProfile = () => {
 
                 <div className="flex-1 text-center sm:text-left">
                   <h3 className="text-lg font-semibold text-sky-900">
-                    {profile.firstName || "First"} {profile.lastName || "Last"}
+                    {data?.firstName || "First"} {data?.lastName || "Last"}
                   </h3>
                   <p className="text-sm text-sky-700/80">
-                    {profile.gmail || "email@example.com"}
+                    {data?.gmail || "email@example.com"}
                   </p>
                   <p className="text-sm text-sky-700/60 mt-1">
-                    {profile.phone || "—"}
+                    {data?.phone || "—"}
                   </p>
                 </div>
               </div>
@@ -292,7 +294,7 @@ const OwnerProfile = () => {
                   <div className="mt-1 inline-flex items-center gap-2">
                     {/* <span className="text-sm font-medium text-sky-800">{profile.status}</span> */}
                     <span className="text-xs px-2 py-1 rounded-full bg-sky-50 text-sky-700">
-                      {profile.status}
+                      {data?.status}
                     </span>
                   </div>
                 </div>
@@ -308,6 +310,7 @@ const OwnerProfile = () => {
               </div>
             </div>
 
+            {/* this is need to get from another api */}
             <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
               <h4 className="text-sm font-semibold text-sky-800 mb-3">
                 Business Stats
@@ -334,15 +337,15 @@ const OwnerProfile = () => {
               </h4>
               <p className="text-sm text-sky-700">
                 Phone:{" "}
-                <span className="font-medium">{profile.phone || "—"}</span>
+                <span className="font-medium">{data?.phone || "—"}</span>
               </p>
               <p className="text-sm text-sky-700 mt-1">
                 Email:{" "}
-                <span className="font-medium">{profile.gmail || "—"}</span>
+                <span className="font-medium">{data?.gmail || "—"}</span>
               </p>
               <p className="text-sm text-sky-700 mt-1">
                 Pincode:{" "}
-                <span className="font-medium">{profile.pincode || "—"}</span>
+                <span className="font-medium">{data?.addressDetails?.[0].pinCode || "—"}</span>
               </p>
             </div>
           </aside>
@@ -356,10 +359,11 @@ const OwnerProfile = () => {
                     About the Business
                   </h3>
                   <p className="text-sky-700/90 leading-relaxed text-sm sm:text-base">
-                    {profile.description ||
+                    {data?.description ||
                       "Add a short, compelling description about your business. What services do you provide and what's your core value?"}
                   </p>
 
+                  {/* need to set this in api */}
                   <div className="mt-4 flex gap-2 flex-wrap">
                     <span className="text-sm bg-sky-50 px-3 py-1 rounded-full text-sky-700">
                       Service Provider
@@ -415,18 +419,18 @@ const OwnerProfile = () => {
 
                 <div>
                   <p className="text-sky-700 leading-relaxed text-sm sm:text-base">
-                    {profile.address || "No address set yet."}
-                    {profile.landmark ? (
+                    {data?.addressDetails?.[0].address || "No address set yet."}
+                    {data?.addressDetails?.[0].landMark ? (
                       <span className="text-sky-500">
                         {" "}
-                        — {profile.landmark}
+                        — {data?.addressDetails?.[0].landMark}
                       </span>
                     ) : null}
                   </p>
                   <p className="text-sm text-sky-600 mt-2">
-                    {profile.city && profile.state
-                      ? `${profile.city}, ${profile.state} - ${
-                          profile.pincode || ""
+                    {data?.addressDetails?.[0].city && data?.addressDetails?.[0].state
+                      ? `${data?.addressDetails?.[0].state}, ${data?.addressDetails?.[0].city} - ${
+                          data?.addressDetails?.[0].pinCode || ""
                         }`
                       : ""}
                   </p>
@@ -434,6 +438,7 @@ const OwnerProfile = () => {
               </div>
             </div>
 
+            {/* need to get this data */}
             <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
               <h3 className="text-lg font-semibold text-sky-900 mb-3">
                 Latest Reviews
