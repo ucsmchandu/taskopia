@@ -16,6 +16,8 @@ import JobApply from "./pages/JobApply";
 import JobListings from "./pages/JobListings";
 import WorkerAppliedJobs from "./pages/Worker.AppliedJobs";
 import ForgetPassword from "./components/Authentication/ForgetPassword";
+import OwnerPublicProfile from "./pages/OwnerPublicProfile";
+import WorkerPublicProfile from "./pages/WorkerPublicProfile";
 
 const App = () => {
   return (
@@ -36,6 +38,8 @@ const App = () => {
             <Route path="job/listings" element={<JobListings/>} />
             <Route path="applied-jobs" element={<WorkerAppliedJobs/>} />
             <Route path="password_reset" element={<ForgetPassword/>} />
+            <Route path="owner/public-profile" element={<OwnerPublicProfile/>} />
+            <Route path="worker/public-profile" element={<WorkerPublicProfile/>} ></Route>
           </Route>
         </Routes>
         <ToastContainer />
