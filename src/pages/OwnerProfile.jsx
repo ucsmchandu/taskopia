@@ -45,7 +45,7 @@ const OwnerProfile = () => {
     },
     enabled:!!firebaseId
   });
-  console.log(data);
+  // console.log(data);
 
   const [profile, setProfile] = useState({
     userProfilePhotoUrl: currentUser?.photoURL || null,
@@ -130,7 +130,7 @@ const OwnerProfile = () => {
       setLoading(true);
       // TODO : change the api after backend deployment
       const res=await axios.post("http://localhost:3000/taskopia/u1/api/owner-profile/upload/profile",formData);
-      // console.log(res);
+      console.log(res);
       toast.success("Profile data is submitted",{
         position:'top-left'
       });
