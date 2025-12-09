@@ -69,26 +69,24 @@ const JobPosting = () => {
     if (!validateForm()) return;
     setLoading(true);
     try {
-      const sendData = {
-        firebaseId:currentUser?.uid,
-        email:currentUser?.email, 
-        title: taskData.title.trim(),
-        taskDescription: taskData.taskDescription.trim(),
-        taskCategory: taskData.taskCategory.trim(),
-        location: taskData.location.trim(),
-        amount: taskData.amount.trim(),
-        urgencyLevel: taskData.urgencyLevel.trim(),
-        startingDate: taskData.startingDate.trim(),
-        endingDate: taskData.endingDate.trim(),
-        workingHours: taskData.workingHours.trim(),
-        postRemovingDate: taskData.postRemovingDate.trim(),
-        attachments: taskData.attachments,
-      };
+      const formData=new FormData();
+      formData.append("firebaseId",currentUser?.uid);
+      formData.append("email",currentUser?.email);
+      formData.append("title",taskData.title.trim());
+      formData.append("taskDescription",taskData.taskDescription.trim());
+      formData.append("taskCategory",taskData.taskCategory);
+      formData.append("location",taskData.location.trim());
+      formData.append("amount",taskData.amount.trim());
+      formData.append("urgencyLevel",taskData.urgencyLevel);
+      formData.append("startingDate",taskData.startingDate);
+      formData.append("endingDate",taskData.endingDate);
+      formData.append("workingHours",taskData.workingHours.trim());
+      formData.append("postRemovingDate",taskData.postRemovingDate);
+      formData.append("attachments",taskData.attachments? taskData.attachments:"" );
       // console.log(sendData);
       // here comes the api to post the data for the backend
-      const res=await axios.post('http://localhost:3000/taskopia/u1/api/owner/task/upload-task',sendData);
-      console.log(res);
-      // TODO : add the firebaseUid,email in the sending data 
+      const res=await axios.post('http://localhost:3000/taskopia/u1/api/owner/task/upload-task',formData);
+      console.log(res); 
       toast.success("Task posted successfully!");
       setTaskData({
         title: "",
