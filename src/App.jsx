@@ -18,12 +18,10 @@ import WorkerAppliedJobs from "./pages/Worker.AppliedJobs";
 import ForgetPassword from "./components/Authentication/ForgetPassword";
 import OwnerPublicProfile from "./pages/OwnerPublicProfile";
 import WorkerPublicProfile from "./pages/WorkerPublicProfile";
-import ApiCalls from "./Apis/ApiCalls";
 
 const App = () => {
   return (
     <AuthContextProvider>
-      <ApiCalls/>
       <Router>
         <Scroll/>
         <Routes>
