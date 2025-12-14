@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+// TODO : need to get the data from the db only for suggestions need to display like a add 
 const OwnerSuggestions = () => {
   return (
     <div className=' bg-gradient-to-t from-[#092635] to-[#1B4242]  mt-20 p-6'>

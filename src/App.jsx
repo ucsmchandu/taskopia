@@ -18,10 +18,12 @@ import WorkerAppliedJobs from "./pages/Worker.AppliedJobs";
 import ForgetPassword from "./components/Authentication/ForgetPassword";
 import OwnerPublicProfile from "./pages/OwnerPublicProfile";
 import WorkerPublicProfile from "./pages/WorkerPublicProfile";
+import ApiCalls from "./Apis/ApiCalls";
 
 const App = () => {
   return (
     <AuthContextProvider>
+      <ApiCalls/>
       <Router>
         <Scroll/>
         <Routes>
@@ -40,6 +42,7 @@ const App = () => {
             <Route path="password_reset" element={<ForgetPassword/>} />
             <Route path="owner/public-profile" element={<OwnerPublicProfile/>} />
             <Route path="worker/public-profile" element={<WorkerPublicProfile/>} ></Route>
+            {/* <Route path="xyz" element={<ApiCalls/>} /> */}
           </Route>
         </Routes>
         <ToastContainer />
