@@ -1,62 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContextApi/AuthContext";
-import { firestore } from "../Firebase/Firebase";
-import { getDoc, doc } from "firebase/firestore";
+import {useFirebaseContext} from '../AuthContextApi/FirebaseDataContext' 
 // import { auth } from "../Firebase/Firebase";
 const Navbar = () => {
+  // getting the auth data from the auth context
   const { currentUser } = useAuth();
+  // getting the firebase data using firebase context
+  const {user,isLoading,isError}=useFirebaseContext();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   const currentPath = location.pathname;
+
   //custom hook to check the current location
   const isActive = (path) => currentPath === path;
-  // console.log(currentUser);
+  // console.log(firebaseUserdata);
   const linkBaseClasses =
     "py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200";
 
-  // Fetch user details safely
-  const getUserDetails = async () => {
-    if (!currentUser) {
-      setUser(null);
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const userRef = doc(firestore, "users", currentUser.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        setUser(userSnap.data());
-      } else {
-        console.log("User document not found in Firestore");
-        setUser(null);
-      }
-    } catch (error) {
-      console.error("Error fetching user:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getUserDetails();
-  }, [currentUser]);
-
-  // for logout
-  // const logout = async () => {
-  //   await auth.signOut();
-  //   window.location.reload();
-  // };
-
   // Prevent flicker while loading
-  if (loading) {
+  if (isLoading) {
     return null;
   }
+  if(isError)
+    console.log(isError);
 
   return (
     <nav className="fixed w-full z-50 top-0 left-0 pt-6">

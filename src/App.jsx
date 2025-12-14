@@ -18,11 +18,12 @@ import WorkerAppliedJobs from "./pages/Worker.AppliedJobs";
 import ForgetPassword from "./components/Authentication/ForgetPassword";
 import OwnerPublicProfile from "./pages/OwnerPublicProfile";
 import WorkerPublicProfile from "./pages/WorkerPublicProfile";
-
+import FirebaseUserDataContextProvider from './AuthContextApi/FirebaseDataContext'
 const App = () => {
   return (
     <AuthContextProvider>
-      <Router>
+      <FirebaseUserDataContextProvider>
+        <Router>
         <Scroll/>
         <Routes>
           <Route path="/*" element={<Layout />}>
@@ -45,6 +46,7 @@ const App = () => {
         </Routes>
         <ToastContainer />
       </Router>
+      </FirebaseUserDataContextProvider>
     </AuthContextProvider>
   );
 };

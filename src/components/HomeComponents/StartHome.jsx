@@ -3,8 +3,7 @@ import Button from "../styles/button/Button";
 import FloatingLines from "../../animations/HomeBackground";
 import BlurText from "../../animations/BlurText";
 import { Link } from "react-router-dom";
-const StartHome = ({user}) => {
-
+const StartHome = ({ user, isLoading }) => {
   return (
     <div className="scroll-smooth relative w-full min-h-screen bg-gradient-to-b from-black to-gray-800 text-white overflow-hidden">
       {/* Background Light Rays */}
@@ -54,40 +53,49 @@ const StartHome = ({user}) => {
           </p>
 
           {/* Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-10">
-            {!user && (
-              <Link to="/login" className="pointer-events-auto">
-                {" "}
-                <Button text="Sign Up / Login" />
-              </Link>
-            )}
-            {user && user.userType === "worker" && (
-              <>
-              <Link to="/worker/dashboard" className="pointer-events-auto" >
-                <Button text="Go to Dashboard" />
-              </Link>{" "}
-                <Link to="/job/listings" className="pointer-events-auto">
-                  <Button text="Apply a Job" />
-                </Link>
-              </>
-            )}
-            {user && user.userType === "owner" && (
-              <>
-                <Link to="/owner/dashboard" className="pointer-events-auto">
-                  <Button text="Go to Dashboard" />
-                </Link>{" "}
-                <Link to="/post/job" className="pointer-events-auto">
-                  <Button text="Post a Job" />
-                </Link>
-              </>
+          <div className="relative mt-10">
+            {isLoading && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 backdrop-blur-sm rounded-lg">
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 border-2 border-gray-300 border-t-black rounded-full animate-spin" />
+                  <span className="text-sm font-medium">Loading...</span>
+                </div>
+              </div>
             )}
 
-            {/* {user ? (
-              <Button text="Go to Dashboard" />
-            ) : (
-             <Link to="/login"> <Button text="Sign Up / Login" /></Link>
-            )}
-            <Link to="/post/job"><Button text="Post a Job" /></Link> */}
+            <div
+              className={`flex flex-col sm:flex-row gap-4 ${
+                isLoading ? "pointer-events-none opacity-50" : ""
+              }`}
+            >
+              {!user && (
+                <Link to="/login">
+                  <Button text="Sign Up / Login" />
+                </Link>
+              )}
+
+              {user && user.userType === "worker" && (
+                <>
+                  <Link to="/worker/dashboard">
+                    <Button text="Go to Dashboard" />
+                  </Link>
+                  <Link to="/job/listings">
+                    <Button text="Apply a Job" />
+                  </Link>
+                </>
+              )}
+
+              {user && user.userType === "owner" && (
+                <>
+                  <Link to="/owner/dashboard">
+                    <Button text="Go to Dashboard" />
+                  </Link>
+                  <Link to="/post/job">
+                    <Button text="Post a Job" />
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

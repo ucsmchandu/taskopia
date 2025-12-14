@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../AuthContextApi/AuthContext";
-import { firestore } from "../Firebase/Firebase";
-import { getDoc, doc } from "firebase/firestore";
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
 import useReveal from "../components/HomeComponents/UseReveal";
@@ -11,41 +9,19 @@ import { Target } from "lucide-react";
 import Path from '../components/HomeComponents/Path'
 import WorkerSuggestions from "../components/HomeComponents/Worker.Suggestions";
 import OwnerSuggestions from "../components/HomeComponents/Owner.Suggestions";
+import { useFirebaseContext } from "../AuthContextApi/FirebaseDataContext";
 const Home = () => {
   const {currentUser}=useAuth();
+  const {user,isLoading,isError}=useFirebaseContext();
+  console.log(user);
   // const ref=useReveal();
-
-  // user details
-  const [user,setUser]=useState(null);
-  
-  // fetching the user details 
-  const getDetails=async()=>{
-    try{
-      const userRef=doc(firestore,"users",currentUser.uid);
-      const userSnap=await getDoc(userRef);
-      if(userSnap.exists()){
-        setUser(userSnap.data());
-      }else{
-        console.log("user not found");
-        setUser(null);
-      }
-    }catch(err){
-      console.log(err);
-      console.log(err.message);
-      return;
-    }
-  };
-
-  useEffect(()=>{
-    getDetails();
-  },[currentUser]);
 
 // console.log(user)
   return (
     <div className="scroll-smooth">
 
       {/* animated home content */}
-      <StartHome user={user} />
+      <StartHome user={user} isLoading={isLoading} />
 
       {/* information content */}
       <Cards />
