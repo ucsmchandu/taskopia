@@ -7,8 +7,8 @@ import Cards from "../components/HomeComponents/Cards";
 import StartHome from "../components/HomeComponents/StartHome";
 import { Target } from "lucide-react";
 import Path from '../components/HomeComponents/Path'
-import WorkerSuggestions from "../components/HomeComponents/Worker.Suggestions";
-import OwnerSuggestions from "../components/HomeComponents/Owner.Suggestions";
+import AllySuggestions from "../components/HomeComponents/Ally.Suggestions";
+import HostSuggestions from "../components/HomeComponents/Host.Suggestions";
 import { useFirebaseContext } from "../AuthContextApi/FirebaseDataContext";
 const Home = () => {
   const {currentUser}=useAuth();
@@ -107,8 +107,8 @@ const Home = () => {
             },
             {
               quote:
-                "I found a worker in 10 minutes when my staff didn’t show up. Brilliant idea!",
-              name: "Rajesh, Shop Owner",
+                "I found a ally in 10 minutes when my staff didn’t show up. Brilliant idea!",
+              name: "Rajesh, Shop host",
             },
             {
               quote:
@@ -132,10 +132,10 @@ const Home = () => {
        {
          !user && (
           <Path/>
-         ) || user.userType==="worker" && (
-          <WorkerSuggestions/>
-         ) || user.userType==="owner" && (
-          <OwnerSuggestions/>
+         ) || user.userType==="ally" && (
+          <AllySuggestions/>
+         ) || user.userType==="host" && (
+          <HostSuggestions/>
          )
        }
        

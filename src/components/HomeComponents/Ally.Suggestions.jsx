@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const WorkerSuggestions = () => {
+const AllySuggestions = () => {
   return (
     <div className='w-full  p-6 bg-gradient-to-b from-[#406882] to-[#1A374D]'>
       
@@ -57,4 +57,4 @@ const WorkerSuggestions = () => {
   )
 }
 
-export default WorkerSuggestions
+export default AllySuggestions

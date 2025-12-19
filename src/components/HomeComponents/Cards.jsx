@@ -13,7 +13,7 @@ const Cards = () => {
           {
             icon: <Briefcase className="w-10 h-10 text-white mb-4" />,
             title: "Post a Task",
-            desc: "Owners post one-day or short-term jobs when they need help.",
+            desc: "Hosts post one-day or short-term jobs when they need help.",
             from: "#BBE1FA",
             to: "#4c9fd6",
           },
@@ -27,7 +27,7 @@ const Cards = () => {
           {
             icon: <CheckCircle className="w-10 h-10 text-white mb-4" />,
             title: "Work & Get Paid",
-            desc: "Complete the task, help the owner, and earn your payment easily.",
+            desc: "Complete the task, help the host, and earn your payment easily.",
             from: "#FF9494",
             to: "#d68c8c",
           },

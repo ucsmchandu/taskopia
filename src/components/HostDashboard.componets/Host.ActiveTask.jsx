@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { auth } from "../../Firebase/Firebase";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-const OwnerActiveTasks = () => {
+const HostActiveTasks = () => {
   const queryClient=useQueryClient();
   const navigate=useNavigate();
   const logout=async()=>{
@@ -80,7 +80,7 @@ const OwnerActiveTasks = () => {
           <h1 className="text-lg sm:text-2xl font-semibold">Quick Actions</h1>
 
           <div className="flex flex-col mt-4 gap-3">
-            <Link to="/profile/owner" className="flex gap-3 items-center border border-gray-200 shadow-lg rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition">
+            <Link to="/profile/host" className="flex gap-3 items-center border border-gray-200 shadow-lg rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition">
               <UserRoundPen size={18} /> <span className="truncate text-black">Update Profile</span>
             </Link>
 
@@ -104,4 +104,4 @@ const OwnerActiveTasks = () => {
   );
 };
 
-export default OwnerActiveTasks;
+export default HostActiveTasks;

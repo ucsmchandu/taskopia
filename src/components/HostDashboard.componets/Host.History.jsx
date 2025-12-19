@@ -1,6 +1,6 @@
 import React from "react";
 import { CircleCheckBig } from "lucide-react";
-const OwnerCompletedTasks = () => {
+const HostCompletedTasks = () => {
   return (
     <div className="mt-10 flex flex-col gap-6">
         {/* card-1 */}
@@ -35,4 +35,4 @@ const OwnerCompletedTasks = () => {
   );
 };
 
-export default OwnerCompletedTasks;
+export default HostCompletedTasks;

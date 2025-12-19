@@ -7,10 +7,10 @@ import { Star } from "lucide-react";
 import { useAuth } from "../../AuthContextApi/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
 // importing the active task, completed tasks, analytics components
-import OwnerActiveTask from "../../components/OwnerDashboard.componets/Owner.ActiveTask";
-import OwnerAnalytics from "../../components/OwnerDashboard.componets/Owner.Analytics";
-import OwnerCompletedTasks from "../../components/OwnerDashboard.componets/Owner.History";
-const OwnerDashboard = () => {
+import HostActiveTask from "../../components/HostDashboard.componets/Host.ActiveTask";
+import HostAnalytics from "../../components/HostDashboard.componets/Host.Analytics";
+import HostCompletedTasks from "../../components/HostDashboard.componets/Host.History";
+const HostDashboard = () => {
   const {currentUser}=useAuth();
 
   const [components, setComponents] = useState("activeTasks");
@@ -20,7 +20,7 @@ const OwnerDashboard = () => {
       <div className="flex flex-col md:flex-row justify-between md:items-center">
         {/* left heading */}
         <div>
-          <h1 className="text-4xl font-semibold">Owner Dashboard</h1>
+          <h1 className="text-4xl font-semibold">Host Dashboard</h1>
           <h2 className="text-gray-500">
             Welcome back! Here's your performance overview
           </h2>
@@ -121,10 +121,10 @@ const OwnerDashboard = () => {
         {/* here comes the three diff components  */}
 
         <div>
-          {(components === "activeTasks" && <OwnerActiveTask />) ||
-            (components === "completedTasks" && <OwnerCompletedTasks />) ||
-            (components === "analytics" && <OwnerAnalytics />) || (
-              <OwnerActiveTask />
+          {(components === "activeTasks" && <HostActiveTask />) ||
+            (components === "completedTasks" && <HostCompletedTasks />) ||
+            (components === "analytics" && <HostAnalytics />) || (
+              <HostActiveTask />
             )}
         </div>
       </div>
@@ -132,4 +132,4 @@ const OwnerDashboard = () => {
   );
 };
 
-export default OwnerDashboard;
+export default HostDashboard;

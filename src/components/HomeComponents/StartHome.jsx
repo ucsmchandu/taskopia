@@ -49,7 +49,7 @@ const StartHome = ({ user, isLoading }) => {
           {/* Description */}
           <p className=" lg:w-2xl sm:text-lg md:text-xl text-white italic">
             Students and locals can find instant short-term jobs, and business
-            owners can hire on demand all on one secure, simple platform.
+            hosts can hire on demand all on one secure, simple platform.
           </p>
 
           {/* Buttons */}
@@ -74,9 +74,9 @@ const StartHome = ({ user, isLoading }) => {
                 </Link>
               )}
 
-              {user && user.userType === "worker" && (
+              {user && user.userType === "ally" && (
                 <>
-                  <Link to="/worker/dashboard">
+                  <Link to="/ally/dashboard">
                     <Button text="Go to Dashboard" />
                   </Link>
                   <Link to="/job/listings">
@@ -85,9 +85,9 @@ const StartHome = ({ user, isLoading }) => {
                 </>
               )}
 
-              {user && user.userType === "owner" && (
+              {user && user.userType === "host" && (
                 <>
-                  <Link to="/owner/dashboard">
+                  <Link to="/host/dashboard">
                     <Button text="Go to Dashboard" />
                   </Link>
                   <Link to="/post/job">

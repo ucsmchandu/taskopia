@@ -13,11 +13,11 @@ const JobListings = () => {
               <HouseIcon size={20} />
               <p>Home</p>
             </Link>
-            <Link to="/worker/dashboard" className="flex items-center gap-4 text-gray-700 text-sm cursor-pointer hover:bg-gray-100 p-2 rounded-lg">
+            <Link to="/ally/dashboard" className="flex items-center gap-4 text-gray-700 text-sm cursor-pointer hover:bg-gray-100 p-2 rounded-lg">
               <List size={20} />
               <p>Dashboard</p>
             </Link>
-            <Link to="/profile/worker" className="flex items-center gap-4 text-gray-700 text-sm cursor-pointer hover:bg-gray-100 p-2 rounded-lg">
+            <Link to="/profile/ally" className="flex items-center gap-4 text-gray-700 text-sm cursor-pointer hover:bg-gray-100 p-2 rounded-lg">
               <UserRound size={20} />
               <p>Profile</p>
             </Link>
@@ -53,8 +53,8 @@ const JobListings = () => {
             {/* <p>{" "}</p> */}
             <Link to="/"><button className="cursor-pointer px-4 rounded-lg shadow-md hover:shadow-lg text-sm p-1 bg-gradient-to-l from-gray-800 to-gray-600 transition-all duration-300 hover:scale-105 py-2  text-white">Home</button></Link>
             <Link to=""><button className="cursor-pointer px-4 rounded-lg shadow-md hover:shadow-lg text-sm p-1 bg-gradient-to-l from-gray-800 to-gray-600 transition-all duration-300 hover:scale-105 py-2  text-white">My Tasks</button></Link>
-            <Link to="/profile/worker"><button className="cursor-pointer px-4 rounded-lg shadow-md hover:shadow-lg text-sm p-1 bg-gradient-to-l from-gray-800 to-gray-600 transition-all duration-300 hover:scale-105 py-2  text-white">Profile</button></Link>
-            <Link to="/worker/dashboard"><button className="cursor-pointer px-4 rounded-lg shadow-md hover:shadow-lg text-sm p-1 bg-gradient-to-l from-gray-800 to-gray-600 transition-all duration-300 hover:scale-105 py-2  text-white">Dashboard</button></Link>
+            <Link to="/profile/ally"><button className="cursor-pointer px-4 rounded-lg shadow-md hover:shadow-lg text-sm p-1 bg-gradient-to-l from-gray-800 to-gray-600 transition-all duration-300 hover:scale-105 py-2  text-white">Profile</button></Link>
+            <Link to="/ally/dashboard"><button className="cursor-pointer px-4 rounded-lg shadow-md hover:shadow-lg text-sm p-1 bg-gradient-to-l from-gray-800 to-gray-600 transition-all duration-300 hover:scale-105 py-2  text-white">Dashboard</button></Link>
           </div>
 
           {/* LISTINGS */}

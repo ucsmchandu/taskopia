@@ -1,6 +1,6 @@
 import React from "react";
 import {CalendarDays } from 'lucide-react'
-const WorkerActiveTasks = () => {
+const AllyActiveTasks = () => {
   const activeTasks = [
     {
       id: "TSK-2024-1",
@@ -69,4 +69,4 @@ const WorkerActiveTasks = () => {
   );
 };
 
-export default WorkerActiveTasks;
+export default AllyActiveTasks;

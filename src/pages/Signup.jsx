@@ -16,7 +16,7 @@ const Signup = () => {
   const [data, setData] = useState({
     userName: "",
     email: "",
-    userType: "", // studnt or owner
+    userType: "", // studnt or host
     password: "",
     confirmPassword: "",
   });
@@ -68,7 +68,7 @@ const Signup = () => {
         userId: userCredential.user.uid,
         email: userCredential.user.email,
         userName: data.userName, 
-        userType: data.userType, // student or owner
+        userType: data.userType, // student or host
       });
     } catch (err) {
       console.log(err);
@@ -160,8 +160,8 @@ const Signup = () => {
                 onChange={handleData}
               >
                 <option value="">select user type</option>
-                <option value="worker">Worker</option>
-                <option value="owner">Owner</option>
+                <option value="ally">Ally</option>
+                <option value="host">Host</option>
               </select>
             </div>
             <div className="flex flex-col space-y-1">

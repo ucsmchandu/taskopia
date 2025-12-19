@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 // TODO : need to get the data from the db only for suggestions need to display like a add 
-const OwnerSuggestions = () => {
+const HostSuggestions = () => {
   return (
     <div className=' bg-gradient-to-t from-[#092635] to-[#1B4242]  mt-20 p-6'>
       
@@ -21,7 +21,7 @@ const OwnerSuggestions = () => {
           Post a Task
         </Link>
 
-        <Link to="/owner/dashboard" className='bg-white/10 border cursor-pointer border-white/10 text-white px-5 py-2 rounded-xl hover:bg-white/20 transition'>
+        <Link to="/host/dashboard" className='bg-white/10 border cursor-pointer border-white/10 text-white px-5 py-2 rounded-xl hover:bg-white/20 transition'>
           View Posted Tasks
         </Link>
       </div>
@@ -51,7 +51,7 @@ const OwnerSuggestions = () => {
 
       {/* Footer Button */}
       <div className='mt-8 text-center'>
-        <Link to="/owner/dashboard" className='bg-white cursor-pointer text-black font-medium px-6 py-2 rounded-full shadow hover:bg-gray-200 transition'>
+        <Link to="/host/dashboard" className='bg-white cursor-pointer text-black font-medium px-6 py-2 rounded-full shadow hover:bg-gray-200 transition'>
           View All My Tasks
         </Link>
       </div>
@@ -61,4 +61,4 @@ const OwnerSuggestions = () => {
   )
 }
 
-export default OwnerSuggestions
+export default HostSuggestions

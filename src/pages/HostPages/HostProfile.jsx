@@ -3,14 +3,14 @@ import React, { useState, useEffect } from "react";
 
 
 
-const OwnerProfile = () => {
+const HostProfile = () => {
 
 
   return (
     <>
-  <p>owner</p>
+  <p>host</p>
     </>
   );
 };
 
-export default OwnerProfile;
+export default HostProfile;

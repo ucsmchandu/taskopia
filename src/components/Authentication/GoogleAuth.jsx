@@ -80,8 +80,8 @@ const GoogleAuth = () => {
             onChange={(e) => setUserType(e.target.value)}
           >
             <option value="">select user type</option>
-            <option value="worker">Worker</option>
-            <option value="owner">Owner</option>
+            <option value="ally">Ally</option>
+            <option value="host">Host</option>
           </select>
         </form>
         <button

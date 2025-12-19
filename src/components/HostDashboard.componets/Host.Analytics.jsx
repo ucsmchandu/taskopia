@@ -1,7 +1,7 @@
 import React from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
-const OwnerAnalytics = () => {
+const HostAnalytics = () => {
   const monthlyData = [
     { month: "Jan", earnings: 2400 },
     { month: "Feb", earnings: 3200 },
@@ -68,4 +68,4 @@ const OwnerAnalytics = () => {
   );
 };
 
-export default OwnerAnalytics;
+export default HostAnalytics;

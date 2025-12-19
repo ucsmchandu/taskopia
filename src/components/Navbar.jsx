@@ -79,13 +79,13 @@ const Navbar = () => {
               </>
             )}
 
-            {/* Worker Links */}
-            {user?.userType === "worker" && (
+            {/* ally Links */}
+            {user?.userType === "ally" && (
               <>
                 <Link
                   to="/job/listings"
                   className={`${linkBaseClasses} ${
-                    isActive("/worker-dashboard")
+                    isActive("/ally-dashboard")
                       ? "text-white bg-blue-600 shadow-md"
                       : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
@@ -103,9 +103,9 @@ const Navbar = () => {
                   Applied Jobs
                 </Link>
                 <Link
-                  to="/profile/worker"
+                  to="/profile/ally"
                   className={`${linkBaseClasses} ${
-                    isActive("/profile/worker")
+                    isActive("/profile/ally")
                       ? "text-white bg-blue-600 shadow-md"
                       : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
@@ -124,8 +124,8 @@ const Navbar = () => {
               </>
             )}
 
-            {/* Owner Links */}
-            {user?.userType === "owner" && (
+            {/* host Links */}
+            {user?.userType === "host" && (
               <>
                 <Link
                   to="/post/job"
@@ -138,9 +138,9 @@ const Navbar = () => {
                   Post Job
                 </Link>
                 <Link
-                  to="/owner/dashboard"
+                  to="/host/dashboard"
                   className={`${linkBaseClasses} ${
-                    isActive("/owner/dashboard")
+                    isActive("/host/dashboard")
                       ? "text-white bg-blue-600 shadow-md"
                       : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
@@ -148,7 +148,7 @@ const Navbar = () => {
                   Dashboard
                 </Link>
                 <Link
-                  to="/profile/owner"
+                  to="/profile/host"
                   className={`${linkBaseClasses} ${
                     isActive("/profile")
                       ? "text-white bg-blue-600 shadow-md"
@@ -243,8 +243,8 @@ const Navbar = () => {
             </>
           )}
 
-          {/* worker */}
-          {user?.userType === "worker" && (
+          {/* ally */}
+          {user?.userType === "ally" && (
             <>
               <Link
                 to="/job/listings"
@@ -269,7 +269,7 @@ const Navbar = () => {
                 Applied Jobs
               </Link>
               <Link
-                to="/profile/worker"
+                to="/profile/ally"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/profile")
@@ -291,7 +291,7 @@ const Navbar = () => {
             </>
           )}
 
-          {user?.userType === "owner" && (
+          {user?.userType === "host" && (
             <>
               <Link
                 to="/post/job"
@@ -305,10 +305,10 @@ const Navbar = () => {
                 Post Job
               </Link>
               <Link
-                to="/owner/dashboard"
+                to="/host/dashboard"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
-                  isActive("/owner/dashboard")
+                  isActive("/host/dashboard")
                     ? "text-white bg-blue-600"
                     : "text-gray-800 hover:bg-gray-100 hover:text-blue-700"
                 }`}
@@ -316,7 +316,7 @@ const Navbar = () => {
                 Dashboard
               </Link>
               <Link
-                to="/profile/owner"
+                to="/profile/host"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
                   isActive("/profile")

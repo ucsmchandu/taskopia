@@ -1,7 +1,7 @@
 import React from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
-const WorkerAnalytics = () => {
+const AllyAnalytics = () => {
   const monthlyData = [
     { month: "Jan", earnings: 2400 },
     { month: "Feb", earnings: 3200 },
@@ -68,4 +68,4 @@ const WorkerAnalytics = () => {
   );
 };
 
-export default WorkerAnalytics;
+export default AllyAnalytics;

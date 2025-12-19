@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { ClipboardList, CheckCircle, Coins, TrendingUp,ChevronRight  } from "lucide-react";
-import WorkerActiveTasks from "../../components/WorkerDashboardComponents/Worker.ActiveTasks";
-import WorkerAnalytics from "../../components/WorkerDashboardComponents/Worker.Analytics";
-import WorkerEarnings from "../../components/WorkerDashboardComponents/Worker.Earnings";
-import WorkerHistory from "../../components/WorkerDashboardComponents/Worker.History";
+import AllyActiveTasks from "../../components/AllyDashboardComponents/Ally.ActiveTasks";
+import AllyAnalytics from "../../components/AllyDashboardComponents/Ally.Analytics";
+import AllyEarnings from "../../components/AllyDashboardComponents/Ally.Earnings";
+import AllyHistory from "../../components/AllyDashboardComponents/Ally.History";
 import { Link } from "react-router-dom";
-const WorkerDashboard = () => {
+const AllyDashboard = () => {
   const [section, setSection] = useState("active");
 
   return (
@@ -14,7 +14,7 @@ const WorkerDashboard = () => {
       {/* Header */}
       <div className=" flex flex-col md:flex-row items-center justify-between ">
         <div className="flex flex-col">
-          <h1 className="text-4xl font-bold">Worker Dashboard</h1>
+          <h1 className="text-4xl font-bold">Ally Dashboard</h1>
           <p className="text-gray-500 mt-1">
             Track your tasks, earnings, performance, and history.
           </p>
@@ -109,19 +109,19 @@ const WorkerDashboard = () => {
         <div className="mt-8">
 
           {section === "active" && (
-            <WorkerActiveTasks/>
+            <AllyActiveTasks/>
           )}
 
           {section === "earnings" && (
-           <WorkerEarnings/>
+           <AllyEarnings/>
           )}
 
           {section === "history" && (
-           <WorkerHistory/>
+           <AllyHistory/>
           )}
 
           {section === "analytics" && (
-            <WorkerAnalytics/>
+            <AllyAnalytics/>
           )}
 
         </div>
@@ -130,4 +130,4 @@ const WorkerDashboard = () => {
   );
 };
 
-export default WorkerDashboard;
+export default AllyDashboard;

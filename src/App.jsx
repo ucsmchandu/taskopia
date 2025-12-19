@@ -5,15 +5,15 @@ import Layout from "./MainLayout/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import JobPosting from "./pages/OwnerPages/JobPosting";
+import JobPosting from "./pages/HostPages/JobPosting";
 import AuthContextProvider from "./AuthContextApi/AuthContext";
-import WorkerProfile from "./pages/WorkerPages/WorkerProfile";
-import OwnerProfile from "./pages/OwnerPages/OwnerProfile";
-import WorkerDashboard from "./pages/WorkerPages/WorkerDashboard";
-import OwnerDashboard from "./pages/OwnerPages/OwnerDashboard";
+import AllyProfile from "./pages/AllyPages/AllyProfile";
+import HostProfile from "./pages/HostPages/HostProfile";
+import AllyDashboard from "./pages/AllyPages/AllyDashboard";
+import HostDashboard from "./pages/HostPages/HostDashboard";
 import Scroll from "./components/Scroll";
-import JobApply from "./pages/WorkerPages/JobApply";
-import JobListings from "./pages/WorkerPages/JobListings";
+import JobApply from "./pages/AllyPages/JobApply";
+import JobListings from "./pages/AllyPages/JobListings";
 import ForgetPassword from "./components/Authentication/ForgetPassword";
 import FirebaseUserDataContextProvider from './AuthContextApi/FirebaseDataContext'
 const App = () => {
@@ -28,10 +28,10 @@ const App = () => {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="post/job" element={<JobPosting />} />
-            <Route path="profile/worker" element={<WorkerProfile />} />
-            <Route path="profile/owner" element={<OwnerProfile />} />
-            <Route path="owner/dashboard" element={<OwnerDashboard />} />
-            <Route path="worker/dashboard" element={<WorkerDashboard/>} />
+            <Route path="profile/ally" element={<AllyProfile />} />
+            <Route path="profile/host" element={<HostProfile />} />
+            <Route path="host/dashboard" element={<HostDashboard />} />
+            <Route path="ally/dashboard" element={<AllyDashboard/>} />
             <Route path="apply/job" element={<JobApply/>} />
             <Route path="job/listings" element={<JobListings/>} />
             <Route path="password_reset" element={<ForgetPassword/>} />

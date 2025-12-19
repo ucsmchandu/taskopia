@@ -1,7 +1,7 @@
 import React from "react";
 import { Wallet, ArrowDownCircle, Clock, CheckCircle } from "lucide-react";
 
-const WorkerEarnings = () => {
+const AllyEarnings = () => {
   return (
     <div className="p-4 sm:p-6 bg-white rounded-xl shadow-md border border-gray-100 text-gray-800 max-w-full">
       {/* Header */}
@@ -132,4 +132,4 @@ const WorkerEarnings = () => {
   );
 };
 
-export default WorkerEarnings;
+export default AllyEarnings;
