@@ -3,7 +3,9 @@ import { useAuth } from "../AuthContextApi/AuthContext";
 import { auth } from "../Firebase/Firebase";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 const WorkerProfile = () => {
+  const queryClient=useQueryClient();
   const navigate = useNavigate();
   //user details from the login
   const { currentUser } = useAuth();
@@ -51,6 +53,7 @@ const WorkerProfile = () => {
   const logout = async () => {
     let userConfirmation = confirm("Do you want to logout?");
     if (userConfirmation) {
+      queryClient.clear();
       await auth.signOut();
       navigate("/");
     }

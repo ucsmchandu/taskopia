@@ -3,12 +3,14 @@ import { CheckCheck, BotMessageSquare, UserRoundPen, LogOut } from "lucide-react
 import { Link } from "react-router-dom";
 import { auth } from "../../Firebase/Firebase";
 import { useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
+import { useQueryClient } from "@tanstack/react-query";
 const OwnerActiveTasks = () => {
+  const queryClient=useQueryClient();
   const navigate=useNavigate();
   const logout=async()=>{
     const userConfirmation=confirm("are you want to logout?");
     if(userConfirmation){
+      queryClient.clear();
       await auth.signOut();
       navigate("/");
     }

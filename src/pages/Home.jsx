@@ -13,9 +13,10 @@ import { useFirebaseContext } from "../AuthContextApi/FirebaseDataContext";
 const Home = () => {
   const {currentUser}=useAuth();
   const {user,isLoading,isError}=useFirebaseContext();
-  console.log(user);
+  // console.log(user);
   // const ref=useReveal();
-
+  if(isError)
+    throw new Error(isError);
 // console.log(user)
   return (
     <div className="scroll-smooth">

@@ -53,7 +53,7 @@ const StartHome = ({ user, isLoading }) => {
           </p>
 
           {/* Buttons */}
-          <div className="relative mt-10">
+          <div className="relative pointer-events-auto mt-10">
             {isLoading && (
               <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/60 backdrop-blur-sm rounded-lg">
                 <div className="flex items-center gap-2">

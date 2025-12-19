@@ -5,6 +5,8 @@ import { auth } from "../Firebase/Firebase";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import getOwnerProfileData from "../ApiHooks/OwnerHooks/getOwnerProfileData";
 
 // this place holder is used when the actual image is not loaded
 const Placeholder = ({ className = "h-20 w-20 rounded-full bg-gray-200" }) => (
@@ -28,33 +30,24 @@ const Placeholder = ({ className = "h-20 w-20 rounded-full bg-gray-200" }) => (
   </div>
 );
 
-
 const OwnerProfile = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-  const firebaseId=currentUser?.uid;
-  // const [profileData,setProfileData]=useState([]);
-  const [loading,setLoading]=useState(false);
-  // get the profile data based on the firebase uid
-  const {data,isLoading,isError,refetch}=useQuery({
-    queryKey:['ownerProfile',firebaseId],
-    queryFn:async()=>{
-      const res=await axios.get(`http://localhost:3000/taskopia/u1/api/owner-profile/get/profile/${firebaseId}`);
-      // setProfileData(res.data.profileData);
-      return res.data.profileData;
-    },
-    enabled:!!firebaseId
-  });
-  // console.log(data);
+  const firebaseId = currentUser?.uid;
+  const [isEdit, setIsEdit] = useState(false);
+  const [loading, setLoading] = useState(false);
+  // used for mobile modal animation (mounted -> animate up)
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const [profile, setProfile] = useState({
-    userProfilePhotoUrl: currentUser?.photoURL || null,
-    businessProfilePhotoUrl: null, // user supplied
-    firstName: currentUser?.displayName?.split?.(" ")?.[0] || "",
-    lastName: currentUser?.displayName?.split?.(" ")?.[1] || "",
+  const defaultProfile = {
+    userProfilePhotoUrl: null,
+    businessProfilePhotoUrl: null,
+    firstName: "",
+    lastName: "",
     businessName: "",
     phone: "",
-    gmail: currentUser?.email || "",
+    gmail: "",
     adminVerify: false,
     rating: 4.8,
     reviews: 12,
@@ -65,11 +58,54 @@ const OwnerProfile = () => {
     landmark: "",
     status: "Active",
     description: "",
-  });
+  };
+  const [profile, setProfile] = useState(defaultProfile);
 
-  const [isEdit, setIsEdit] = useState(false);
-  // used for mobile modal animation (mounted -> animate up)
-  const [modalVisible, setModalVisible] = useState(false);
+  // get the profile data based on the firebase uid
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["ownerProfile", firebaseId],
+    queryFn: () => getOwnerProfileData(firebaseId),
+    enabled: !!currentUser?.uid,
+    staleTime: 5 * 60 * 1000, //5 min
+    gcTime: 10 * 60 * 1000, // 5 min
+    refetchOnReconnect: true,
+  });
+  // console.log(currentUser.uid)
+  // console.log(data);
+
+  // this is for display the data in their respective fields while editing
+  const mapProfileData = (data, currentUser) => ({
+    userProfilePhotoUrl:
+      currentUser.photoURL || data?.userProfilePhotoUrl || null,
+
+    businessProfilePhotoUrl: data?.businessProfilePhotoUrl || null,
+
+    firstName:
+      data?.firstName || currentUser.displayName?.split(" ")?.[0] || "",
+
+    lastName: data?.lastName || currentUser.displayName?.split(" ")?.[1] || "",
+
+    businessName: data?.businessName || "",
+    phone: data?.phone || "",
+    gmail: data?.gmail || currentUser.email || "",
+
+    adminVerify: data?.adminVerify || false,
+    rating: data?.rating?.average || 4.8,
+    reviews: data?.rating?.count || 12,
+
+    state: data?.addressDetails?.[0]?.state || "",
+    city: data?.addressDetails?.[0]?.city || "",
+    pincode: data?.addressDetails?.[0]?.pinCode || "",
+    address: data?.addressDetails?.[0]?.address || "",
+    landmark: data?.addressDetails?.[0]?.landMark || "",
+
+    status: data?.status || "Active",
+    description: data?.description || "",
+  });
+  useEffect(() => {
+    if (!isEdit || !data || !currentUser) return;
+    setProfile(mapProfileData(data, currentUser));
+  }, [isEdit, data, currentUser]);
 
   useEffect(() => {
     if (isEdit) {
@@ -96,62 +132,71 @@ const OwnerProfile = () => {
   };
 
   // image preview this is used to preview the image on the div container
-  const getPreview=(image)=>{
-    if(!image) return null;
-    return typeof image==="string" ? image:URL.createObjectURL(image);
-  }
+  const getPreview = (image) => {
+    if (!image) return null;
+    return typeof image === "string" ? image : URL.createObjectURL(image);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-      setProfile((p) => ({ ...p, [name]: value }));
+    setProfile((p) => ({ ...p, [name]: value }));
   };
 
-  
-  // submit the data 
-  const handleSubmit = async(e) => {
+  // submit new profile data
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData=new FormData();
-    formData.append("firebaseUid",currentUser?.uid);
-    formData.append("userProfilePhotoUrl",profile.userProfilePhotoUrl ? profile.userProfilePhotoUrl:null);
-    formData.append("businessProfilePhotoUrl",profile.businessProfilePhotoUrl ? profile.businessProfilePhotoUrl : null);
-    formData.append("firstName",profile.firstName);
-    formData.append("lastName",profile.lastName);
-    formData.append("businessName",profile.businessName);
-    formData.append("phone",profile.phone);
-    formData.append("gmail",profile.gmail);
-    formData.append("state",profile.state);
-    formData.append("city",profile.city);
-    formData.append("pincode",profile.pincode);
-    formData.append("address",profile.address);
-    formData.append("landmark",profile.landmark);
-    formData.append("description",profile.description);
-    // console.log("Profile payload (console-only):", formData);
-    try{
+    const formData = new FormData();
+    formData.append("firebaseUid", currentUser?.uid);
+    formData.append(
+      "userProfilePhotoUrl",
+      profile.userProfilePhotoUrl ? profile.userProfilePhotoUrl : null
+    );
+    formData.append(
+      "businessProfilePhotoUrl",
+      profile.businessProfilePhotoUrl ? profile.businessProfilePhotoUrl : null
+    );
+    formData.append("firstName", profile.firstName);
+    formData.append("lastName", profile.lastName);
+    formData.append("businessName", profile.businessName);
+    formData.append("phone", profile.phone);
+    formData.append("gmail", profile.gmail);
+    formData.append("state", profile.state);
+    formData.append("city", profile.city);
+    formData.append("pincode", profile.pincode);
+    formData.append("address", profile.address);
+    formData.append("landmark", profile.landmark);
+    formData.append("description", profile.description);
+    const formObject=Object.fromEntries(formData.entries());
+    console.log(formObject);
+    try {
       setLoading(true);
       // TODO : change the api after backend deployment
-      const res=await axios.post("http://localhost:3000/taskopia/u1/api/owner-profile/upload/profile",formData);
+      const res = await axios.post(
+        "http://localhost:3000/taskopia/u1/api/owner-profile/upload/profile",
+        formData
+      );
       console.log(res);
-      toast.success("Profile data is submitted",{
-        position:'top-left'
+      toast.success("Profile data is submitted", {
+        position: "top-left",
       });
       setProfile({
-            firstName:"",
-            lastName:"",
-            businessName:"",
-            phone:"",
-            gmail:"",
-            state:"",
-            city:"",
-            pincode:"",
-            address:"",
-            landmark:"",
-            description:""
+        firstName: "",
+        lastName: "",
+        businessName: "",
+        phone: "",
+        gmail: "",
+        state: "",
+        city: "",
+        pincode: "",
+        address: "",
+        landmark: "",
+        description: "",
       });
-    }catch(err){
+    } catch (err) {
       console.log(err);
       console.log(err.message);
-      return;
-    }finally{
+      throw err;
+    } finally {
       setLoading(false);
     }
     // close with animation
@@ -160,9 +205,48 @@ const OwnerProfile = () => {
     setTimeout(() => setIsEdit(false), 240);
   };
 
+  // submit the edited data
+  const handleEditData = async (e) => {
+     e.preventDefault();
+    try {
+     
+      const editFormData = new FormData();
+      editFormData.append("firebaseUid", currentUser?.uid);
+      editFormData.append(
+        "userProfilePhotoUrl",
+        profile.userProfilePhotoUrl ? profile.userProfilePhotoUrl : null
+      );
+      editFormData.append(
+        "businessProfilePhotoUrl",
+        profile.businessProfilePhotoUrl ? profile.businessProfilePhotoUrl : null
+      );
+      editFormData.append("firstName", profile.firstName);
+      editFormData.append("lastName", profile.lastName);
+      editFormData.append("businessName", profile.businessName);
+      editFormData.append("phone", profile.phone);
+      editFormData.append("gmail", profile.gmail);
+      editFormData.append("state", profile.state);
+      editFormData.append("city", profile.city);
+      editFormData.append("pincode", profile.pincode);
+      editFormData.append("address", profile.address);
+      editFormData.append("landmark", profile.landmark);
+      editFormData.append("description", profile.description);
+      const formObject = Object.fromEntries(editFormData.entries());
+      console.log(formObject);
+    } catch (err) {
+      console.log(err);
+      console.log(err.message);
+      throw err;
+    }
+     setModalVisible(false);
+    // small delay to allow slide-down animation, then unmount modal
+    setTimeout(() => setIsEdit(false), 240);
+  };
+
   const logout = async () => {
     const ok = confirm("Are you sure you want to logout?");
     if (!ok) return;
+    queryClient.clear();
     await auth.signOut();
     navigate("/");
   };
@@ -204,7 +288,8 @@ const OwnerProfile = () => {
                       {data?.businessName || "Your Business Name"}
                     </h1>
                     <p className="text-xs sm:text-sm text-sky-700/80 mt-1">
-                      {data?.addressDetails?.[0].city || "City"}, {data?.addressDetails?.[0].state || "State"}
+                      {data?.addressDetails?.[0].city || "City"},{" "}
+                      {data?.addressDetails?.[0].state || "State"}
                     </p>
 
                     <div className="mt-2 flex flex-wrap gap-2 items-center">
@@ -213,7 +298,8 @@ const OwnerProfile = () => {
                           {renderStars(data?.rating?.average)}
                         </div>
                         <span className="text-sm text-sky-800 font-medium">
-                          {data?.rating?.average} · {data?.rating?.count} reviews
+                          {data?.rating?.average} · {data?.rating?.count}{" "}
+                          reviews
                         </span>
                       </div>
                       {data?.adminVerify ? (
@@ -247,7 +333,7 @@ const OwnerProfile = () => {
                     onClick={() => setIsEdit(true)}
                     className="bg-sky-700 cursor-pointer hover:bg-sky-800 text-white px-4 py-2 rounded-lg shadow-md"
                   >
-                    Edit Profile
+                    {data ? "Edit Profile" : "Set Profile Data"}
                   </button>
                 </div>
               </div>
@@ -336,16 +422,16 @@ const OwnerProfile = () => {
                 Contact
               </h4>
               <p className="text-sm text-sky-700">
-                Phone:{" "}
-                <span className="font-medium">{data?.phone || "—"}</span>
+                Phone: <span className="font-medium">{data?.phone || "—"}</span>
               </p>
               <p className="text-sm text-sky-700 mt-1">
-                Email:{" "}
-                <span className="font-medium">{data?.gmail || "—"}</span>
+                Email: <span className="font-medium">{data?.gmail || "—"}</span>
               </p>
               <p className="text-sm text-sky-700 mt-1">
                 Pincode:{" "}
-                <span className="font-medium">{data?.addressDetails?.[0].pinCode || "—"}</span>
+                <span className="font-medium">
+                  {data?.addressDetails?.[0].pinCode || "—"}
+                </span>
               </p>
             </div>
           </aside>
@@ -383,7 +469,7 @@ const OwnerProfile = () => {
                     onClick={() => setIsEdit(true)}
                     className="bg-sky-700 cursor-pointer hover:bg-sky-800 text-white px-4 py-2 rounded-lg shadow-md"
                   >
-                    Edit
+                    {data ? "Edit" : "Set Profile Data"}
                   </button>
                 </div>
               </div>
@@ -428,10 +514,11 @@ const OwnerProfile = () => {
                     ) : null}
                   </p>
                   <p className="text-sm text-sky-600 mt-2">
-                    {data?.addressDetails?.[0].city && data?.addressDetails?.[0].state
-                      ? `${data?.addressDetails?.[0].state}, ${data?.addressDetails?.[0].city} - ${
-                          data?.addressDetails?.[0].pinCode || ""
-                        }`
+                    {data?.addressDetails?.[0].city &&
+                    data?.addressDetails?.[0].state
+                      ? `${data?.addressDetails?.[0].state}, ${
+                          data?.addressDetails?.[0].city
+                        } - ${data?.addressDetails?.[0].pinCode || ""}`
                       : ""}
                   </p>
                 </div>
@@ -519,7 +606,7 @@ const OwnerProfile = () => {
           {/* modal container */}
           <div className="absolute p-2 md:w-full top-1/4 bottom-0 right-0 left-0 md:inset-0 md:top-32 flex justify-center">
             <form
-              onSubmit={handleSubmit}
+              onSubmit={data ? handleEditData: handleSubmit}
               className={`w-full md:w-3/4 lg:w-2/3 bg-white rounded-t-2xl md:rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6
           transform transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)]
           ${
@@ -562,8 +649,10 @@ const OwnerProfile = () => {
                     <label className="text-sm text-sky-700 cursor-pointer bg-sky-50 px-3 py-1 rounded">
                       Upload
                       <input
-                      name="userProfilePhotoUrl"
-                        onChange={(e)=>handleImageUpload(e,"userProfilePhotoUrl")}
+                        name="userProfilePhotoUrl"
+                        onChange={(e) =>
+                          handleImageUpload(e, "userProfilePhotoUrl")
+                        }
                         accept="image/*"
                         type="file"
                         className="hidden"
@@ -604,8 +693,10 @@ const OwnerProfile = () => {
                     <label className="text-sm text-sky-700 cursor-pointer bg-sky-50 px-3 py-1 rounded">
                       Upload
                       <input
-                      name="businessProfilePhotoUrl"
-                        onChange={(e)=>handleImageUpload(e,"businessProfilePhotoUrl")}
+                        name="businessProfilePhotoUrl"
+                        onChange={(e) =>
+                          handleImageUpload(e, "businessProfilePhotoUrl")
+                        }
                         accept="image/*"
                         type="file"
                         className="hidden"
@@ -705,12 +796,21 @@ const OwnerProfile = () => {
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="px-4 cursor-pointer py-2 rounded bg-sky-700 text-white shadow"
-                >
-                  Save Changes
-                </button>
+                {data ? (
+                  <button
+                    type="submit"
+                    className="px-4 cursor-pointer py-2 rounded bg-sky-700 text-white shadow"
+                  >
+                    Save Changes
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="px-4 cursor-pointer py-2 rounded bg-sky-700 text-white shadow"
+                  >
+                    Add Profile
+                  </button>
+                )}
               </div>
             </form>
           </div>
