@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useAuth } from "../AuthContextApi/AuthContext";
-import PostTaskButton from "../components/JobPostingComponents/PostTaskButton";
+import { useAuth } from "../../AuthContextApi/AuthContext";
+import PostTaskButton from "../../components/JobPostingComponents/PostTaskButton";
 import axios from "axios";
 const JobPosting = () => {
   const { currentUser } = useAuth();
@@ -64,29 +64,30 @@ const JobPosting = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
     setLoading(true);
     try {
-      const formData=new FormData();
-      formData.append("firebaseId",currentUser?.uid);
-      formData.append("email",currentUser?.email);
-      formData.append("title",taskData.title.trim());
-      formData.append("taskDescription",taskData.taskDescription.trim());
-      formData.append("taskCategory",taskData.taskCategory);
-      formData.append("location",taskData.location.trim());
-      formData.append("amount",taskData.amount.trim());
-      formData.append("urgencyLevel",taskData.urgencyLevel);
-      formData.append("startingDate",taskData.startingDate);
-      formData.append("endingDate",taskData.endingDate);
-      formData.append("workingHours",taskData.workingHours.trim());
-      formData.append("postRemovingDate",taskData.postRemovingDate);
-      formData.append("attachments",taskData.attachments? taskData.attachments:"" );
+      const formData = new FormData();
+      formData.append("firebaseId", currentUser?.uid);
+      formData.append("email", currentUser?.email);
+      formData.append("title", taskData.title.trim());
+      formData.append("taskDescription", taskData.taskDescription.trim());
+      formData.append("taskCategory", taskData.taskCategory);
+      formData.append("location", taskData.location.trim());
+      formData.append("amount", taskData.amount.trim());
+      formData.append("urgencyLevel", taskData.urgencyLevel);
+      formData.append("startingDate", taskData.startingDate);
+      formData.append("endingDate", taskData.endingDate);
+      formData.append("workingHours", taskData.workingHours.trim());
+      formData.append("postRemovingDate", taskData.postRemovingDate);
+      formData.append(
+        "attachments",
+        taskData.attachments ? taskData.attachments : ""
+      );
       // console.log(sendData);
       // here comes the api to post the data for the backend
-      const res=await axios.post('http://localhost:3000/taskopia/u1/api/owner/task/upload-task',formData);
-      console.log(res); 
       toast.success("Task posted successfully!");
       setTaskData({
         title: "",

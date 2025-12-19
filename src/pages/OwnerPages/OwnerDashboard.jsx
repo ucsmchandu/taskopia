@@ -4,12 +4,12 @@ import { TrendingUp } from "lucide-react";
 import { SquareCheckBig } from "lucide-react";
 import { ClockArrowUp,ChevronRight  } from "lucide-react";
 import { Star } from "lucide-react";
-import { useAuth } from "../AuthContextApi/AuthContext";
+import { useAuth } from "../../AuthContextApi/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
 // importing the active task, completed tasks, analytics components
-import OwnerActiveTask from "../components/OwnerDashboard.componets/Owner.ActiveTask";
-import OwnerAnalytics from "../components/OwnerDashboard.componets/Owner.Analytics";
-import OwnerCompletedTasks from "../components/OwnerDashboard.componets/Owner.History";
+import OwnerActiveTask from "../../components/OwnerDashboard.componets/Owner.ActiveTask";
+import OwnerAnalytics from "../../components/OwnerDashboard.componets/Owner.Analytics";
+import OwnerCompletedTasks from "../../components/OwnerDashboard.componets/Owner.History";
 const OwnerDashboard = () => {
   const {currentUser}=useAuth();
 

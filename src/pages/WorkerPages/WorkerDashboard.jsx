@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { ClipboardList, CheckCircle, Coins, TrendingUp,ChevronRight  } from "lucide-react";
-import WorkerActiveTasks from "../components/WorkerDashboardComponents/Worker.ActiveTasks";
-import WorkerAnalytics from "../components/WorkerDashboardComponents/Worker.Analytics";
-import WorkerEarnings from "../components/WorkerDashboardComponents/Worker.Earnings";
-import WorkerHistory from "../components/WorkerDashboardComponents/Worker.History";
+import WorkerActiveTasks from "../../components/WorkerDashboardComponents/Worker.ActiveTasks";
+import WorkerAnalytics from "../../components/WorkerDashboardComponents/Worker.Analytics";
+import WorkerEarnings from "../../components/WorkerDashboardComponents/Worker.Earnings";
+import WorkerHistory from "../../components/WorkerDashboardComponents/Worker.History";
 import { Link } from "react-router-dom";
 const WorkerDashboard = () => {
   const [section, setSection] = useState("active");

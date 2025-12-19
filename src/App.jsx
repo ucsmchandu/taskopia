@@ -5,19 +5,16 @@ import Layout from "./MainLayout/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import JobPosting from "./pages/JobPosting";
+import JobPosting from "./pages/OwnerPages/JobPosting";
 import AuthContextProvider from "./AuthContextApi/AuthContext";
-import WorkerProfile from "./pages/WorkerProfile";
-import OwnerProfile from "./pages/OwnerProfile";
-import WorkerDashboard from "./pages/WorkerDashboard";
-import OwnerDashboard from "./pages/OwnerDashboard";
+import WorkerProfile from "./pages/WorkerPages/WorkerProfile";
+import OwnerProfile from "./pages/OwnerPages/OwnerProfile";
+import WorkerDashboard from "./pages/WorkerPages/WorkerDashboard";
+import OwnerDashboard from "./pages/OwnerPages/OwnerDashboard";
 import Scroll from "./components/Scroll";
-import JobApply from "./pages/JobApply";
-import JobListings from "./pages/JobListings";
-import WorkerAppliedJobs from "./pages/Worker.AppliedJobs";
+import JobApply from "./pages/WorkerPages/JobApply";
+import JobListings from "./pages/WorkerPages/JobListings";
 import ForgetPassword from "./components/Authentication/ForgetPassword";
-import OwnerPublicProfile from "./pages/OwnerPublicProfile";
-import WorkerPublicProfile from "./pages/WorkerPublicProfile";
 import FirebaseUserDataContextProvider from './AuthContextApi/FirebaseDataContext'
 const App = () => {
   return (
@@ -37,10 +34,7 @@ const App = () => {
             <Route path="worker/dashboard" element={<WorkerDashboard/>} />
             <Route path="apply/job" element={<JobApply/>} />
             <Route path="job/listings" element={<JobListings/>} />
-            <Route path="applied-jobs" element={<WorkerAppliedJobs/>} />
             <Route path="password_reset" element={<ForgetPassword/>} />
-            <Route path="owner/public-profile" element={<OwnerPublicProfile/>} />
-            <Route path="worker/public-profile" element={<WorkerPublicProfile/>} ></Route>
             {/* <Route path="xyz" element={<ApiCalls/>} /> */}
           </Route>
         </Routes>
