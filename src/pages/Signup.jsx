@@ -86,7 +86,7 @@ const Signup = () => {
     } finally {
       setLoading(false);
     }
-    navigate("/login");
+    // navigate("/login");
     setData({
       userName: "",
       email: "",

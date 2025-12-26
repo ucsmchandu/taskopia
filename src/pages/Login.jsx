@@ -33,12 +33,13 @@ const Login = () => {
     // console.log(data);
     setLoading(true);
     try {
-      // logging using the email and password
+      // logging using the email and password (creates the token which is send to backend)
       const userCredential = await signInWithEmailAndPassword(
         auth,
         data.email,
         data.password
       );
+      // console.log(userCredential);
 
       const user = userCredential.user;
       if (!user.emailVerified) {

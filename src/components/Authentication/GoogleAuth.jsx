@@ -23,6 +23,11 @@ const GoogleAuth = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
+      // this is used to send the req to backend to verify the user 
+      // console.log(user.accessToken);
+      const firebaseToken=await user.getIdToken();
+      console.log(firebaseToken);
+
       // here we are checking the user already exists or not
       const userRef = doc(firestore, "users", user.uid); //getting the user details by using the uid
       const userSnap = await getDoc(userRef);
