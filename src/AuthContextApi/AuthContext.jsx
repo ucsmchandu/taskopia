@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { createContext } from "react";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-
+import FullscreenLoader from "../components/FullScreenLoader";
 export const AuthContext = createContext();
 
 const checkAuth = async () => {
@@ -38,7 +38,7 @@ const AuthContextProvider = ({ children }) => {
   return (
     <>
       <AuthContext.Provider value={{ currentUser: data, loading: isLoading }}>
-        {isLoading ? <div>Loading...</div> : children}
+        {isLoading ? <><FullscreenLoader/></> : children}
       </AuthContext.Provider>
     </>
   );
