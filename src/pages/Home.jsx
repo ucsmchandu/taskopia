@@ -9,20 +9,16 @@ import { Target } from "lucide-react";
 import Path from '../components/HomeComponents/Path'
 import AllySuggestions from "../components/HomeComponents/Ally.Suggestions";
 import HostSuggestions from "../components/HomeComponents/Host.Suggestions";
-import { useFirebaseContext } from "../AuthContextApi/FirebaseDataContext";
 const Home = () => {
-  const {currentUser}=useAuth();
-  const {user,isLoading,isError}=useFirebaseContext();
-  // console.log(user);
+  const {currentUser,loading}=useAuth();
   // const ref=useReveal();
-  if(isError)
-    throw new Error(isError);
+
 // console.log(user)
   return (
     <div className="scroll-smooth">
 
       {/* animated home content */}
-      <StartHome user={user} isLoading={isLoading} />
+      <StartHome user={currentUser} isLoading={loading} />
 
       {/* information content */}
       <Cards />
@@ -130,11 +126,11 @@ const Home = () => {
 
       {/* ready to experince */}
        {
-         !user && (
+         !currentUser && (
           <Path/>
-         ) || user.userType==="ally" && (
+         ) || currentUser.userType==="ally" && (
           <AllySuggestions/>
-         ) || user.userType==="host" && (
+         ) || currentUser.userType==="host" && (
           <HostSuggestions/>
          )
        }

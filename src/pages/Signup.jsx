@@ -9,6 +9,7 @@ import {
 import { setDoc, doc } from "firebase/firestore";
 import EmailButton from "../components/styles/EmailButton/EmailButton";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 const Signup = () => {
   const navigate = useNavigate();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -50,7 +51,6 @@ const Signup = () => {
       return;
     }
     setLoading(true);
-    // console.log(data);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -62,20 +62,27 @@ const Signup = () => {
       await sendEmailVerification(userCredential.user);
       toast.success("Verification email is sent! please check your inbox.");
       // console.log(userCredential);
+      const firebaseToken = await userCredential.user.getIdToken();
+      // console.log(firebaseToken);
 
-      // storing the users data in doc 
-      await setDoc(doc(firestore, "users", userCredential.user.uid), {
-        userId: userCredential.user.uid,
-        email: userCredential.user.email,
-        userName: data.userName, 
-        userType: data.userType, // student or host
-      });
+      const sendData = {
+        firebaseToken,
+        userName: data.userName,
+        email: data.email,
+        userType: data.userType,
+      };
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/register`,
+        sendData,
+        { withCredentials: true }
+      );
+      // console.log(res);
     } catch (err) {
       console.log(err);
-      console.log("message :",err.message);
-      if(err.message=="Firebase: Error (auth/email-already-in-use)."){
-        toast.error("Email is already in use. Try another email!",{
-          position:"top-right"
+      console.log("message :", err.message);
+      if (err.message == "Firebase: Error (auth/email-already-in-use).") {
+        toast.error("Email is already in use. Try another email!", {
+          position: "top-right",
         });
         return;
       }

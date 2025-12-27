@@ -5,7 +5,10 @@ import GoogleAuth from "../components/Authentication/GoogleAuth";
 import { auth } from "../Firebase/Firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 const Login = () => {
+  const queryClient=useQueryClient();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
@@ -42,10 +45,20 @@ const Login = () => {
       // console.log(userCredential);
 
       const user = userCredential.user;
+      const firebaseToken = await user.getIdToken();
+      // console.log(firebaseToken);
       if (!user.emailVerified) {
         toast.warning("Please verify your email before logging in.");
         return;
       }
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/login`,
+        { firebaseToken },
+        { withCredentials: true }
+      );
+      // console.log(res);
+      queryClient.invalidateQueries(["authData"]);
       toast.success("Login successful!");
     } catch (err) {
       console.log(err);

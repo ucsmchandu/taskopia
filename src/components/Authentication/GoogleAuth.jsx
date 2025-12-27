@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { setDoc, doc, getDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
-import { firestore } from "../../Firebase/Firebase";
+import { useQueryClient } from "@tanstack/react-query";
 import { auth } from "../../Firebase/Firebase";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 const GoogleAuth = () => {
+  const queryClient=useQueryClient();
   const [userType, setUserType] = useState("");
   console.log(userType);
   const location = useLocation();
@@ -23,45 +24,27 @@ const GoogleAuth = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // this is used to send the req to backend to verify the user 
-      // console.log(user.accessToken);
-      const firebaseToken=await user.getIdToken();
-      console.log(firebaseToken);
+      // this is used to send the req to backend to verify the user
+      const firebaseToken = await user.getIdToken();
+      // console.log(firebaseToken);
 
-      // here we are checking the user already exists or not
-      const userRef = doc(firestore, "users", user.uid); //getting the user details by using the uid
-      const userSnap = await getDoc(userRef);
-      if (userSnap.exists()) {
-        const savedRole = userSnap.data().userType;
-        if (userType !== savedRole) {
-          //checking the current user type with already stored usertype
-          toast.error(
-            `This email is already registered as ${savedRole}. You cannot login as ${userType}`,
-            {
-              position: "top-right",
-            }
-          );
-          return;
-        }
-      }
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/auto/signin`,
+        { firebaseToken, userType },
+        { withCredentials: true }
+      );
+      // reload the auth data from cache to update the ui
+      queryClient.invalidateQueries(["authData"]);
 
-      if (user) {
-        // storing all four main data points
-        await setDoc(doc(firestore, "users", user.uid), {
-          userId: user.uid,
-          email: user.email,
-          userName: user.displayName,
-          userType: userType,
-        });
-        toast.success("User login SuccessFull", {
-          position: "top-right",
-        });
-        navigate(from, { replace: true });
-      }
+      toast.success("User login SuccessFull", {
+        position: "top-right",
+      });
+      setUserType("");
+      navigate(from, { replace: true });
     } catch (err) {
-      console.log(err);
-      console.log(err.message);
-      toast.error("Google signin failed", {
+      // console.log(err);
+      console.log(err.response.data.message);
+      toast.error(`${err.response.data.message}`, {
         position: "top-right",
       });
       return;
