@@ -15,11 +15,9 @@ import Scroll from "./components/Scroll";
 import JobApply from "./pages/AllyPages/JobApply";
 import JobListings from "./pages/AllyPages/JobListings";
 import ForgetPassword from "./components/Authentication/ForgetPassword";
-import FirebaseUserDataContextProvider from './AuthContextApi/FirebaseDataContext'
 const App = () => {
   return (
     <AuthContextProvider>
-      <FirebaseUserDataContextProvider>
         <Router>
         <Scroll/>
         <Routes>
@@ -40,7 +38,6 @@ const App = () => {
         </Routes>
         <ToastContainer />
       </Router>
-      </FirebaseUserDataContextProvider>
     </AuthContextProvider>
   );
 };

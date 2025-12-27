@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContextApi/AuthContext";
-import {useFirebaseContext} from '../AuthContextApi/FirebaseDataContext' 
 // import { auth } from "../Firebase/Firebase";
 const Navbar = () => {
   // getting the auth data from the auth context
-  const { currentUser } = useAuth();
-  // getting the firebase data using firebase context
-  const {user,isLoading,isError}=useFirebaseContext();
+  const { currentUser,loading } = useAuth();
+  // console.log(currentUser);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,11 +18,9 @@ const Navbar = () => {
     "py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200";
 
   // Prevent flicker while loading
-  if (isLoading) {
+  if (loading) {
     return null;
   }
-  if(isError)
-    console.log(isError);
 
   return (
     <nav className="fixed w-full z-50 top-0 left-0 pt-6">
@@ -80,7 +76,7 @@ const Navbar = () => {
             )}
 
             {/* ally Links */}
-            {user?.userType === "ally" && (
+            {currentUser?.userType === "ally" && (
               <>
                 <Link
                   to="/job/listings"
@@ -125,7 +121,7 @@ const Navbar = () => {
             )}
 
             {/* host Links */}
-            {user?.userType === "host" && (
+            {currentUser?.userType === "host" && (
               <>
                 <Link
                   to="/post/job"
@@ -244,7 +240,7 @@ const Navbar = () => {
           )}
 
           {/* ally */}
-          {user?.userType === "ally" && (
+          {currentUser?.userType === "ally" && (
             <>
               <Link
                 to="/job/listings"
@@ -291,7 +287,7 @@ const Navbar = () => {
             </>
           )}
 
-          {user?.userType === "host" && (
+          {currentUser?.userType === "host" && (
             <>
               <Link
                 to="/post/job"

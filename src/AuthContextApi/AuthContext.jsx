@@ -1,41 +1,48 @@
-import React from 'react'
-import { useContext,useEffect,useState } from 'react'
-import { onAuthStateChanged } from 'firebase/auth'
-import {firestore,auth} from '../Firebase/Firebase'
-import { getDoc,doc } from 'firebase/firestore'
-import { createContext } from 'react'
+import React from "react";
+import { useContext, useEffect, useState } from "react";
+import { createContext } from "react";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
-export const AuthContext=createContext();
+export const AuthContext = createContext();
 
+const checkAuth = async () => {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/auth/me`,
+      { withCredentials: true }
+    );
+    // console.log(res)
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    console.log(err.message);
+    throw err;
+  }
+};
 
-const AuthContextProvider = ({children}) => {
+const AuthContextProvider = ({ children }) => {
+  // const [loading, setLoading] = useState(true);
+  // const [currentUser, setCurrentUser] = useState(null);
 
-  const [loading,setLoading]=useState(true);
-  const [currentUser,setCurrentUser]=useState(null);
-
-  useEffect(()=>{
-    const unsubcribe=onAuthStateChanged(auth,async(user)=>{
-      if(user){
-        const docRef=await getDoc(doc(firestore,"users",user.uid));
-        // console.log(user)
-        if(docRef.exists() && user.emailVerified) //email verified is for the manual signin i.e that the user clicks the link or not
-          setCurrentUser(user);
-      }else{
-        setCurrentUser(null);
-      }
-      setLoading(false);
-    });
-    return ()=> unsubcribe();
-  },[]);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["authData"],
+    queryFn: checkAuth,
+    retry: 1,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
 
   return (
-    <div>
-        <AuthContext.Provider value={{currentUser,loading}}>
-            {!loading && children}
-        </AuthContext.Provider>
-    </div>
-  )
-}
+    <>
+      <AuthContext.Provider value={{ currentUser: data, loading: isLoading }}>
+        {isLoading ? <div>Loading...</div> : children}
+      </AuthContext.Provider>
+    </>
+  );
+};
 
-export default AuthContextProvider
-export const useAuth=()=>useContext(AuthContext);
+export default AuthContextProvider;
+export const useAuth = () => useContext(AuthContext);
