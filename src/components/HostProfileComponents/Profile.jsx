@@ -151,7 +151,7 @@ const Profile = ({ data }) => {
               <div className=" w-fit">
                 <button
                   onClick={() => setShowModel(true)}
-                  className="border px-5 py-0.5 rounded-lg border-gray-400 shadow-sm cursor-pointer text-sm  font-medium"
+                  className="border px-5 py-1 hover:scale-110 bg-blue-500 text-white rounded-lg bg-blend-darken border-gray-400 shadow-sm cursor-pointer text-sm  font-medium"
                 >
                   Edit
                 </button>
@@ -172,7 +172,7 @@ const Profile = ({ data }) => {
                     max-h-[90vh] overflow-auto"
           >
             <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+              className="absolute top-3 right-3 cursor-pointer bg-red-300 p-0.5 rounded-4xl px-2 text-red-500 hover:"
               onClick={() => setShowModel(false)}
             >
               ✕
