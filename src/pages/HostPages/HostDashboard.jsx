@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { TrendingUp } from "lucide-react";
 import { SquareCheckBig } from "lucide-react";
-import { ClockArrowUp,ChevronRight  } from "lucide-react";
+import { ClockArrowUp, ChevronRight } from "lucide-react";
 import { Star } from "lucide-react";
 import { useAuth } from "../../AuthContextApi/AuthContext";
 import { useQueryClient } from "@tanstack/react-query";
@@ -11,7 +11,7 @@ import HostActiveTask from "../../components/HostDashboard.componets/Host.Active
 import HostAnalytics from "../../components/HostDashboard.componets/Host.Analytics";
 import HostCompletedTasks from "../../components/HostDashboard.componets/Host.History";
 const HostDashboard = () => {
-  const {currentUser}=useAuth();
+  const { currentUser } = useAuth();
 
   const [components, setComponents] = useState("activeTasks");
   return (
@@ -28,7 +28,10 @@ const HostDashboard = () => {
 
         {/* right buttons */}
         <div>
-          <Link to="/post/job" className="text-sm flex flex-row items-center justify-center gap-1 bg-[#257180] text-white hover:scale-105 rounded-2xl mt-4 md:mt-0 py-2 px-4 cursor-pointer transition">
+          <Link
+            to="/post/job"
+            className="text-sm flex flex-row items-center justify-center gap-1 bg-[#257180] text-white hover:scale-105 rounded-2xl mt-4 md:mt-0 py-2 px-4 cursor-pointer transition"
+          >
             Post New Task <ChevronRight size={15} />
           </Link>
         </div>
