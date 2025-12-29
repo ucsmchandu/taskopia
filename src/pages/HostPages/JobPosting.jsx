@@ -385,8 +385,8 @@ const JobPosting = () => {
             </div>
           </form>
 
-          <div className="lg:w-96 space-y-6">
-            <div className="bg-white shadow rounded-xl p-6 space-y-4">
+          <div className="lg:w-96 space-y-6 ">
+            <div className="bg-white shadow lg:sticky lg:top-32 rounded-xl p-6 space-y-4">
               <h2 className="font-semibold text-xl text-slate-800 text-center">
                 Task Preview
               </h2>

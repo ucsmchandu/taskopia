@@ -26,7 +26,7 @@ const GoogleAuth = () => {
 
       // this is used to send the req to backend to verify the user
       const firebaseToken = await user.getIdToken();
-      console.log(firebaseToken);
+      // console.log(firebaseToken);
 
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/auto/signin`,
