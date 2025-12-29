@@ -15,6 +15,7 @@ import Scroll from "./components/Scroll";
 import JobApply from "./pages/AllyPages/JobApply";
 import JobListings from "./pages/AllyPages/JobListings";
 import ForgetPassword from "./components/Authentication/ForgetPassword";
+import ViewTaskDetails from "./components/HostDashboard.componets/ViewTaskDetails";
 const App = () => {
   return (
     <AuthContextProvider>
@@ -33,7 +34,7 @@ const App = () => {
             <Route path="apply/job" element={<JobApply/>} />
             <Route path="job/listings" element={<JobListings/>} />
             <Route path="password_reset" element={<ForgetPassword/>} />
-            {/* <Route path="xyz" element={<ApiCalls/>} /> */}
+            <Route path="task/details/:id" element={<ViewTaskDetails/>} />
           </Route>
         </Routes>
         <ToastContainer />

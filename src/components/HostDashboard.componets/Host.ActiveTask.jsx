@@ -10,6 +10,8 @@ import { auth } from "../../Firebase/Firebase";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+
+// get tasks
 const getActiveTasks = async () => {
   try {
     const res = await axios.get(
@@ -44,7 +46,6 @@ const HostActiveTasks = () => {
   });
 
   // console.log(tasks);
-
   const navigate = useNavigate();
   const logout = async () => {
     const userConfirmation = confirm("are you want to logout?");
@@ -55,14 +56,40 @@ const HostActiveTasks = () => {
     }
     return;
   };
+  // let tasks=[];
+
+  //  formatting the date
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   return (
     <>
-      {!tasks && (isPending || isFetching) ? (
+    {/* laoding */}
+      {(isPending || isFetching) && (
         <div className="flex flex-col items-center justify-center h-40 space-y-2">
           <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
           <p className="text-gray-700 font-semibold">Loading your Tasks...</p>
         </div>
-      ) : (
+      )}
+
+      {/*  */}
+      {!isPending && !isFetching && tasks?.length === 0 && (
+        <div className="flex flex-col justify-center items-center">
+          <p className="text-xl sm:text-2xl text-gray-500 text-center italic mt-30">
+            Nothing here yet — check back soon!
+          </p>
+          <button className="text-sm w-fit cursor-pointer mt-6 px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition">
+            Post Task
+          </button>
+        </div>
+      )}
+
+      {!isPending && !isFetching && tasks?.length > 0 && (
         <>
           <div className="mt-10 text-gray-800 px-4 sm:px-6 lg:px-0">
             {/* heading */}
@@ -106,16 +133,19 @@ const HostActiveTasks = () => {
                       <div className="flex flex-col sm:flex-row gap-4 text-sm text-gray-600">
                         <p>
                           <span className="font-medium">Start:</span>{" "}
-                          {task.startingDate.split("T")[0]}
+                          {formatDate(task.startingDate)}
                         </p>
                         <p>
                           <span className="font-medium">Due:</span>{" "}
-                          {task.endingDate.split("T")[0]}
+                          {formatDate(task.endingDate)}
                         </p>
                       </div>
-                      <button className="w-full cursor-pointer sm:w-auto px-6 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors">
+                      <Link
+                        to={`/task/details/${task._id}`}
+                        className="w-full flex justify-center cursor-pointer sm:w-auto px-6 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
+                      >
                         View Details
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 ))}
