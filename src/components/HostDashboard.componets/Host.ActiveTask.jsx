@@ -61,7 +61,6 @@ const useLogout = () => {
 };
 
 const HostActiveTasks = () => {
-  
   const {
     data: tasks,
     isPending,
@@ -109,151 +108,163 @@ const HostActiveTasks = () => {
       )}
 
       {/*  */}
-      {!isPending && !isFetching && tasks?.length === 0 && (
-        <div className="flex flex-col justify-center items-center">
-          <p className="text-xl sm:text-2xl text-gray-500 text-center italic mt-30">
-            Nothing here yet — check back soon!
-          </p>
-          <button className="text-sm w-fit cursor-pointer mt-6 px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition">
-            Post Task
-          </button>
-        </div>
-      )}
+      {!isPending &&
+        !isFetching &&
+        tasks?.length > 0 &&
+        tasks.every(
+          (t) => t.status === "completed" || t.status === "cancelled"
+        ) && (
+          <div className="flex flex-col justify-center items-center">
+            <p className="text-xl sm:text-2xl text-gray-500 italic mt-30">
+              Nothing here yet — check back soon!
+            </p>
 
-      {!isPending && !isFetching && tasks?.length > 0 && (
-        <>
-          <div className="mt-10 text-gray-800 px-4 sm:px-6 lg:px-0">
-            {/* heading */}
-            <div className="mt-6">
-              <h1 className="text-2xl sm:text-3xl font-semibold">
-                Current Task
-              </h1>
-            </div>
+            <Link to="/post/job" className="text-sm w-fit mt-6 px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white">
+              Post Task
+            </Link>
+          </div>
+        )}
 
-            <div className="flex flex-col md:flex-row gap-6 mt-6">
-              <div className="flex-1 flex flex-col gap-6">
-                {tasks.map((task) => (
-                  <div
-                    key={task._id}
-                    className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8 hover:shadow-lg transition-shadow"
-                  >
-                    {/* Top section */}
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                      <div className="flex gap-2">
-                        <span className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
-                          {task.urgency}
-                        </span>
-                        <span className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
-                          {task?.status}
-                        </span>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-2xl font-semibold text-gray-900">
-                          ₹{task.budget}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="text-xl font-semibold text-gray-900 mb-6">
-                      {task.taskTitle}
-                    </h3>
-
-                    {/* Bottom section */}
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4 border-t border-gray-200">
-                      <div className="flex flex-col sm:flex-row gap-4 text-sm text-gray-600">
-                        <p>
-                          <span className="font-medium">Start:</span>{" "}
-                          {formatDate(task.startingDate)}
-                        </p>
-                        <p>
-                          <span className="font-medium">Due:</span>{" "}
-                          {formatDate(task.endingDate)}
-                        </p>
-                      </div>
-                      <Link
-                        to={`/task/details/${task._id}`}
-                        className="w-full flex justify-center cursor-pointer sm:w-auto px-6 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
-                      >
-                        View Details
-                      </Link>
-                    </div>
-                  </div>
-                ))}
+      {!isPending &&
+        !isFetching &&
+        tasks?.some(
+          (t) => t.status !== "completed" && t.status !== "cancelled"
+        ) && (
+          <>
+            <div className="mt-10 text-gray-800 px-4 sm:px-6 lg:px-0">
+              {/* heading */}
+              <div className="mt-6">
+                <h1 className="text-2xl sm:text-3xl font-semibold">
+                  Current Task
+                </h1>
               </div>
 
-              <aside className="md:w-64 w-full border border-gray-300 p-4 sm:p-6  bg-gradient-to-t from-[#aac0c8] to-[#98D8EF] rounded-xl shadow-sm self-start md:self-auto">
-                <h1 className="text-lg sm:text-2xl font-semibold">
-                  Quick Actions
-                </h1>
+              <div className="flex flex-col md:flex-row gap-6 mt-6">
+                <div className="flex-1 flex flex-col gap-6">
+                  {tasks.map((task) => (
+                    <div
+                      key={task._id}
+                      className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8 hover:shadow-lg transition-shadow"
+                    >
+                      {/* Top section */}
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <div className="flex gap-2">
+                          <span className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                            {task.urgency}
+                          </span>
+                          <span className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                            {task?.status}
+                          </span>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-2xl font-semibold text-gray-900">
+                            ₹{task.budget}
+                          </p>
+                        </div>
+                      </div>
 
-                <div className="flex flex-col mt-4 gap-3">
-                  <Link
-                    to="/profile/host"
-                    className="flex gap-3 items-center border border-gray-200 shadow-lg rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition"
-                  >
-                    <UserRoundPen size={18} />{" "}
-                    <span className="truncate text-black">Update Profile</span>
-                  </Link>
+                      {/* Title */}
+                      <h3 className="text-xl font-semibold text-gray-900 mb-6">
+                        {task.taskTitle}
+                      </h3>
 
-                  <Link
-                    to=""
-                    className="flex gap-3 items-center border border-gray-200 shadow-lg rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition"
-                  >
-                    <BotMessageSquare size={18} />{" "}
-                    <span className="truncate text-black">AI</span>
-                  </Link>
-
-                  <Link
-                    to="/post/job"
-                    className="flex gap-3 items-center border border-gray-200 shadow-lg rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition"
-                  >
-                    <CheckCheck size={18} />{" "}
-                    <span className="truncate text-black">Post a Task</span>
-                  </Link>
-
-                  <button
-                    disabled={createLogout.isFetching}
-                    onClick={logout}
-                    className="flex gap-3 text-white items-center bg-red-500 rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-red-600 transition"
-                  >
-                    {createLogout.isPending ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <svg
-                          className="animate-spin h-5 w-5"
-                          viewBox="0 0 24 24"
+                      {/* Bottom section */}
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4 border-t border-gray-200">
+                        <div className="flex flex-col sm:flex-row gap-4 text-sm text-gray-600">
+                          <p>
+                            <span className="font-medium">Start:</span>{" "}
+                            {formatDate(task.startingDate)}
+                          </p>
+                          <p>
+                            <span className="font-medium">Due:</span>{" "}
+                            {formatDate(task.endingDate)}
+                          </p>
+                        </div>
+                        <Link
+                          to={`/task/details/${task._id}`}
+                          className="w-full flex justify-center cursor-pointer sm:w-auto px-6 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
                         >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                            fill="none"
-                          />
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          />
-                        </svg>
-                        Logging out...
-                      </span>
-                    ) : (
-                      <>
-                        {" "}
-                        <LogOut size={18} />{" "}
-                        <span className="truncate text-white">Logout</span>
-                      </>
-                    )}
-                  </button>
+                          View Details
+                        </Link>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </aside>
+
+                <aside className="md:w-64 w-full border border-gray-300 p-4 sm:p-6  bg-gradient-to-t from-[#aac0c8] to-[#98D8EF] rounded-xl shadow-sm self-start md:self-auto">
+                  <h1 className="text-lg sm:text-2xl font-semibold">
+                    Quick Actions
+                  </h1>
+
+                  <div className="flex flex-col mt-4 gap-3">
+                    <Link
+                      to="/profile/host"
+                      className="flex gap-3 items-center border border-gray-200 shadow-lg rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition"
+                    >
+                      <UserRoundPen size={18} />{" "}
+                      <span className="truncate text-black">
+                        Update Profile
+                      </span>
+                    </Link>
+
+                    <Link
+                      to=""
+                      className="flex gap-3 items-center border border-gray-200 shadow-lg rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition"
+                    >
+                      <BotMessageSquare size={18} />{" "}
+                      <span className="truncate text-black">AI</span>
+                    </Link>
+
+                    <Link
+                      to="/post/job"
+                      className="flex gap-3 items-center border border-gray-200 shadow-lg rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition"
+                    >
+                      <CheckCheck size={18} />{" "}
+                      <span className="truncate text-black">Post a Task</span>
+                    </Link>
+
+                    <button
+                      disabled={createLogout.isFetching}
+                      onClick={logout}
+                      className="flex gap-3 text-white items-center bg-red-500 rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-red-600 transition"
+                    >
+                      {createLogout.isPending ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <svg
+                            className="animate-spin h-5 w-5"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                              fill="none"
+                            />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            />
+                          </svg>
+                          Logging out...
+                        </span>
+                      ) : (
+                        <>
+                          {" "}
+                          <LogOut size={18} />{" "}
+                          <span className="truncate text-white">Logout</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </aside>
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
     </>
   );
 };
