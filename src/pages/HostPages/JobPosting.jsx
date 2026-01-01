@@ -5,6 +5,7 @@ import PostTaskButton from "../../components/JobPostingComponents/PostTaskButton
 import axios from "axios";
 import { useQueryClient,useMutation } from "@tanstack/react-query";
 
+// post task 
 const usePostTask=()=>{
   const queryClient=useQueryClient();
 
@@ -48,18 +49,18 @@ const JobPosting = () => {
   const [loading, setLoading] = useState(false);
 
   // TODO : need to implement the other related categories
-  const categories = [
-    "Design",
-    "Writing",
-    "Marketing",
-    "Programming",
-    "Administrative",
-    "Translation",
-    "Data Entry",
-    "Customer Service",
-    "Research",
-    "Other",
-  ];
+  // const categories = [
+  //   "Design",
+  //   "Writing",
+  //   "Marketing",
+  //   "Programming",
+  //   "Administrative",
+  //   "Translation",
+  //   "Data Entry",
+  //   "Customer Service",
+  //   "Research",
+  //   "Other",
+  // ];
 
   const handleData = (e) => {
     const { name, value, files } = e.target;
@@ -67,6 +68,7 @@ const JobPosting = () => {
     else setTaskData({ ...taskData, [name]: value });
   };
 
+  // func to validate the form
   const validateForm = () => {
     const newErrors = {};
     if (!taskData.title.trim()) newErrors.title = "Title is required";
@@ -88,6 +90,7 @@ const JobPosting = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // submit the data
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -194,7 +197,7 @@ const JobPosting = () => {
                 <label className="text-sm font-medium text-slate-700 mb-1 block">
                   Category
                 </label>
-                <select
+                {/* <select
                   name="taskCategory"
                   value={taskData.taskCategory}
                   onChange={handleData}
@@ -204,7 +207,15 @@ const JobPosting = () => {
                   {categories.map((c, i) => (
                     <option key={i}>{c}</option>
                   ))}
-                </select>
+                </select> */}
+                 <input
+                  type="text"
+                  name="taskCategory"
+                  placeholder="eg: Customer Service, Design"
+                  value={taskData.taskCategory}
+                  onChange={handleData}
+                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
                 {errors.taskCategory && (
                   <p className="text-red-500 text-sm mt-1">{errors.taskCategory}</p>
                 )}
@@ -374,8 +385,8 @@ const JobPosting = () => {
             </div>
           </form>
 
-          <div className="lg:w-96 space-y-6">
-            <div className="bg-white shadow rounded-xl p-6 space-y-4">
+          <div className="lg:w-96 space-y-6 ">
+            <div className="bg-white shadow lg:sticky lg:top-32 rounded-xl p-6 space-y-4">
               <h2 className="font-semibold text-xl text-slate-800 text-center">
                 Task Preview
               </h2>

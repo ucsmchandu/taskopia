@@ -30,8 +30,8 @@ const AuthContextProvider = ({ children }) => {
     queryFn: checkAuth,
     retry: 1,
     refetchOnMount: true,
-    refetchOnWindowFocus: false,
-    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
     gcTime: 5 * 60 * 1000,
   });
 
