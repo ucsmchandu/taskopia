@@ -111,10 +111,10 @@ const HostDashboard = () => {
         </div>
 
         {/* right buttons */}
-        <div>
+        <div className="">
           <Link
             to="/post/job"
-            className="text-sm flex flex-row items-center justify-center gap-1 bg-[#257180] text-white hover:scale-105 rounded-2xl mt-4 md:mt-0 py-2 px-4 cursor-pointer transition"
+            className="text-sm shadow-lg flex flex-row items-center justify-center text-white gap-1 bg-gradient-to-r from-[#257180] to-[#85cfca] hover:scale-105 rounded-2xl mt-4 md:mt-0 py-2 px-4 cursor-pointer transition"
           >
             Post New Task <ChevronRight size={15} />
           </Link>

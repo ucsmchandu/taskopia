@@ -69,7 +69,10 @@ const HostCompletedTasks = () => {
               Nothing here yet — check back soon!
             </p>
 
-            <Link to="/post/job" className="text-sm w-fit mt-6 cursor-pointer px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white">
+            <Link
+              to="/post/job"
+              className="text-sm w-fit mt-6 cursor-pointer px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white"
+            >
               Post Task
             </Link>
           </div>
