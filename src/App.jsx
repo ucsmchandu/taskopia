@@ -17,6 +17,7 @@ import JobApply from "./pages/AllyPages/JobApply";
 import JobListings from "./pages/AllyPages/JobListings";
 import ForgetPassword from "./components/Authentication/ForgetPassword";
 import ViewTaskDetails from "./components/HostDashboard.componets/ViewTaskDetails";
+import Applications from "./components/HostDashboard.componets/Applications";
 const App = () => {
   return (
     <AuthContextProvider>
@@ -85,6 +86,14 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            <Route
+            path="task/:id/applications"
+            element={
+              <ProtectedRoute>
+                <Applications />
+              </ProtectedRoute>
+            }
+          />
           </Route>
         </Routes>
         <ToastContainer />

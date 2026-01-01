@@ -4,10 +4,19 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Pencil } from "lucide-react";
+import { Link } from "react-router-dom";
 import UpdateTask from "./UpdateTask";
 import { useNavigate } from "react-router-dom";
-
+import {
+  Pencil,
+  Trash2,
+  Users,
+  Calendar,
+  Clock,
+  MapPin,
+  Mail,
+  Briefcase,
+} from "lucide-react";
 // get the tasks
 const getTask = async (id) => {
   try {
@@ -52,7 +61,6 @@ const useDeletingTask = () => {
 
 const ViewTaskDetails = () => {
   const createDelete = useDeletingTask();
-
   const [showModel, setShowModel] = useState(false);
   const { id } = useParams();
   // query here
@@ -72,7 +80,7 @@ const ViewTaskDetails = () => {
     placeholderData: null,
   });
 
-  //   console.log(task);
+    // console.log(task);
   // formatting the date
   const formatDate = (dateString) => {
     // console.log(id)
@@ -138,7 +146,7 @@ const ViewTaskDetails = () => {
                   {task.taskTitle}
                 </h1>
 
-                <p className="text-2xl font-semibold text-gray-900">
+                <p className="text-2xl font-semibold text-blue-500">
                   ₹{task.budget}
                 </p>
               </div>
@@ -175,8 +183,9 @@ const ViewTaskDetails = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1">
-                      Start Date
+                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
+                      <Calendar size={18} />
+                      <span>Start Date</span>
                     </p>
                     <p className="text-gray-900">
                       {formatDate(task.startingDate)}
@@ -184,8 +193,9 @@ const ViewTaskDetails = () => {
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1">
-                      End Date
+                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
+                      <Calendar size={18} />
+                      <span>End Date</span>
                     </p>
                     <p className="text-gray-900">
                       {formatDate(task.endingDate)}
@@ -193,29 +203,33 @@ const ViewTaskDetails = () => {
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1">
-                      Working Hours
+                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
+                      <Clock size={18} />
+                      <span>Working Hours</span>
                     </p>
                     <p className="text-gray-900">{task.workingHours} hours</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1">
-                      Location
+                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
+                      <MapPin size={18} />
+                      <span>Location</span>
                     </p>
                     <p className="text-gray-900">{task.address}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1">
-                      Applications
+                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
+                      <Users size={18} />
+                      <span>Applications</span>
                     </p>
                     <p className="text-gray-900">{task.applicationsCount}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1">
-                      Status
+                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
+                      <Briefcase size={18} />
+                      <span>Status</span>
                     </p>
                     <p className="text-gray-900">
                       {task.isActive ? "Active" : "Inactive"}
@@ -231,21 +245,29 @@ const ViewTaskDetails = () => {
                 </h2>
 
                 <div>
-                  <p className="text-sm font-medium text-gray-500 mb-1">
-                    Email
+                  <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
+                    <Mail size={18} />
+                    <span>Email</span>
                   </p>
                   <p className="text-gray-900">{task.email}</p>
                 </div>
               </div>
 
-              {/* Action Button */}
-              <div className="flex gap-3">
+              {/* Action Buttons */}
+              <div className="flex gap-4 flex-wrap">
                 <button
                   onClick={() => setShowModel(true)}
                   className="flex-1 flex cursor-pointer flex-row justify-center items-center gap-2 px-6 py-3 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <Pencil size={18} /> <span>Edit Task</span>
                 </button>
+
+                <Link
+                to={`/task/${task._id}/applications`}
+                className="flex-1 flex cursor-pointer flex-row justify-center items-center gap-2 px-6 py-3 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+                  <Users size={18} />Applications ({task.applicationsCount})
+                </Link>
+
                 <button
                   onClick={handleDelete}
                   disabled={createDelete.isPending}
@@ -272,12 +294,16 @@ const ViewTaskDetails = () => {
                       Deleting..
                     </span>
                   ) : (
-                    "Delete"
+                    <div className="flex flex-row items-center justify-center gap-2">
+                      <Trash2 size={18} />
+                      Delete
+                    </div>
                   )}
                 </button>
               </div>
             </div>
           </div>
+
           {showModel && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
               <div
