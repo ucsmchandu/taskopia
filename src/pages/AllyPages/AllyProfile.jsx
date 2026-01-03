@@ -38,8 +38,6 @@ export default function AllyProfile() {
     keepPreviousData: true,
     placeholderData: null,
   });
-// console.log(profile)
-  // Fallback data
 
  
   return (
