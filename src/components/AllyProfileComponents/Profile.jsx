@@ -8,11 +8,55 @@ import {
   CheckCircle,
   Award,
   Calendar,
+  LogOut,
 } from "lucide-react";
 import UpdateProfile from "./UpdateProfile";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../../Firebase/Firebase";
+import axios from "axios";
+
+const useLogout = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async () => {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
+      return res.data;
+    },
+    onSuccess: async () => {
+      await auth.signOut();
+      await queryClient.invalidateQueries({
+        queryKey: ["authData"],
+        refetchType: "active",
+      });
+      queryClient.clear();
+      toast.success("Logout Successful");
+      navigate("/");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+      return null;
+    },
+  });
+};
+
 const Profile = ({ profile }) => {
   const [showModel, setShowModel] = useState(false);
   const [showLongBio, setShowLongBio] = useState(false);
+
+  const createLogout = useLogout();
+
+  const logout = () => {
+    const cfrm = confirm("Are you want to logging out...?");
+    if (cfrm) createLogout.mutate();
+    else return;
+  };
 
   // printing the rating stars
   const renderStars = () => {
@@ -70,11 +114,6 @@ const Profile = ({ profile }) => {
                     className="w-24 h-24 sm:w-36 sm:h-36 md:w-44 md:h-44 rounded-full object-cover border-4 border-white shadow-xl"
                     alt="Profile"
                   />
-                  {/* {profileData.verified && (
-                  <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 bg-neutral-800 rounded-full p-1.5 ring-4 ring-white status-dot">
-                    <CheckCircle size={18} className="text-white" />
-                  </div>
-                )} */}
                 </div>
               </div>
 
@@ -217,14 +256,48 @@ const Profile = ({ profile }) => {
             </div>
 
             {/* FOOTER */}
-            <div className="px-4 sm:px-10 pb-6 sm:pb-8 animate-fadeInUp">
-              <div className="bg-neutral-900 rounded-2xl p-4 sm:p-5 text-center">
+            <div className="px-4 flex flex-row items-center gap-6 sm:px-10 pb-6 sm:pb-8 animate-fadeInUp">
+              <div className="bg-neutral-900 w-full rounded-2xl p-4 sm:p-5 text-center">
                 <p className="text-neutral-400 text-xs sm:text-sm">
                   Profile last updated on{" "}
                   <span className="text-white font-medium">
                     {formatDate(profile?.updatedAt)}
                   </span>
                 </p>
+              </div>
+              <div>
+                <button
+                  disabled={createLogout.isPending}
+                  onClick={logout}
+                  className="flex gap-1 text-white px-6 py-3 items-center bg-red-500 rounded-xl w-full p-1 text-sm cursor-pointer hover:bg-red-600 transition"
+                >
+                  {createLogout.isPending ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Logging out...
+                    </span>
+                  ) : (
+                    <>
+                      <LogOut size={18} />{" "}
+                      <span className="truncate text-white">Logout</span>
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>

@@ -40,7 +40,7 @@ const GoogleAuth = () => {
         position: "top-right",
       });
       setUserType("");
-      navigate(from, { replace: true });
+      navigate("/");
     } catch (err) {
       // console.log(err);
       console.log(err.response.data.message);

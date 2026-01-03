@@ -19,7 +19,7 @@ const getActiveTasks = async () => {
     const res = await axios.get(
       `${
         import.meta.env.VITE_BACKEND_BASE
-      }/taskopia/u1/api/tasks/get/all/tasks`,
+      }/taskopia/u1/api/tasks/get/host/tasks`,
       { withCredentials: true }
     );
     return res.data.tasks;
