@@ -1,0 +1,215 @@
+import React from "react";
+import { useState } from "react";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Edit3,
+  CheckCircle,
+  Award,
+  Calendar,
+} from "lucide-react";
+const Profile = ({ profile }) => {
+  const [showLongBio, setShowLongBio] = useState(false);
+
+  const renderStars = () => {
+    const stars = [];
+    const rounded = Math.round(profile?.rating?.average);
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <svg
+          key={i}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          className={`w-4 h-4 ${
+            i <= rounded ? "fill-amber-500" : "fill-gray-300"
+          }`}
+        >
+          <path d="M12 2l2.9 6 6.6.6-5 4.5 1.5 6.3L12 16.8 6 19.4l1.5-6.3-5-4.5 6.6-.6z" />
+        </svg>
+      );
+    }
+    return stars;
+  };
+
+  return (
+    <div className="min-h-screen bg-neutral-100 py-10 px-4 sm:px-6 lg:px-10">
+      <div className="max-w-4xl mx-auto mt-10 sm:mt-20">
+        <div className="bg-white rounded-3xl shadow-xl border border-neutral-200 relative overflow-hidden animate-fadeInUp">
+          {/* HEADER */}
+          <div className="bg-neutral-900 pt-12 sm:pt-16 pb-16 sm:pb-20 px-4 sm:px-10 relative animate-scaleIn">
+            <button className="absolute top-6 right-4 sm:right-6 flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border border-white/20 text-white text-xs sm:text-sm hover:bg-white/10 transition">
+              <Edit3 size={16} />
+              <span className="hidden sm:inline">Edit Profile</span>
+            </button>
+
+            <div className="flex justify-center mb-5 animate-scaleIn">
+              <div className="relative">
+                <img
+                  src={profile?.userProfilePhotoUrl}
+                  className="w-24 h-24 sm:w-36 sm:h-36 md:w-44 md:h-44 rounded-full object-cover border-4 border-white shadow-xl"
+                  alt="Profile"
+                />
+                {/* {profileData.verified && (
+                  <div className="absolute bottom-1 sm:bottom-2 right-1 sm:right-2 bg-neutral-800 rounded-full p-1.5 ring-4 ring-white status-dot">
+                    <CheckCircle size={18} className="text-white" />
+                  </div>
+                )} */}
+              </div>
+            </div>
+
+            <div className="text-center animate-fadeInUp">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white">
+                {profile?.firstName} {profile?.lastName}
+                <span className="text-neutral-300 font-normal text-sm sm:text-base">
+                  , {profile?.age}
+                </span>
+              </h1>
+
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-3">
+                <span className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 text-xs sm:text-sm text-white rounded-full border border-white/20">
+                  <Award size={12} />
+                  Verified Ally
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* STATS + Rating */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 border-b border-neutral-200 -mt-10 relative z-10 mx-4 sm:mx-10 animate-fadeInUp">
+            <div className="bg-white rounded-tl-2xl px-4 py-4 sm:px-6 sm:py-6 border-b sm:border-b-0 sm:border-r border-neutral-200">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Calendar className="text-neutral-700" />
+                <div>
+                  <p className="text-xs text-neutral-500 uppercase">
+                    Member Since
+                  </p>
+                  <p className="font-semibold text-sm sm:text-base">
+                    {profile?.createdAt.split("T")[0]}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white px-4 py-4 sm:px-6 sm:py-6 border-b sm:border-b-0 sm:border-r border-neutral-200">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Award className="text-neutral-700" />
+                <div>
+                  <p className="text-xs text-neutral-500 uppercase">Status</p>
+                  <p className="font-semibold text-sm sm:text-base">Active</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-tr-2xl px-4 py-4 sm:px-6 sm:py-6">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <div className="flex">{renderStars()}</div>
+                <div>
+                  <p className="text-xs text-neutral-500 uppercase">Rating</p>
+                  <p className="font-semibold text-sm sm:text-base">
+                    {profile?.rating?.average.toFixed(1)} / 5
+                  </p>
+                  <p className="text-neutral-500 text-xs">
+                    {profile?.rating?.count} reviews
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ABOUT */}
+          <div className="px-4 sm:px-10 py-6 sm:py-8 animate-fadeInUp">
+            <div className="bg-neutral-50 rounded-2xl p-4 sm:p-6 border border-neutral-200">
+              <h2 className="text-xs sm:text-sm uppercase tracking-wider text-neutral-500 font-semibold mb-2 sm:mb-3">
+                About
+              </h2>
+              <p className="text-neutral-700 leading-relaxed text-sm sm:text-base">
+                {profile?.description}
+              </p>
+              <button
+                onClick={() => setShowLongBio(!showLongBio)}
+                className="mt-2 sm:mt-3 text-sm cursor-pointer font-medium text-neutral-700 hover:text-neutral-900"
+              >
+                {showLongBio ? "Show less" : "Read more"}
+              </button>
+            </div>
+          </div>
+
+          {/* CONTACT */}
+          <div className="px-4 sm:px-10 pb-6 sm:pb-8 grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fadeInUp">
+            <div className="bg-white rounded-2xl p-4 sm:p-6 border border-neutral-200">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center">
+                  <Phone className="text-neutral-700" size={18} />
+                </div>
+                <div>
+                  <p className="text-xs text-neutral-500 uppercase mb-1">
+                    Phone
+                  </p>
+                  <p className="font-medium text-sm sm:text-base">
+                    {profile?.phone}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl p-4 sm:p-6 border border-neutral-200">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center">
+                  <Mail className="text-neutral-700" size={18} />
+                </div>
+                <div>
+                  <p className="text-xs text-neutral-500 uppercase mb-1">
+                    Email
+                  </p>
+                  <p className="font-medium text-sm sm:text-base break-all">
+                    {profile?.gmail}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* LOCATION */}
+          <div className="px-4 sm:px-10 pb-6 sm:pb-8 animate-fadeInUp">
+            <h2 className="text-xs sm:text-sm uppercase tracking-wider text-neutral-500 font-semibold mb-2 sm:mb-3">
+              Location
+            </h2>
+            <div className="bg-neutral-50 rounded-2xl p-4 sm:p-6 border border-neutral-200">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <div className="w-12 h-12 sm:w-12 sm:h-12 rounded-xl bg-white flex items-center justify-center border border-neutral-200">
+                  <MapPin size={20} className="text-neutral-700" />
+                </div>
+                <div>
+                  <p className="text-lg sm:text-xl font-semibold">
+                    {profile?.addressDetails?.city}
+                  </p>
+                  <p className="text-neutral-600 text-sm sm:text-base">
+                    {profile?.addressDetails?.state}
+                  </p>
+                  <p className="text-neutral-500 text-xs sm:text-sm mt-1">
+                    PIN: {profile?.addressDetails?.pinCode}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* FOOTER */}
+          <div className="px-4 sm:px-10 pb-6 sm:pb-8 animate-fadeInUp">
+            <div className="bg-neutral-900 rounded-2xl p-4 sm:p-5 text-center">
+              <p className="text-neutral-400 text-xs sm:text-sm">
+                Profile last updated on{" "}
+                <span className="text-white font-medium">
+                  {profile?.updatedAt.split("T")[0]}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Profile;

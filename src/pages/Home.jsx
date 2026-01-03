@@ -23,10 +23,10 @@ const Home = () => {
       <StartHome user={currentUser} isLoading={loading} />
 
       {/* information content */}
-      {currentUser.userType === "host" ? <HowItWorksSection /> : <Cards />}
+      {currentUser?.userType === "host" ? <HowItWorksSection /> : <Cards />}
 
       {/* why choose taskopia */}
-      {currentUser.userType === "host" ? (
+      {currentUser?.userType === "host" ? (
         <WhyChoose />
       ) : (
         <section className="py-20 px-6 bg-gradient-to-b from-white to-[#8D5F8C]">
@@ -94,7 +94,7 @@ const Home = () => {
 
       {/* What our users saying  */}
 
-      {currentUser.userType === "host" ? (
+      {currentUser?.userType === "host" ? (
         <UserSay />
       ) : (
         <section className="py-20 px-6 bg-white text-center">
@@ -134,11 +134,11 @@ const Home = () => {
           </div>
         </section>
       )}
-      <UserSay />
+      
       {/* ready to experince */}
       {(!currentUser && <Path />) ||
-        (currentUser.userType === "ally" && <AllySuggestions />) ||
-        (currentUser.userType === "host" && <HostSuggestions />)}
+        (currentUser?.userType === "ally" && <AllySuggestions />) ||
+        (currentUser?.userType === "host" && <HostSuggestions />)}
     </div>
   );
 };
