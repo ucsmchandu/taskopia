@@ -62,7 +62,7 @@ const useLogout = () => {
 
 const HostActiveTasks = () => {
   const {
-    data: tasks,
+    data:tasks,
     isPending,
     isFetching,
     isError,
@@ -110,8 +110,8 @@ const HostActiveTasks = () => {
       {/*  */}
       {!isPending &&
         !isFetching &&
-        tasks?.length > 0 &&
-        tasks.every(
+        (tasks?.length === 0 || !tasks) &&
+        tasks?.every(
           (t) => t.status === "completed" || t.status === "cancelled"
         ) && (
           <div className="flex flex-col justify-center items-center">

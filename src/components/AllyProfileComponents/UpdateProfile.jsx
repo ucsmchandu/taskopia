@@ -76,7 +76,7 @@ const UpdateProfile = ({ data }) => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-3xl shadow-xl p-8 md:p-10">
           <div className="border-b border-slate-200 pb-6 mb-8">

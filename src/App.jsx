@@ -18,6 +18,9 @@ import JobListings from "./pages/AllyPages/JobListings";
 import ForgetPassword from "./components/Authentication/ForgetPassword";
 import ViewTaskDetails from "./components/HostDashboard.componets/ViewTaskDetails";
 import Applications from "./components/HostDashboard.componets/Applications";
+import TaskDetailsPage from "./components/ApplyingJobs/TaskDetailsPage";
+import AppliedTasks from "./components/ApplyingJobs/AppliedTasks";
+import ViewAppliedTaskDetails from "./components/ApplyingJobs/ViewAppliedTaskDetails";
 const App = () => {
   return (
     <AuthContextProvider>
@@ -69,7 +72,7 @@ const App = () => {
               }
             />
             <Route
-              path="apply/job"
+              path="apply/job/:applyTaskId"
               element={
                 <ProtectedRoute>
                   <JobApply />
@@ -91,6 +94,33 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Applications />
+              </ProtectedRoute>
+            }
+          />
+
+           <Route
+            path="task/:taskId"
+            element={
+              <ProtectedRoute>
+                <TaskDetailsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="applied-tasks"
+            element={
+              <ProtectedRoute>
+                <AppliedTasks />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="view/applied/task/details/:taskId"
+            element={
+              <ProtectedRoute>
+                <ViewAppliedTaskDetails />
               </ProtectedRoute>
             }
           />

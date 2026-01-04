@@ -9,6 +9,7 @@ import {
   Award,
   Calendar,
   LogOut,
+  X,
 } from "lucide-react";
 import UpdateProfile from "./UpdateProfile";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -304,21 +305,21 @@ const Profile = ({ profile }) => {
         </div>
       </div>
       {showModel && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
             className="absolute inset-0 bg-white/10 "
             onClick={() => setShowModel(false)}
           />
 
           <div
-            className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6 z-10 relative
+            className="bg-white rounded-lg shadow-lg w-full max-w-3xl z-10 relative
                     max-h-[90vh] overflow-auto"
           >
             <button
               className="absolute top-3 right-3 cursor-pointer bg-red-300 p-0.5 rounded-4xl px-2 text-red-500 hover:"
               onClick={() => setShowModel(false)}
             >
-              ✕
+              <X/>
             </button>
             <UpdateProfile data={profile} />
           </div>
