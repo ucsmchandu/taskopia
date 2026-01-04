@@ -226,9 +226,11 @@ const TaskDetailsPage = () => {
                       </div>
                     </div>
 
-                    <button className="w-full py-2.5 border-2 border-gray-900 text-gray-900 font-semibold rounded-xl hover:bg-gray-50 transition-colors duration-200">
+                    {/* <button 
+                    
+                    // className="w-full py-2.5 border-2 border-gray-900 text-gray-900 font-semibold rounded-xl hover:bg-gray-50 transition-colors duration-200">
                       Contact Host
-                    </button>
+                    </button> */}
                   </div>
 
                   {/* Category */}

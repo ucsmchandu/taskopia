@@ -89,14 +89,14 @@ const Navbar = () => {
                   Jobs
                 </Link>
                 <Link
-                  to="/applied-jobs"
+                  to="/applied-tasks"
                   className={`${linkBaseClasses} ${
-                    isActive("/applied-jobs")
+                    isActive("/applied-tasks")
                       ? "text-white bg-blue-600 shadow-md"
                       : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
                 >
-                  Applied Jobs
+                  Applied tasks
                 </Link>
                 <Link
                   to="/profile/ally"
@@ -254,15 +254,15 @@ const Navbar = () => {
                 Jobs
               </Link>
               <Link
-                to="/applied-jobs"
+                to="/applied-tasks"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
-                  isActive("/applied-jobs")
+                  isActive("/applied-tasks")
                     ? "text-white bg-blue-600"
                     : "text-gray-800 hover:bg-gray-100 hover:text-blue-700"
                 }`}
               >
-                Applied Jobs
+                Applied tasks
               </Link>
               <Link
                 to="/profile/ally"

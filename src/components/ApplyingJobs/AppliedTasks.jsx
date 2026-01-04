@@ -37,7 +37,7 @@ const AppliedTasks = () => {
 
   // const tasks=[]
 
-  // console.log(tasks);
+  console.log(tasks);
 
   const statusColors = {
     applied: "bg-gray-100 text-gray-800",
@@ -61,7 +61,7 @@ const AppliedTasks = () => {
           </p>
 
           <Link
-            to=""
+            to="/job/listings"
             className="text-sm w-fit mt-6 px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white"
           >
             Apply Task
@@ -98,21 +98,6 @@ const AppliedTasks = () => {
                   </span>
                 </div>
 
-                {/* Host Information */}
-                {/* <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Task Host</p>
-                  <p className="font-medium text-gray-800">
-                    {task?.host?.firstName} {task?.host?.lastName}
-                  </p>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {task?.host?.addressDetails?.city},{" "}
-                    {task?.host?.addressDetails?.state}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    {task?.host?.addressDetails?.landMark}
-                  </p>
-                </div> */}
-
                 {/* Budget and Date Section */}
                 <div className="flex justify-between items-center mb-4 pb-4 border-b">
                   <div>
@@ -144,9 +129,12 @@ const AppliedTasks = () => {
                 )}
 
                 {/* Action Button */}
-                <button className="w-full cursor-pointer bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-2.5 text-sm font-medium transition-colors">
+                <Link to={`/view/applied/task/details/${task?.task?._id}`}>
+                <button
+                className="w-full cursor-pointer bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-2.5 text-sm font-medium transition-colors">
                   View Details
                 </button>
+                </Link>
               </div>
             ))}
           </div>
