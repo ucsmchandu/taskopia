@@ -37,7 +37,7 @@ const AppliedTasks = () => {
 
   // const tasks=[]
 
-  console.log(tasks);
+  // console.log(tasks);
 
   const statusColors = {
     applied: "bg-gray-100 text-gray-800",
