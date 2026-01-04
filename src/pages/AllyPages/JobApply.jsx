@@ -22,7 +22,7 @@ const useJobApply = (id) => {
     onSuccess: (res) => {
       console.log(res)
       toast.success("Your Application Send Successfully");
-      // TODO : here invalidate the job application in ally profile
+      queryClient.invalidateQueries(["allyAppliedTasks"]);
       navigate("/applied-tasks");
     },
     onError: (err) => {

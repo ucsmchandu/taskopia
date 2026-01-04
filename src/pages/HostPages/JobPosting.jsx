@@ -4,11 +4,12 @@ import { useAuth } from "../../AuthContextApi/AuthContext";
 import PostTaskButton from "../../components/JobPostingComponents/PostTaskButton";
 import axios from "axios";
 import { useQueryClient,useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 // post task 
 const usePostTask=()=>{
   const queryClient=useQueryClient();
-
+  const navigate=useNavigate();
   return useMutation({
     mutationFn:async(formData)=>{
       const res=await axios.post(`${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/tasks/upload/task`,formData,{withCredentials:true});
@@ -18,6 +19,8 @@ const usePostTask=()=>{
       toast.success("Task Posted successfully");
       //TODO: here invalidate the query
       // console.log(res);
+      queryClient.invalidateQueries(["hostTasksData"])
+      navigate('/host/dashboard')
       window.scrollTo(0,0);
     },
     onError:(err)=>{
@@ -47,20 +50,6 @@ const JobPosting = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-
-  // TODO : need to implement the other related categories
-  // const categories = [
-  //   "Design",
-  //   "Writing",
-  //   "Marketing",
-  //   "Programming",
-  //   "Administrative",
-  //   "Translation",
-  //   "Data Entry",
-  //   "Customer Service",
-  //   "Research",
-  //   "Other",
-  // ];
 
   const handleData = (e) => {
     const { name, value, files } = e.target;

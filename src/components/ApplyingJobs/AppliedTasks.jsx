@@ -68,7 +68,7 @@ const AppliedTasks = () => {
           </Link>
         </div>
       )}
-      {!isPending && !isFetching && tasks.length > 0 && (
+      {!isPending && !isFetching && tasks?.length > 0 && (
         <>
           <div className="max-w-3xl min-h-screen mx-auto p-5 mt-20">
             <h1 className="text-2xl font-bold mb-6">Applied Tasks</h1>

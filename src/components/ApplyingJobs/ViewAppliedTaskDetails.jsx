@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
-// TODO : add application cancel and view host profile buttons
 
 // to get the task details
 const getTaskDetails = async (id) => {
