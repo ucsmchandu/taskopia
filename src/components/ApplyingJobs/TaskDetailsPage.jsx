@@ -18,6 +18,22 @@ const getTask = async (id) => {
   }
 };
 
+// to check the task was applied or not
+const getConfirmCheckApplication = async (id) => {
+  try {
+    const res = await axios.get(
+      `${
+        import.meta.env.VITE_BACKEND_BASE
+      }/taskopia/u1/api/application/tasks/${id}/my-application`,
+      { withCredentials: true }
+    );
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
 const TaskDetailsPage = () => {
   const { taskId } = useParams();
   // console.log(taskId);
@@ -38,8 +54,24 @@ const TaskDetailsPage = () => {
     placeholderData: null,
   });
 
-  // console.log(task);
-
+  const {
+    data: checkApply,
+    isPending: pending,
+    isFetching: fetching,
+    isError: Error,
+  } = useQuery({
+    queryKey: ["checkAllyApplyTask"],
+    queryFn: () => getConfirmCheckApplication(taskId),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 2,
+    refetchOnReconnect: true,
+    enabled: true,
+    placeholderData: null,
+  });
+  // console.log(task)
+  // console.log(checkApply);
+  // console.log(Error)
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-IN", {
@@ -185,11 +217,23 @@ const TaskDetailsPage = () => {
                       </p>
                     </div>
 
-                    <Link to={`/apply/job/${taskId}`}>
+                    {(pending || fetching) && (
+                      <div className="flex flex-col items-center justify-center h-40 space-y-2">
+                        <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                        <p className="text-gray-700 font-semibold">Loading</p>
+                      </div>
+                    )}
+                    {!pending && !fetching && checkApply?.applied ? (
                       <button className="w-full cursor-pointer py-4 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-xl transition-colors duration-200 shadow-md hover:shadow-lg">
-                        Apply for This Task
+                        Already Applied
                       </button>
-                    </Link>
+                    ) : (
+                      <Link to={`/apply/job/${taskId}`}>
+                        <button className="w-full cursor-pointer py-4 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-xl transition-colors duration-200 shadow-md hover:shadow-lg">
+                          Apply for This Task
+                        </button>
+                      </Link>
+                    )}
 
                     <div className="mt-4 pt-4 border-t border-gray-100">
                       <p className="text-xs text-gray-500 text-center">
