@@ -305,7 +305,7 @@ const SetupProfile = () => {
           <button
             type="submit"
             disabled={createProfile.isPending}
-            className="w-full md:w-auto px-8 py-4 rounded-xl text-white font-semibold bg-blue-600 hover:bg-blue-700 disabled:opacity-70"
+            className="w-full cursor-pointer md:w-auto px-8 py-4 rounded-xl text-white font-semibold bg-blue-600 hover:bg-blue-700 disabled:opacity-70"
           >
             {createProfile.isPending ? (
               <span className="flex items-center justify-center gap-2">

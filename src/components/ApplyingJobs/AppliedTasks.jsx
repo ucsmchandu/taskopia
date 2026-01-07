@@ -18,6 +18,8 @@ const getAppliedTasks = async () => {
   }
 };
 
+
+
 const AppliedTasks = () => {
   const {
     data: tasks,
@@ -37,7 +39,7 @@ const AppliedTasks = () => {
 
   // const tasks=[]
 
-  // console.log(tasks);
+  // console.log(checkApply);
 
   const statusColors = {
     applied: "bg-gray-100 text-gray-800",
@@ -128,12 +130,17 @@ const AppliedTasks = () => {
                   </div>
                 )}
 
+                {task?.status === "cancelled" && (
+                  <span className="px-2 py-1 text-xs text-white rounded bg-red-500 w-fit">
+                    You cancelled the task
+                  </span>
+                )}
+
                 {/* Action Button */}
                 <Link to={`/view/applied/task/details/${task?.task?._id}`}>
-                <button
-                className="w-full cursor-pointer bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-2.5 text-sm font-medium transition-colors">
-                  View Details
-                </button>
+                  <button className="w-full mt-4 cursor-pointer bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-2.5 text-sm font-medium transition-colors">
+                    View Details
+                  </button>
                 </Link>
               </div>
             ))}
