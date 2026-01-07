@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Check, X, User, Clock, Star } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-// ================= API =================
+//  API
 const getApplications = async (taskId) => {
   const res = await axios.get(
     `${
@@ -27,14 +27,14 @@ const updateApplicationStatus = async ({ id, status }) => {
   return res.data;
 };
 
-// ================= COMPONENT =================
+//  COMPONENT
 const Applications = () => {
   const { id: taskId } = useParams();
   const [filter, setFilter] = useState("all");
-  const [activeAppId, setActiveAppId] = useState(null); // ⭐ NEW
+  const [activeAppId, setActiveAppId] = useState(null);
   const queryClient = useQueryClient();
 
-  // -------- Fetch --------
+  //  Fetch
   const {
     data: applications = [],
     isLoading,
@@ -45,31 +45,33 @@ const Applications = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  // -------- Mutation --------
+  // console.log(applications)
+
+  //  Mutation
   const mutation = useMutation({
     mutationFn: updateApplicationStatus,
     onSuccess: (res) => {
       toast.success(res.message);
       queryClient.invalidateQueries(["hostApplications", taskId]);
-      setActiveAppId(null); // ⭐ RESET
+      setActiveAppId(null); //  RESET
     },
     onError: (err) => {
       toast.error(err?.response?.data?.message || "Action failed");
-      setActiveAppId(null); // ⭐ RESET
+      setActiveAppId(null); //  RESET
     },
   });
 
-  // -------- Handlers --------
+  //  Handlers
   const acceptApplication = (appId) => {
     if (confirm("Are you sure you want to accept this application?")) {
-      setActiveAppId(appId); // ⭐ SET ACTIVE
+      setActiveAppId(appId); //  SET ACTIVE
       mutation.mutate({ id: appId, status: "accepted" });
     }
   };
 
   const rejectApplication = (appId) => {
     if (confirm("Are you sure you want to reject this application?")) {
-      setActiveAppId(appId); // ⭐ SET ACTIVE
+      setActiveAppId(appId); //  SET ACTIVE
       mutation.mutate({ id: appId, status: "rejected" });
     }
   };
@@ -79,7 +81,7 @@ const Applications = () => {
       ? applications
       : applications.filter((a) => a.status === filter);
 
-  // -------- Page Loading --------
+  //  Page Loading
   if (isLoading || isFetching) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -102,7 +104,7 @@ const Applications = () => {
             <button
               key={t}
               onClick={() => setFilter(t)}
-              className={`px-4 py-2 rounded-md text-sm ${
+              className={`px-4 cursor-pointer py-2 rounded-md text-sm ${
                 filter === t
                   ? "bg-gray-900 text-white"
                   : "bg-white border text-gray-600"
@@ -128,7 +130,7 @@ const Applications = () => {
             return (
               <div
                 key={app._id}
-                className="bg-white border rounded-lg p-5 flex gap-4"
+                className="bg-white border border-gray-300 rounded-lg p-5 flex gap-4"
               >
                 <div className="hidden sm:flex w-11 h-11 rounded-full bg-gray-100 items-center justify-center">
                   <User size={18} />
@@ -160,39 +162,53 @@ const Applications = () => {
 
                   <p className="text-gray-600 mb-3">{app.coverMessage}</p>
 
-                  {app.status === "applied" && (
-                    <div className="flex gap-2">
-                      {/* ACCEPT */}
-                      <button
-                        onClick={() => acceptApplication(app._id)}
-                        disabled={isActive}
-                        className="px-3 py-1.5 bg-green-600 text-white rounded-md flex items-center gap-1"
-                      >
-                        {isActive ? (
-                          <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                          <>
-                            <Check size={14} /> Accept
-                          </>
-                        )}
-                      </button>
+                  <div className="flex items-center justify-between mt-2">
+                    <div>
+                      {app.status === "applied" && (
+                        <div className="flex gap-2">
+                          {/* ACCEPT */}
+                          <button
+                            onClick={() => acceptApplication(app._id)}
+                            disabled={isActive}
+                            className="px-3 py-1.5 cursor-pointer bg-green-600 text-white rounded-md flex items-center gap-1"
+                          >
+                            {isActive ? (
+                              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                            ) : (
+                              <>
+                                <Check size={14} /> Accept
+                              </>
+                            )}
+                          </button>
 
-                      {/* REJECT */}
-                      <button
-                        onClick={() => rejectApplication(app._id)}
-                        disabled={isActive}
-                        className="px-3 py-1.5 border rounded-md flex items-center gap-1"
-                      >
-                        {isActive ? (
-                          <span className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                          <>
-                            <X size={14} /> Reject
-                          </>
-                        )}
-                      </button>
+                          {/* REJECT */}
+                          <button
+                            onClick={() => rejectApplication(app._id)}
+                            disabled={isActive}
+                            className="px-3 py-1.5 cursor-pointer border border-gray-400 rounded-md flex items-center gap-1"
+                          >
+                            {isActive ? (
+                              <span className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin" />
+                            ) : (
+                              <>
+                                <X size={14} /> Reject
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  )}
+
+                    <div className="flex-shrink-0">
+                      <Link
+                      to={`/ally/public/profile/${app?.applicant?._id}`}
+                        type="button"
+                        className="px-3 py-1.5 cursor-pointer bg-white border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 flex items-center gap-2 text-sm"
+                      >
+                        <User size={14} /> View Profile
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
             );

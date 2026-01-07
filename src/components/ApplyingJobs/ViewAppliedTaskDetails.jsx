@@ -220,6 +220,13 @@ const AppliedTasksPage = () => {
                             Task Host
                           </div>
                         </div>
+                        <div className="ml-4 hover:scale-105 transition ease-in-out w-fit">
+                          <Link 
+                          to={`/host/public/profile/${tasks?.host?._id}`}
+                          className=" px-2 py-2 shadow-md p-1 rounded-lg text-sm cursor-pointer text-white bg-orange-500">
+                            View Profile
+                          </Link>
+                        </div>
                       </div>
 
                       <div className="pt-4 border-t border-gray-100 space-y-3">
