@@ -74,7 +74,7 @@ const AppliedTasksPage = () => {
     enabled: true,
     placeholderData: null,
   });
-  console.log(tasks);
+  // console.log(tasks);
 
   const statusColors = {
     applied: "bg-blue-50 text-blue-700 border-blue-200",
