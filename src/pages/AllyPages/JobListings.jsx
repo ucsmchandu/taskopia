@@ -98,11 +98,11 @@ const JobListings = () => {
                 Home
               </button>
             </Link>
-            <Link to="">
+            {/* <Link to="/">
               <button className="cursor-pointer px-4 rounded-lg shadow-md hover:shadow-lg text-sm p-1 bg-gradient-to-l from-gray-800 to-gray-600 transition-all duration-300 hover:scale-105 py-2  text-white">
                 My Tasks
               </button>
-            </Link>
+            </Link> */}
             <Link to="/profile/ally">
               <button className="cursor-pointer px-4 rounded-lg shadow-md hover:shadow-lg text-sm p-1 bg-gradient-to-l from-gray-800 to-gray-600 transition-all duration-300 hover:scale-105 py-2  text-white">
                 Profile

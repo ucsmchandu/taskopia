@@ -173,7 +173,7 @@ const AllyDashboard = () => {
         </div>
 
         {/* Section Content */}
-        <div className="mt-8">
+        <div className="mt-8 min-h-screen">
           {section === "active" && <AllyActiveTasks />}
 
           {section === "earnings" && <AllyEarnings />}
