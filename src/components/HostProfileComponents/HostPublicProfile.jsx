@@ -67,14 +67,14 @@ const HostPublicProfile = () => {
   };
 
   const { id } = useParams();
-  console.log(id);
+  // console.log(id);
   const { data, isPending, isFetching, isError } = useQuery({
     queryKey: ["hostPublicProfile", id],
     queryFn: () => getProfile(id),
     staleTime: 5 * 60 * 1000,
   });
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <>

@@ -253,19 +253,29 @@ const TaskDetailsPage = () => {
                   {task?.createdBy?.firstName}
                   {task?.createdBy?.lastName}
                 </div> */}
-                      <div>
-                        <p className="font-semibold text-gray-900">
-                          {task?.createdBy?.firstName}{" "}
-                          {task?.createdBy?.lastName}
-                        </p>
-                        <div className="flex items-center gap-1 mt-1">
-                          <span className="text-amber-500">
-                            <Star size={16} />
-                          </span>
-                          <span className="font-semibold text-gray-900">
-                            {task?.createdBy?.rating.average}
-                          </span>
-                          <span className="text-gray-500 text-sm">/5.0</span>
+                      <div className="flex gap-6">
+                        <div>
+                          <p className="font-semibold text-gray-900">
+                            {task?.createdBy?.firstName}{" "}
+                            {task?.createdBy?.lastName}
+                          </p>
+                          <div className="flex items-center gap-1 mt-1">
+                            <span className="text-amber-500">
+                              <Star size={16} />
+                            </span>
+                            <span className="font-semibold text-gray-900">
+                              {task?.createdBy?.rating.average}
+                            </span>
+                            <span className="text-gray-500 text-sm">/5.0</span>
+                          </div>
+                        </div>
+
+                        <div>
+                          <Link 
+                          to={`/host/public/profile/${task?.createdBy?._id}`}
+                          className="text-sm bg-orange-400 text-white p-1 px-2 rounded-lg shadow-lg hover:scale-105 cursor-pointer transition ease-in-out">
+                            View Profile
+                          </Link>
                         </div>
                       </div>
                     </div>

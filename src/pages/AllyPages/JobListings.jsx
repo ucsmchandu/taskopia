@@ -42,7 +42,7 @@ const JobListings = () => {
       <div className="m-6 mt-30 min-h-screen flex flex-row gap-10 ">
         {/* LEFT  */}
         <div className="w-64 hidden md:block">
-          <div className="flex flex-col gap-3 bg-white shadow-sm p-5 rounded-xl">
+          <div className="flex flex-col gap-3 sticky top-30 bg-white shadow-sm p-5 rounded-xl">
             <Link
               to="/"
               className="flex items-center gap-4 text-gray-700 text-sm cursor-pointer hover:bg-gray-100 p-2 rounded-lg"
