@@ -3,38 +3,80 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../AuthContextApi/AuthContext";
 import PostTaskButton from "../../components/JobPostingComponents/PostTaskButton";
 import axios from "axios";
-import { useQueryClient,useMutation } from "@tanstack/react-query";
+import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-
-// post task 
-const usePostTask=()=>{
-  const queryClient=useQueryClient();
-  const navigate=useNavigate();
+import { useEffect } from "react";
+// post task
+const usePostTask = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   return useMutation({
-    mutationFn:async(formData)=>{
-      const res=await axios.post(`${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/tasks/upload/task`,formData,{withCredentials:true});
+    mutationFn: async (formData) => {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/tasks/upload/task`,
+        formData,
+        { withCredentials: true },
+      );
       return res.data;
     },
-    onSuccess:(res)=>{
+    onSuccess: (res) => {
       toast.success("Task Posted successfully");
       //TODO: here invalidate the query
       // console.log(res);
-      queryClient.invalidateQueries(["hostTasksData"])
-      navigate('/host/dashboard')
-      window.scrollTo(0,0);
+      queryClient.invalidateQueries(["hostTasksData"]);
+      navigate("/host/dashboard");
+      window.scrollTo(0, 0);
     },
-    onError:(err)=>{
+    onError: (err) => {
       console.log(err);
       toast.error("something went wrong");
-    }
-  })
-}
+    },
+  });
+};
+
+// reverse geocoding
+const getLocationName = async (lat, lng) => {
+  try {
+    const response = await axios.get(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
+    );
+    // console.log(data)
+    // const address = data.address;
+
+    // const city = // 90 lat 180 long
+    //   address.city || address.town || address.village || address.county;
+    return response.data;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
 
 const JobPosting = () => {
+  const [coordinates, setCoordinates] = useState({
+    lat: null,
+    lng: null,
+  });
+
+  // get the location name from the api
+  const {
+    data: locationName,
+    isPending,
+    isFetching,
+    isError,
+  } = useQuery({
+    queryKey: ["hostLocationName", coordinates.lat, coordinates.lng],
+    queryFn: () => getLocationName(coordinates.lat, coordinates.lng),
+    staleTime: 6 * 60 * 60 * 1000, //6 hours
+    gcTime: 24 * 60 * 60 * 1000, //24 hours
+    refetchOnWindowFocus: false,
+    enabled: !!coordinates.lat && !!coordinates.lng,
+  });
+
   const { currentUser } = useAuth();
-  const createTask=usePostTask();
+  const createTask = usePostTask();
   // console.log(currentUser.email);
-  // console.log(currentUser.uid); firebase uid for the user  
+  // console.log(currentUser.uid); firebase uid for the user
   const [taskData, setTaskData] = useState({
     title: "",
     taskDescription: "",
@@ -83,6 +125,24 @@ const JobPosting = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
+    const detectedCity =
+      locationName?.address?.city ||
+      locationName?.address?.town ||
+      locationName?.address?.village;
+    ("");
+    const normalizedDetectedCity = detectedCity.toLowerCase().trim();
+    const normalizedTaskCity = taskData.location.toLowerCase().trim();
+
+    if (
+      normalizedDetectedCity &&
+      normalizedTaskCity &&
+      normalizedDetectedCity !== normalizedTaskCity
+    ) {
+      alert(
+        "You are posting a task for a different location than your current location. Please make sure the task is genuine. Posting fake or misleading tasks may lead to account restrictions.",
+      );
+    }
+
     setLoading(true);
     try {
       const formData = new FormData();
@@ -100,9 +160,9 @@ const JobPosting = () => {
       formData.append("postRemovingDate", taskData.postRemovingDate);
       formData.append(
         "attachments",
-        taskData.attachments ? taskData.attachments : ""
+        taskData.attachments ? taskData.attachments : "",
       );
-      
+
       // const formValues = Object.fromEntries(formData.entries());
       // console.log(formValues);
 
@@ -129,13 +189,41 @@ const JobPosting = () => {
     }
   };
 
+  // get the coordinates
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        setCoordinates({
+          lat: lat,
+          lng: lng,
+        });
+      },
+      () => {
+        alert("Location permission is required");
+      },
+    );
+  }, []);
+
+  // console.log(locationName);
+
   return (
     <div className="min-h-screen px-4 lg:px-12 py-10 bg-slate-50">
       <section className="py-8 mb-8 mt-20">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl font-bold mb-2 text-slate-900">Post a Task</h1>
+          <h1 className="text-4xl font-bold mb-2 text-slate-900">
+            Post a Task
+          </h1>
           <p className="text-slate-600 text-lg">
-            Tell us about your project and find the perfect person to complete it
+            Tell us about your project and find the perfect person to complete
+            it
           </p>
         </div>
       </section>
@@ -178,7 +266,9 @@ const JobPosting = () => {
                   className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 />
                 {errors.taskDescription && (
-                  <p className="text-red-500 text-sm mt-1">{errors.taskDescription}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.taskDescription}
+                  </p>
                 )}
               </div>
 
@@ -197,7 +287,7 @@ const JobPosting = () => {
                     <option key={i}>{c}</option>
                   ))}
                 </select> */}
-                 <input
+                <input
                   type="text"
                   name="taskCategory"
                   placeholder="eg: Customer Service, Design"
@@ -206,7 +296,9 @@ const JobPosting = () => {
                   className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 {errors.taskCategory && (
-                  <p className="text-red-500 text-sm mt-1">{errors.taskCategory}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.taskCategory}
+                  </p>
                 )}
               </div>
             </div>
@@ -266,7 +358,9 @@ const JobPosting = () => {
                   <option value="notUrgent">Not Urgent</option>
                 </select>
                 {errors.urgencyLevel && (
-                  <p className="text-red-500 text-sm mt-1">{errors.urgencyLevel}</p>
+                  <p className="text-red-500 text-sm mt-1">
+                    {errors.urgencyLevel}
+                  </p>
                 )}
               </div>
             </div>
@@ -288,7 +382,9 @@ const JobPosting = () => {
                   className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 {errors.startingDate && (
-                  <p className="text-red-600 text-sm mt-1">{errors.startingDate}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.startingDate}
+                  </p>
                 )}
               </div>
 
@@ -304,7 +400,9 @@ const JobPosting = () => {
                   className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 {errors.endingDate && (
-                  <p className="text-red-600 text-sm mt-1">{errors.endingDate}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.endingDate}
+                  </p>
                 )}
               </div>
 
@@ -320,7 +418,9 @@ const JobPosting = () => {
                   className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 {errors.postRemovingDate && (
-                  <p className="text-red-600 text-sm mt-1">{errors.postRemovingDate}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.postRemovingDate}
+                  </p>
                 )}
               </div>
 
@@ -338,7 +438,9 @@ const JobPosting = () => {
                   className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 {errors.workingHours && (
-                  <p className="text-red-600 text-sm mt-1">{errors.workingHours}</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    {errors.workingHours}
+                  </p>
                 )}
               </div>
             </div>
@@ -362,7 +464,7 @@ const JobPosting = () => {
                 type="submit"
                 disabled={loading}
                 className={`px-8 py-3 rounded-lg text-white font-semibold ${
-                  loading ? "bg-slate-400 cursor-not-allowed":""
+                  loading ? "bg-slate-400 cursor-not-allowed" : ""
                 }`}
               >
                 {createTask.isPending ? (

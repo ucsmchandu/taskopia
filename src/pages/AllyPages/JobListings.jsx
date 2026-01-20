@@ -35,7 +35,7 @@ const JobListings = () => {
     enabled: true,
     placeholderData: null,
   });
-  // console.log(tasks);
+  console.log(tasks);
 
   return (
     <>
