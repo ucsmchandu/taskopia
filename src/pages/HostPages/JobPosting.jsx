@@ -57,6 +57,7 @@ const JobPosting = () => {
     lat: null,
     lng: null,
   });
+  const [locationAllowed, setLocationAllowed] = useState(false);
 
   // get the location name from the api
   const {
@@ -102,6 +103,7 @@ const JobPosting = () => {
   // func to validate the form
   const validateForm = () => {
     const newErrors = {};
+
     if (!taskData.title.trim()) newErrors.title = "Title is required";
     if (!taskData.taskDescription.trim())
       newErrors.taskDescription = "Description is required";
@@ -117,6 +119,10 @@ const JobPosting = () => {
       newErrors.workingHours = "Working hours is required";
     if (!taskData.postRemovingDate)
       newErrors.postRemovingDate = "Post removing date is required";
+    if (!locationAllowed || !coordinates.lat || !coordinates.lng) {
+      newErrors.locationAccess = "Location access is required to post a task";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -124,24 +130,28 @@ const JobPosting = () => {
   // submit the data
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!locationAllowed) {
+    toast.error("Please allow location access to post a task");
+    return;
+  }
     if (!validateForm()) return;
-    const detectedCity =
-      locationName?.address?.city ||
-      locationName?.address?.town ||
-      locationName?.address?.village;
-    ("");
-    const normalizedDetectedCity = detectedCity.toLowerCase().trim();
-    const normalizedTaskCity = taskData.location.toLowerCase().trim();
+    // const detectedCity =
+    //   locationName?.address?.city ||
+    //   locationName?.address?.town ||
+    //   locationName?.address?.village;
+    // ("");
+    // const normalizedDetectedCity = detectedCity.toLowerCase().trim();
+    // const normalizedTaskCity = taskData.location.toLowerCase().trim();
 
-    if (
-      normalizedDetectedCity &&
-      normalizedTaskCity &&
-      normalizedDetectedCity !== normalizedTaskCity
-    ) {
-      alert(
-        "You are posting a task for a different location than your current location. Please make sure the task is genuine. Posting fake or misleading tasks may lead to account restrictions.",
-      );
-    }
+    // if (
+    //   normalizedDetectedCity &&
+    //   normalizedTaskCity &&
+    //   normalizedDetectedCity !== normalizedTaskCity
+    // ) {
+    //   alert(
+    //     "You are posting a task for a different location than your current location. Please make sure the task is genuine. Posting fake or misleading tasks may lead to account restrictions.",
+    //   );
+    // }
 
     setLoading(true);
     try {
@@ -162,8 +172,8 @@ const JobPosting = () => {
         "attachments",
         taskData.attachments ? taskData.attachments : "",
       );
-      formData.append("lat",coordinates?.lat);
-      formData.append("lng",coordinates?.lng);
+      formData.append("lat", coordinates?.lat);
+      formData.append("lng", coordinates?.lng);
 
       // const formValues = Object.fromEntries(formData.entries());
       // console.log(formValues);
@@ -194,7 +204,8 @@ const JobPosting = () => {
   // get the coordinates
   useEffect(() => {
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported");
+      alert("Geolocation is not supported by your browser");
+      setLocationAllowed(false);
       return;
     }
 
@@ -203,13 +214,13 @@ const JobPosting = () => {
         const lat = position.coords.latitude;
         const lng = position.coords.longitude;
 
-        setCoordinates({
-          lat: lat,
-          lng: lng,
-        });
+        setCoordinates({ lat, lng });
+        setLocationAllowed(true);
       },
-      () => {
-        alert("Location permission is required");
+      (error) => {
+        console.error(error);
+        setLocationAllowed(false);
+        toast.error("Location access is required to post a task");
       },
     );
   }, []);
@@ -464,7 +475,7 @@ const JobPosting = () => {
             <div className="flex justify-center">
               <div
                 type="submit"
-                disabled={loading}
+                disabled={loading || !locationAllowed}
                 className={`px-8 py-3 rounded-lg text-white font-semibold ${
                   loading ? "bg-slate-400 cursor-not-allowed" : ""
                 }`}

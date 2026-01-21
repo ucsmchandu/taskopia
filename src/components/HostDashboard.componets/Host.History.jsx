@@ -15,7 +15,7 @@ const getTasks = async () => {
     return res.data.tasks;
   } catch (err) {
     console.log(err);
-    if (err.response?.status === 404) return null;
+    if (err.response?.status === 404) return [];
     throw err;
   }
 };
@@ -60,7 +60,6 @@ const HostCompletedTasks = () => {
       {/* if the tasks are not completed or cancelled they are related to the history */}
       {!isPending &&
         !isFetching &&
-        tasks?.length > 0 &&
         tasks.every(
           (t) => t.status !== "completed" || t.status !== "cancelled"
         ) && (
@@ -69,12 +68,12 @@ const HostCompletedTasks = () => {
               Nothing here yet — check back soon!
             </p>
 
-            <Link
+            {/* <Link
               to="/post/job"
               className="text-sm w-fit mt-6 cursor-pointer px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white"
             >
               Post Task
-            </Link>
+            </Link> */}
           </div>
         )}
 

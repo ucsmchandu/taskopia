@@ -6,7 +6,8 @@ import { auth } from "../../Firebase/Firebase";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 const GoogleAuth = () => {
-  const queryClient=useQueryClient();
+  const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
   const [userType, setUserType] = useState("");
   console.log(userType);
   const location = useLocation();
@@ -18,6 +19,7 @@ const GoogleAuth = () => {
       toast.warning("Please select User type!");
       return;
     }
+    setLoading(true);
     // creating a new provider
     const provider = new GoogleAuthProvider();
     try {
@@ -31,7 +33,7 @@ const GoogleAuth = () => {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/auto/signin`,
         { firebaseToken, userType },
-        { withCredentials: true }
+        { withCredentials: true },
       );
       // reload the auth data from cache to update the ui
       queryClient.invalidateQueries(["authData"]);
@@ -48,6 +50,8 @@ const GoogleAuth = () => {
         position: "top-right",
       });
       return;
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -74,13 +78,31 @@ const GoogleAuth = () => {
         </form>
         <button
           onClick={handleGoogleSignin}
-          className="flex cursor-pointer items-center justify-center gap-3 w-full px-6 py-2 rounded-lg bg-gray-900 text-white font-semibold shadow hover:bg-gray-700 transition"
+          disabled={loading}
+          className={`flex items-center justify-center gap-3 w-full px-6 py-2 rounded-lg 
+    font-semibold shadow transition
+    ${
+      loading
+        ? "bg-gray-600 cursor-not-allowed"
+        : "bg-gray-900 hover:bg-gray-700 cursor-pointer text-white"
+    }`}
         >
-          <img
-            src="https://res.cloudinary.com/dllvcgpsk/image/upload/v1743403171/google_zgmnav.png"
-            className="h-6"
-          />
-          <span>Sign in with Google</span>
+          {loading ? (
+            <>
+              {/* Tailwind spinner */}
+              <div className="h-5 w-5 rounded-full border-2 border-white border-t-transparent animate-spin" />
+              <span>Signing in...</span>
+            </>
+          ) : (
+            <>
+              <img
+                src="https://res.cloudinary.com/dllvcgpsk/image/upload/v1743403171/google_zgmnav.png"
+                className="h-6"
+                alt="Google"
+              />
+              <span>Sign in with Google</span>
+            </>
+          )}
         </button>
       </div>
     </>
