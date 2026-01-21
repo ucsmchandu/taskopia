@@ -25,7 +25,7 @@ const getActiveTasks = async () => {
     return res.data.tasks;
   } catch (err) {
     console.log(err);
-    if (err.response?.status === 404) return null;
+    if (err.response?.status === 404) return [];
     throw err;
   }
 };
@@ -110,7 +110,7 @@ const HostActiveTasks = () => {
       {/*  */}
       {!isPending &&
         !isFetching &&
-        (tasks?.length === 0 || !tasks) &&
+        tasks?.length === 0  &&
         tasks?.every(
           (t) => t.status === "completed" || t.status === "cancelled"
         ) && (

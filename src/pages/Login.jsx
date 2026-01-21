@@ -144,7 +144,7 @@ const Login = () => {
                 type="submit"
                 className="w-full py-1 cursor-pointer text-lg bg-blue-600 text-white rounded-md mt-4 hover:bg-blue-700 transition"
               >
-                Sign in
+                Login
               </button>
             )}
           </form>
