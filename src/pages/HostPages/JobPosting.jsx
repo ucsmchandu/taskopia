@@ -151,7 +151,7 @@ const JobPosting = () => {
       formData.append("title", taskData.title.trim());
       formData.append("taskDescription", taskData.taskDescription.trim());
       formData.append("taskCategory", taskData.taskCategory);
-      formData.append("location", taskData.location.trim());
+      formData.append("address", taskData.location.trim());
       formData.append("amount", taskData.amount.trim());
       formData.append("urgencyLevel", taskData.urgencyLevel);
       formData.append("startingDate", taskData.startingDate);
@@ -162,6 +162,8 @@ const JobPosting = () => {
         "attachments",
         taskData.attachments ? taskData.attachments : "",
       );
+      formData.append("lat",coordinates?.lat);
+      formData.append("lng",coordinates?.lng);
 
       // const formValues = Object.fromEntries(formData.entries());
       // console.log(formValues);

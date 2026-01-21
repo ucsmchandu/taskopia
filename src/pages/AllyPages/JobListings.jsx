@@ -20,8 +20,8 @@ const getTasks = async ({ sort, lat, lng, distance, search }) => {
   if (sort) params.sort = sort;
   if (search) params.search = search;
   if (lat !== undefined && lng !== undefined) {
-    params.lat = lat;
-    params.lng = lng;
+    params.lat = Number(lat);
+    params.lng = Number(lng);
     params.distance = distance || 5;
   }
 
