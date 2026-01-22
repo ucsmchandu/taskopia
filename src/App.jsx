@@ -23,6 +23,7 @@ import AppliedTasks from "./components/ApplyingJobs/AppliedTasks";
 import ViewAppliedTaskDetails from "./components/ApplyingJobs/ViewAppliedTaskDetails";
 import AllyPublicProfile from "./components/AllyProfileComponents/AllyPublicProfile";
 import HostPublicProfile from "./components/HostProfileComponents/HostPublicProfile";
+import Chatting from "./pages/Chatting";
 const App = () => {
   return (
     <AuthContextProvider>
@@ -118,6 +119,14 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
+          <Route path="chat" element={
+              <ProtectedRoute>
+                <Chatting />
+              </ProtectedRoute>
+            }
+          />
+
           </Route>
         </Routes>
         <ToastContainer />
