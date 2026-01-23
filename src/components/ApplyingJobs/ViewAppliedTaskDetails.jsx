@@ -1,5 +1,5 @@
 import React from "react";
-import { Calendar, MapPin, Clock, User, FileText, Mail } from "lucide-react";
+import { Calendar, MapPin, Clock, User, FileText, Mail, MessageCircle, X, CheckCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -74,7 +74,7 @@ const AppliedTasksPage = () => {
     enabled: true,
     placeholderData: null,
   });
-  // console.log(tasks);
+  // console.log(tasks?.host?.firebaseUid);
 
   const statusColors = {
     applied: "bg-blue-50 text-blue-700 border-blue-200",
@@ -153,7 +153,7 @@ const AppliedTasksPage = () => {
                         {tasks?.task?.taskCategory}
                       </span>
                       <span
-                        className={`text-xs border-gray-300 sm:text-sm font-medium px-3 py-1 rounded-md border`}
+                        className={`text-xs ${tasks?.task?.urgency==="urgency" ? "text-blue-600":"text-red-600"} border-gray-300 sm:text-sm font-medium px-3 py-1 rounded-md border`}
                       >
                         {tasks?.task?.urgency}
                       </span>
@@ -223,7 +223,8 @@ const AppliedTasksPage = () => {
                         <div className="ml-4 hover:scale-105 transition ease-in-out w-fit">
                           <Link 
                           to={`/host/public/profile/${tasks?.host?._id}`}
-                          className=" px-2 py-2 shadow-md p-1 rounded-lg text-sm cursor-pointer text-white bg-orange-500">
+                          className=" px-3 py-2 shadow-md rounded-lg text-sm cursor-pointer text-orange-400 bg-orange-100 border border-orange-200 inline-flex items-center gap-2 hover:bg-orange-200 transition-colors">
+                            <User size={16} />
                             View Profile
                           </Link>
                         </div>
@@ -352,7 +353,7 @@ const AppliedTasksPage = () => {
                       <button
                         disabled={createCancelApplication.isPending}
                         onClick={cancelApplication}
-                        className="flex-1 bg-red-600 cursor-pointer hover:bg-red-500 text-white font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base"
+                        className="flex-1 bg-red-600 cursor-pointer hover:bg-red-500 text-white font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base inline-flex items-center justify-center gap-2"
                       >
                         {createCancelApplication.isPending ? (
                           <span className="flex items-center justify-center gap-2">
@@ -378,12 +379,24 @@ const AppliedTasksPage = () => {
                             Canceling...
                           </span>
                         ) : (
-                          "Cancel Application"
+                          <>
+                            <X size={18} />
+                            Cancel Application
+                          </>
                         )}
                       </button>
+
+                      <Link
+                        to={`/chat/${taskId}/${tasks?.host?.firebaseUid}`}
+                        className="flex-1 flex justify-center items-center gap-2 bg-blue-600 cursor-pointer hover:bg-blue-500 text-white font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base"
+                      >
+                        <MessageCircle size={18} />
+                        Chat with Host
+                      </Link>
                     </>
                   ) : (
-                    <button className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base">
+                    <button className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base inline-flex items-center justify-center gap-2">
+                      <CheckCircle size={18} className="text-green-600" />
                       {tasks?.status}
                     </button>
                   )}

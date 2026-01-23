@@ -9,7 +9,7 @@ const getTask = async (id) => {
       `${
         import.meta.env.VITE_BACKEND_BASE
       }/taskopia/u1/api/tasks/get/task/${id}`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return res.data.task;
   } catch (err) {
@@ -25,7 +25,7 @@ const getConfirmCheckApplication = async (id) => {
       `${
         import.meta.env.VITE_BACKEND_BASE
       }/taskopia/u1/api/application/tasks/${id}/my-application`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return res.data;
   } catch (err) {
@@ -125,13 +125,15 @@ const TaskDetailsPage = () => {
                 {/* Left Column - Main Details */}
                 <div className="lg:col-span-2 space-y-6">
                   {/* Image */}
-                  <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                    <img
-                      src={task?.attachments}
-                      alt="Task attachment"
-                      className="w-full h-64 sm:h-96 object-cover"
-                    />
-                  </div>
+                  {task.attachments && (
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                      <img
+                        src={task?.attachments}
+                        alt="Task attachment"
+                        className="w-full h-64 sm:h-96 object-cover"
+                      />
+                    </div>
+                  )}
 
                   {/* Description */}
                   <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
@@ -271,9 +273,10 @@ const TaskDetailsPage = () => {
                         </div>
 
                         <div>
-                          <Link 
-                          to={`/host/public/profile/${task?.createdBy?._id}`}
-                          className="text-sm bg-orange-400 text-white p-1 px-2 rounded-lg shadow-lg hover:scale-105 cursor-pointer transition ease-in-out">
+                          <Link
+                            to={`/host/public/profile/${task?.createdBy?._id}`}
+                            className="text-sm bg-orange-400 text-white p-1 px-2 rounded-lg shadow-lg hover:scale-105 cursor-pointer transition ease-in-out"
+                          >
                             View Profile
                           </Link>
                         </div>
