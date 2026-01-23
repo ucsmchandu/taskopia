@@ -70,7 +70,7 @@ const ViewTaskDetails = () => {
     isFetching,
     isError,
   } = useQuery({
-    queryKey: ["singleTask"],
+    queryKey: ["singleTask",id],
     queryFn: () => getTask(id),
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,

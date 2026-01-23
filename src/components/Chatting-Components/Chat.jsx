@@ -153,7 +153,7 @@ const Chat = ({ chatId }) => {
               type="button"
               onClick={sendMessage}
               disabled={!text.trim()}
-              className="p-3.5 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/40 disabled:opacity-40 disabled:shadow-none active:scale-95 transition-all duration-200 disabled:cursor-not-allowed"
+              className="p-3.5 rounded-full cursor-pointer bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-lg shadow-orange-500/40 disabled:opacity-40 disabled:shadow-none active:scale-95 transition-all duration-200 disabled:cursor-not-allowed"
             >
               <Send size={20} strokeWidth={2.5} />
             </button>

@@ -88,7 +88,7 @@ const JobListings = () => {
         lat: isNearby ? coords?.lat : undefined,
         lng: isNearby ? coords?.lng : undefined,
         distance: 5,
-        search:debouncedSearch,
+        search: debouncedSearch,
       }),
     enabled: !isNearby || !!coords,
     staleTime: 5 * 60 * 1000,
@@ -245,11 +245,13 @@ const JobListings = () => {
                 </div>
               </div>
 
-              <img
-                src={task.attachments}
-                alt="task"
-                className="h-32 w-32 rounded-xl object-cover"
-              />
+              {task.attachments && (
+                <img
+                  src={task.attachments}
+                  alt="task"
+                  className="h-32 w-32 rounded-xl object-cover"
+                />
+              )}
             </div>
           ))}
       </div>

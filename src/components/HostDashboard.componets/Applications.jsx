@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Check, X, User, Clock, Star } from "lucide-react";
+import { Check, X, User, Clock, Star, MessageCircle, CircleX   } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useAuth } from "../../AuthContextApi/AuthContext";
 
 //  API
 const getApplications = async (taskId) => {
@@ -33,6 +34,8 @@ const Applications = () => {
   const [filter, setFilter] = useState("all");
   const [activeAppId, setActiveAppId] = useState(null);
   const queryClient = useQueryClient();
+  const {currentUser}=useAuth();
+  // console.log(currentUser)
 
   //  Fetch
   const {
@@ -89,7 +92,7 @@ const Applications = () => {
       </div>
     );
   }
-
+  console.log(filtered)
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-10 mt-20">
@@ -162,21 +165,21 @@ const Applications = () => {
 
                   <p className="text-gray-600 mb-3">{app.coverMessage}</p>
 
-                  <div className="flex items-center justify-between mt-2">
-                    <div>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-4 pt-4 border-t border-gray-200">
+                    <div className="flex flex-wrap gap-2">
                       {app.status === "applied" && (
-                        <div className="flex gap-2">
+                        <>
                           {/* ACCEPT */}
                           <button
                             onClick={() => acceptApplication(app._id)}
                             disabled={isActive}
-                            className="px-3 py-1.5 cursor-pointer bg-green-600 text-white rounded-md flex items-center gap-1"
+                            className="px-4 py-2 cursor-pointer bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-colors"
                           >
                             {isActive ? (
                               <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                             ) : (
                               <>
-                                <Check size={14} /> Accept
+                                <Check size={16} /> <span>Accept</span>
                               </>
                             )}
                           </button>
@@ -185,28 +188,47 @@ const Applications = () => {
                           <button
                             onClick={() => rejectApplication(app._id)}
                             disabled={isActive}
-                            className="px-3 py-1.5 cursor-pointer border border-gray-400 rounded-md flex items-center gap-1"
+                            className="px-4 py-2 cursor-pointer bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-colors"
                           >
                             {isActive ? (
-                              <span className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin" />
+                              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                             ) : (
                               <>
-                                <X size={14} /> Reject
+                                <X size={16} /> Reject
                               </>
                             )}
                           </button>
-                        </div>
+                        </>
+                      )}
+
+                      {app.status === "accepted" && (
+                        <span className="px-4 py-2 flex flex-row justify-center items-center gap-1 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
+                          <Check size={16} /> Accepted
+                        </span>
+                      )}
+
+                      {app.status === "rejected" && (
+                        <span className="flex flex-row justify-center items-center gap-1 px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium">
+                          <CircleX size={16}/> Rejected
+                        </span>
                       )}
                     </div>
 
-                    <div className="flex-shrink-0">
+                    <div className="flex flex-wrap gap-2">
                       <Link
-                      to={`/ally/public/profile/${app?.applicant?._id}`}
-                        type="button"
-                        className="px-3 py-1.5 cursor-pointer bg-white border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 flex items-center gap-2 text-sm"
+                        to={`/ally/public/profile/${app?.applicant?._id}`}
+                        className="px-4 py-2 cursor-pointer bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 flex items-center gap-2 text-sm font-medium transition-colors"
                       >
-                        <User size={14} /> View Profile
+                        <User size={16} /> View Profile
                       </Link>
+
+                      {app.status === "accepted" && (
+                        <Link
+                        to={`/chat/${taskId}/${app?.applicant?.firebaseUid}`}
+                        className="px-4 py-2 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-colors">
+                          <MessageCircle size={16} /> Chat
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </div>
