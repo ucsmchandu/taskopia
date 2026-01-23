@@ -34,37 +34,49 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
-            <Route path="post/job" element={
+            <Route
+              path="post/job"
+              element={
                 <ProtectedRoute>
                   <JobPosting />
                 </ProtectedRoute>
               }
             />
-            <Route path="profile/ally" element={
+            <Route
+              path="profile/ally"
+              element={
                 <ProtectedRoute>
                   <AllyProfile />
                 </ProtectedRoute>
               }
             />
-            <Route path="profile/host" element={
+            <Route
+              path="profile/host"
+              element={
                 <ProtectedRoute>
                   <HostProfile />
                 </ProtectedRoute>
               }
             />
-            <Route path="host/dashboard" element={
+            <Route
+              path="host/dashboard"
+              element={
                 <ProtectedRoute>
                   <HostDashboard />
                 </ProtectedRoute>
               }
             />
-            <Route path="ally/dashboard" element={
+            <Route
+              path="ally/dashboard"
+              element={
                 <ProtectedRoute>
                   <AllyDashboard />
                 </ProtectedRoute>
               }
             />
-            <Route path="apply/job/:applyTaskId" element={
+            <Route
+              path="apply/job/:applyTaskId"
+              element={
                 <ProtectedRoute>
                   <JobApply />
                 </ProtectedRoute>
@@ -72,61 +84,76 @@ const App = () => {
             />
             <Route path="job/listings" element={<JobListings />} />
             <Route path="password_reset" element={<ForgetPassword />} />
-            <Route path="task/details/:id" element={
+            <Route
+              path="task/details/:id"
+              element={
                 <ProtectedRoute>
                   <ViewTaskDetails />
                 </ProtectedRoute>
               }
             />
-            <Route path="task/:id/applications" element={
-              <ProtectedRoute>
-                <Applications />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="task/:id/applications"
+              element={
+                <ProtectedRoute>
+                  <Applications />
+                </ProtectedRoute>
+              }
+            />
 
-           <Route path="task/:taskId" element={
-              <ProtectedRoute>
-                <TaskDetailsPage />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="task/:taskId"
+              element={
+                <ProtectedRoute>
+                  <TaskDetailsPage />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="applied-tasks" element={
-              <ProtectedRoute>
-                <AppliedTasks />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="applied-tasks"
+              element={
+                <ProtectedRoute>
+                  <AppliedTasks />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="view/applied/task/details/:taskId" element={
-              <ProtectedRoute>
-                <ViewAppliedTaskDetails />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="view/applied/task/details/:taskId"
+              element={
+                <ProtectedRoute>
+                  <ViewAppliedTaskDetails />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="ally/public/profile/:id" element={
-              <ProtectedRoute>
-                <AllyPublicProfile />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="ally/public/profile/:id"
+              element={
+                <ProtectedRoute>
+                  <AllyPublicProfile />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="host/public/profile/:id" element={
-              <ProtectedRoute>
-                <HostPublicProfile />
-              </ProtectedRoute>
-            }
-          />
+            <Route
+              path="host/public/profile/:id"
+              element={
+                <ProtectedRoute>
+                  <HostPublicProfile />
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="chat" element={
-              <ProtectedRoute>
-                <Chatting />
-              </ProtectedRoute>
-            }
-          />
-
+            <Route
+              path="chat/:taskId/:hostId"
+              element={
+                <ProtectedRoute>
+                  <Chatting />
+                </ProtectedRoute>
+              }
+            />
           </Route>
         </Routes>
         <ToastContainer />

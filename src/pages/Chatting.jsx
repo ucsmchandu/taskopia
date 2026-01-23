@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Chat from "../components/Chatting-Components/Chat";
 import CreateOrOpenChat from "../components/Chatting-Components/CreateOrOpenChat";
 import { auth } from "../Firebase/Firebase";
+import { useParams } from "react-router-dom";
 
 const Chatting = () => {
   const [currentUser, setCurrentUser] = useState(null);
@@ -9,8 +10,11 @@ const Chatting = () => {
   const [loading, setLoading] = useState(true);
 
   // TODO: replace the dummy data with original data
-  const taskId = "task123";
-  const otherUserId = "Z9sUE6FiFqhvUEppAu61nolUhjw2";
+  // const taskId = "task123";
+  const {taskId,hostId}=useParams();
+  // console.log(hostId)
+  // console.log(id)
+  // const hostId = "";
 
   // Wait for auth
   useEffect(() => {
@@ -25,14 +29,14 @@ const Chatting = () => {
   useEffect(() => {
     if (!currentUser) return;
 
-    const chatId = [taskId, currentUser.uid, otherUserId].sort().join("_");
+    const chatId = [taskId, currentUser.uid, hostId].sort().join("_");
 
     const ensureChat = async () => {
       try {
         await CreateOrOpenChat({
           chatId,
           taskId,
-          userUids: [currentUser.uid, otherUserId],
+          userUids: [currentUser.uid, hostId],
         });
         setChatReady(true);
       } catch (err) {
@@ -44,14 +48,28 @@ const Chatting = () => {
   }, [currentUser]);
 
   if (loading) {
-    return <p className="text-center mt-10">Authenticating…</p>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-700 font-medium">Authenticating…</p>
+        </div>
+      </div>
+    );
   }
 
   if (!chatReady) {
-    return <p className="text-center mt-10">Opening chat…</p>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-700 font-medium">Opening chat…</p>
+        </div>
+      </div>
+    );
   }
 
-  const chatId = [taskId, currentUser.uid, otherUserId].sort().join("_");
+  const chatId = [taskId, currentUser.uid, hostId].sort().join("_");
 
   return <Chat chatId={chatId} />;
 };
