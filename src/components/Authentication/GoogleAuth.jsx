@@ -5,23 +5,32 @@ import { useQueryClient } from "@tanstack/react-query";
 import { auth } from "../../Firebase/Firebase";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+
 const GoogleAuth = () => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [userType, setUserType] = useState("");
   console.log(userType);
+
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
+
   const handleGoogleSignin = async () => {
     // checking the user type
     if (!userType) {
       toast.warning("Please select User type!");
       return;
     }
+
     setLoading(true);
+
     // creating a new provider
     const provider = new GoogleAuthProvider();
+
+    // store safely before async updates
+    const selectedUserType = userType;
+
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
@@ -32,28 +41,40 @@ const GoogleAuth = () => {
 
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/auto/signin`,
-        { firebaseToken, userType },
+        { firebaseToken, userType: selectedUserType },
         { withCredentials: true },
       );
+
       // reload the auth data from cache to update the ui
-      queryClient.invalidateQueries(["authData"]);
+      await queryClient.invalidateQueries({ queryKey: ["authData"] });
 
       toast.success("User login SuccessFull", {
         position: "top-right",
       });
+
       setUserType("");
-      navigate("/");
+
+      // Add a small delay to ensure state updates before navigation
+
+      if (selectedUserType === "ally") navigate("/profile/ally");
+      else navigate("/profile/host");
     } catch (err) {
       // console.log(err);
-      console.log(err.response.data.message);
-      toast.error(`${err.response.data.message}`, {
-        position: "top-right",
-      });
+      console.log(err?.response?.data?.message);
+
+      toast.error(
+        err?.response?.data?.message ||
+          "Something went wrong. Please try again.",
+        {
+          position: "top-right",
+        },
+      );
       return;
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <>
       <div>
@@ -64,46 +85,50 @@ const GoogleAuth = () => {
           >
             <span className="text-red-600">*</span> User Type
           </label>
+
           <select
-            className="border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none w-full rounded-md p-2"
+            className="border border-gray-300 focus:ring-2 focus:ring-blue-400 focus:outline-none w-full rounded-md p-2 disabled:bg-gray-100"
             name="userType"
             id="userType"
-            value={userType.userType}
+            value={userType}
+            disabled={loading}
             onChange={(e) => setUserType(e.target.value)}
           >
             <option value="">select user type</option>
             <option value="ally">Ally</option>
             <option value="host">Host</option>
           </select>
-        </form>
-        <button
-          onClick={handleGoogleSignin}
-          disabled={loading}
-          className={`flex items-center justify-center gap-3 w-full px-6 py-2 rounded-lg 
+
+          <button
+            type="button"
+            onClick={handleGoogleSignin}
+            disabled={loading}
+            className={`flex items-center mt-2 justify-center gap-3 w-full px-6 py-2 rounded-lg 
     font-semibold shadow transition
     ${
       loading
         ? "bg-gray-600 cursor-not-allowed"
         : "bg-gray-900 hover:bg-gray-700 cursor-pointer text-white"
     }`}
-        >
-          {loading ? (
-            <>
-              {/* Tailwind spinner */}
-              <div className="h-5 w-5 rounded-full border-2 border-white border-t-transparent animate-spin" />
-              <span>Signing in...</span>
-            </>
-          ) : (
-            <>
-              <img
-                src="https://res.cloudinary.com/dllvcgpsk/image/upload/v1743403171/google_zgmnav.png"
-                className="h-6"
-                alt="Google"
-              />
-              <span>Sign in with Google</span>
-            </>
-          )}
-        </button>
+          >
+            {loading ? (
+              <>
+                {/* Tailwind spinner */}
+                <div className="h-5 w-5 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                <span>Signing in...</span>
+              </>
+            ) : (
+              <>
+                <img
+                  src="https://res.cloudinary.com/dllvcgpsk/image/upload/v1743403171/google_zgmnav.png"
+                  className="h-6"
+                  alt="Google"
+                />
+                <span>Sign in with Google</span>
+              </>
+            )}
+          </button>
+        </form>
       </div>
     </>
   );

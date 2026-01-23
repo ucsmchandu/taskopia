@@ -11,6 +11,14 @@ const ProtectedRoute = ({ children }) => {
   if (!currentUser) {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
+  if (!currentUser?.profileSetup) {
+    const redirectPath =
+      currentUser?.userType === "ally" ? "/profile/ally" : "/profile/host";
+
+    if (location.pathname !== redirectPath) {
+      return <Navigate to={redirectPath} replace />;
+    }
+  }
   return children;
 };
 

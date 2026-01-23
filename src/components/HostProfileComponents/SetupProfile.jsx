@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "../../AuthContextApi/AuthContext";
 
-const useCreateProfile = () => {
+const useCreateProfile = (onProfileCreated) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -13,7 +14,7 @@ const useCreateProfile = () => {
           import.meta.env.VITE_BACKEND_BASE
         }/taskopia/u1/api/host-profile/upload/profile`,
         formData,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       return res.data;
     },
@@ -21,6 +22,33 @@ const useCreateProfile = () => {
       toast.success("Profile Submitted Successfully", { position: "top-left" });
       console.log(res);
       queryClient.invalidateQueries(["hostProfileData"]);
+
+      // the arrow function that called after successful of this api
+      onProfileCreated?.();
+    },
+    onError: (err) => {
+      console.log(err);
+      toast.error("something went wrong");
+    },
+  });
+};
+
+const useCreateUpdateUser = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      const res = await axios.patch(
+        `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/update/user`,
+        {},
+        { withCredentials: true },
+      );
+      return res.data;
+    },
+    onSuccess: (res) => {
+      toast.success("Profile setup completed");
+      console.log(res);
+      queryClient.invalidateQueries(["authData"]);
     },
     onError: (err) => {
       console.log(err);
@@ -30,7 +58,20 @@ const useCreateProfile = () => {
 };
 
 const SetupProfile = () => {
-  const createProfile = useCreateProfile();
+  const { currentUser, loading } = useAuth();
+  if (loading)
+    return (
+      <>
+        <div className="flex flex-col min-h-screen items-center justify-center h-40 space-y-2">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-700 font-semibold">Loading...</p>
+        </div>
+      </>
+    );
+  const createUpdateUser = useCreateUpdateUser();
+  const createProfile = useCreateProfile(() => {
+    createUpdateUser.mutate();
+  });
 
   const [form, setForm] = useState({
     userProfilePhotoUrl: null,
@@ -39,7 +80,7 @@ const SetupProfile = () => {
     lastName: "",
     businessName: "",
     phone: "",
-    gmail: "",
+    gmail: currentUser?.email || "",
     state: "",
     city: "",
     pincode: "",
