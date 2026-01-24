@@ -1,5 +1,15 @@
 import React from "react";
-import { Calendar, MapPin, Clock, User, FileText, Mail, MessageCircle, X, CheckCircle } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Clock,
+  User,
+  FileText,
+  Mail,
+  MessageCircle,
+  X,
+  CheckCircle,
+} from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +25,7 @@ const getTaskDetails = async (id) => {
       `${
         import.meta.env.VITE_BACKEND_BASE
       }/taskopia/u1/api/application/tasks/application/details/me/${id}`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return res.data.tasks;
   } catch (error) {
@@ -36,7 +46,7 @@ const useCancelApplication = () => {
           import.meta.env.VITE_BACKEND_BASE
         }/taskopia/u1/api/application/tasks/application/${id}/cancel`,
         {},
-        { withCredentials: true }
+        { withCredentials: true },
       );
       return res.data;
     },
@@ -153,7 +163,7 @@ const AppliedTasksPage = () => {
                         {tasks?.task?.taskCategory}
                       </span>
                       <span
-                        className={`text-xs ${tasks?.task?.urgency==="urgency" ? "text-blue-600":"text-red-600"} border-gray-300 sm:text-sm font-medium px-3 py-1 rounded-md border`}
+                        className={`text-xs ${tasks?.task?.urgency === "urgency" ? "text-blue-600" : "text-red-600"} border-gray-300 sm:text-sm font-medium px-3 py-1 rounded-md border`}
                       >
                         {tasks?.task?.urgency}
                       </span>
@@ -221,9 +231,10 @@ const AppliedTasksPage = () => {
                           </div>
                         </div>
                         <div className="ml-4 hover:scale-105 transition ease-in-out w-fit">
-                          <Link 
-                          to={`/host/public/profile/${tasks?.host?._id}`}
-                          className=" px-3 py-2 shadow-md rounded-lg text-sm cursor-pointer text-orange-400 bg-orange-100 border border-orange-200 inline-flex items-center gap-2 hover:bg-orange-200 transition-colors">
+                          <Link
+                            to={`/host/public/profile/${tasks?.host?._id}`}
+                            className=" px-3 py-2 shadow-md rounded-lg text-sm cursor-pointer text-orange-400 bg-orange-100 border border-orange-200 inline-flex items-center gap-2 hover:bg-orange-200 transition-colors"
+                          >
                             <User size={16} />
                             View Profile
                           </Link>
@@ -386,13 +397,15 @@ const AppliedTasksPage = () => {
                         )}
                       </button>
 
-                      <Link
-                        to={`/chat/${taskId}/${tasks?.host?.firebaseUid}`}
-                        className="flex-1 flex justify-center items-center gap-2 bg-blue-600 cursor-pointer hover:bg-blue-500 text-white font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base"
-                      >
-                        <MessageCircle size={18} />
-                        Chat with Host
-                      </Link>
+                      {tasks?.status === "accepted" && (
+                        <Link
+                          to={`/chat/${taskId}/${tasks?.host?.firebaseUid}`}
+                          className="flex-1 flex justify-center items-center gap-2 bg-blue-600 cursor-pointer hover:bg-blue-500 text-white font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base"
+                        >
+                          <MessageCircle size={18} />
+                          Chat with Host
+                        </Link>
+                      )}
                     </>
                   ) : (
                     <button className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base inline-flex items-center justify-center gap-2">

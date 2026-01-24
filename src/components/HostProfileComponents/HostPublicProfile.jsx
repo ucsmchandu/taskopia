@@ -22,7 +22,7 @@ const getProfile = async (id) => {
       }/taskopia/u1/api/host-profile/get/public-profile/${id}`,
       { withCredentials: true }
     );
-    return res.data;
+    return res.data.profileData;
   } catch (err) {
     console.log(err);
     return null;
@@ -91,7 +91,7 @@ const HostPublicProfile = () => {
               {/* Banner Image */}
               <div className="relative h-48 sm:h-56 bg-gray-200">
                 <img
-                  src={businessData.businessProfilePhotoUrl}
+                  src={data?.businessProfilePhotoUrl}
                   alt="Business Banner"
                   className="w-full h-full object-cover"
                 />
@@ -100,7 +100,7 @@ const HostPublicProfile = () => {
                 <div className="absolute top-4 right-4">
                   <span
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium backdrop-blur-sm ${
-                      businessData.status === "active"
+                      data?.status === "active"
                         ? "bg-white/90 text-green-700"
                         : "bg-white/90 text-gray-700"
                     }`}
@@ -122,8 +122,8 @@ const HostPublicProfile = () => {
                 <div className="flex justify-center -mt-16 sm:-mt-20 mb-6">
                   <div className="relative">
                     <img
-                      src={businessData.userProfilePhotoUrl}
-                      alt={`${businessData.firstName} ${businessData.lastName}`}
+                      src={data?.userProfilePhotoUrl}
+                      alt={`${data?.firstName} ${data?.lastName}`}
                       className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 border-white shadow-xl object-cover bg-white"
                     />
                   </div>
@@ -132,17 +132,17 @@ const HostPublicProfile = () => {
                 {/* Business Name & Owner */}
                 <div className="text-center mb-6">
                   <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 capitalize mb-2">
-                    {businessData.businessName}
+                    {data?.businessName}
                   </h1>
                   <p className="text-gray-600 text-sm sm:text-base">
-                    {businessData.firstName} {businessData.lastName}
+                    {data?.firstName} {data?.lastName}
                   </p>
                 </div>
 
                 {/* Description */}
                 <div className="text-center mb-8 max-w-2xl mx-auto">
                   <p className="text-gray-600 text-sm sm:text-base whitespace-pre-line">
-                    {businessData.description}
+                    {data?.description}
                   </p>
                 </div>
 
@@ -151,10 +151,10 @@ const HostPublicProfile = () => {
                   <div className="flex items-center gap-2">
                     <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
                     <span className="text-lg font-semibold text-gray-900">
-                      {businessData.rating.average.toFixed(1)}
+                      {data?.rating?.average?.toFixed(1)}
                     </span>
                     <span className="text-sm text-gray-500">
-                      ({businessData.rating.count})
+                      ({data?.rating?.count})
                     </span>
                   </div>
 
@@ -191,7 +191,7 @@ const HostPublicProfile = () => {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-gray-500 mb-0.5">Email</p>
                       <p className="text-sm sm:text-base text-gray-900 font-medium truncate">
-                        {businessData.gmail}
+                        {data?.gmail}
                       </p>
                     </div>
                   </div>
@@ -204,7 +204,7 @@ const HostPublicProfile = () => {
                     <div className="flex-1">
                       <p className="text-xs text-gray-500 mb-0.5">Phone</p>
                       <p className="text-sm sm:text-base text-gray-900 font-medium">
-                        {businessData.phone}
+                        {data?.phone}
                       </p>
                     </div>
                   </div>
@@ -217,15 +217,15 @@ const HostPublicProfile = () => {
                     <div className="flex-1">
                       <p className="text-xs text-gray-500 mb-1">Address</p>
                       <p className="text-sm sm:text-base text-gray-900 font-medium capitalize mb-1">
-                        {businessData.addressDetails.address}
+                        {data?.addressDetails?.address}
                       </p>
                       <p className="text-sm text-gray-600">
-                        {businessData.addressDetails.landMark}
+                        {data?.addressDetails?.landMark}
                       </p>
                       <p className="text-sm text-gray-600 capitalize">
-                        {businessData.addressDetails.city},{" "}
-                        {businessData.addressDetails.state} -{" "}
-                        {businessData.addressDetails.pinCode}
+                        {data?.addressDetails?.city},{" "}
+                        {data?.addressDetails?.state} -{" "}
+                        {data?.addressDetails?.pinCode}
                       </p>
                     </div>
                   </div>
@@ -240,7 +240,7 @@ const HostPublicProfile = () => {
                         Member Since
                       </p>
                       <p className="text-sm sm:text-base text-gray-900 font-medium">
-                        {formatDate(businessData.createdAt)}
+                        {formatDate(data?.createdAt)}
                       </p>
                     </div>
                   </div>
