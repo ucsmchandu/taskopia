@@ -23,7 +23,7 @@ function Reveal({ as: Tag = "div", className = "", children, ...props }) {
 
 const Home = () => {
   const { currentUser, loading } = useAuth();
-console.log(currentUser)
+// console.log(currentUser)
   return (
     <div className="scroll-smooth">
       {/* animated home content */}
