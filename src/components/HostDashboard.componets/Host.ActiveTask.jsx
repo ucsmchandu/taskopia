@@ -62,7 +62,7 @@ const useLogout = () => {
 
 const HostActiveTasks = () => {
   const {
-    data:tasks,
+    data,
     isPending,
     isFetching,
     isError,
@@ -77,7 +77,9 @@ const HostActiveTasks = () => {
     placeholderData: null,
   });
 
-  // console.log(tasks);
+  const tasks=data? data.filter((t)=>t.isDeleted===false && t.status!=="completed" && t.status!=="cancelled"):[];
+
+  console.log(tasks);
   const createLogout = useLogout();
 
   // let tasks=[];
@@ -110,9 +112,7 @@ const HostActiveTasks = () => {
       {/*  */}
       {!isPending &&
         !isFetching &&
-        (!tasks || tasks?.length === 0 || tasks?.every(
-          (t) => t.status === "completed" || t.status === "cancelled"
-        )) && (
+        tasks?.length === 0 && (
           <div className="flex flex-col justify-center items-center">
             <p className="text-xl sm:text-2xl text-gray-500 italic mt-30">
               Nothing here yet, check back soon!
@@ -125,10 +125,7 @@ const HostActiveTasks = () => {
         )}
 
       {!isPending &&
-        !isFetching &&
-        tasks?.some(
-          (t) => t.status !== "completed" && t.status !== "cancelled"
-        ) && (
+        !isFetching && tasks?.length>0 &&(
           <>
             <div className="mt-10 text-gray-800 px-4 sm:px-6 lg:px-0">
               {/* heading */}

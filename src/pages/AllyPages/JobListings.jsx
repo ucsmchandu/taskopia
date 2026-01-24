@@ -75,12 +75,7 @@ const JobListings = () => {
     );
   }, [isNearby]);
 
-  const {
-    data: tasks = [],
-    isPending,
-    isFetching,
-    isError,
-  } = useQuery({
+  const { data, isPending, isFetching, isError } = useQuery({
     queryKey: ["allyTasks", sort, coords?.lat, coords?.lng, debouncedSearch],
     queryFn: () =>
       getTasks({
@@ -95,6 +90,8 @@ const JobListings = () => {
     gcTime: 30 * 60 * 1000,
     retry: 2,
   });
+
+  const tasks = data ? data.filter((t) => t.isDeleted === false) : [];
 
   if (isError) {
     return (

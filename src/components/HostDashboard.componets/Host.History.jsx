@@ -10,7 +10,7 @@ const getTasks = async () => {
       `${
         import.meta.env.VITE_BACKEND_BASE
       }/taskopia/u1/api/tasks/get/all/tasks`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return res.data.tasks;
   } catch (err) {
@@ -30,12 +30,7 @@ const formatDate = (dateString) => {
 };
 
 const HostCompletedTasks = () => {
-  const {
-    data: tasks,
-    isPending,
-    isFetching,
-    isError,
-  } = useQuery({
+  const { data, isPending, isFetching, isError } = useQuery({
     queryKey: ["hostTasksData"],
     queryFn: getTasks,
     staleTime: 5 * 60 * 1000,
@@ -45,6 +40,10 @@ const HostCompletedTasks = () => {
     enabled: true,
     placeholderData: null,
   });
+
+  const tasks = data
+    ? data.filter((t) => t.status === "completed" || t.status === "cancelled")
+    : [];
 
   // console.log(tasks);
   return (
@@ -58,56 +57,48 @@ const HostCompletedTasks = () => {
       )}
 
       {/* if the tasks are not completed or cancelled they are related to the history */}
-      {!isPending &&
-        !isFetching &&
-        tasks.every(
-          (t) => t.status !== "completed" || t.status !== "cancelled"
-        ) && (
-          <div className="flex flex-col justify-center items-center">
-            <p className="text-xl sm:text-2xl text-gray-500 italic mt-30">
-              Nothing here yet, check back soon!
-            </p>
+      {!isPending && !isFetching && tasks?.length === 0 && (
+        <div className="flex flex-col justify-center items-center">
+          <p className="text-xl sm:text-2xl text-gray-500 italic mt-30">
+            Nothing here yet, check back soon!
+          </p>
 
-            {/* <Link
+          {/* <Link
               to="/post/job"
               className="text-sm w-fit mt-6 cursor-pointer px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white"
             >
               Post Task
             </Link> */}
-          </div>
-        )}
+        </div>
+      )}
 
       {/* if the tasks are completed or cancelled then only they realted to the history */}
-      {!isPending &&
-        !isFetching &&
-        tasks?.some(
-          (t) => t.status === "completed" && t.status === "cancelled"
-        ) && (
-          <>
-            <div className="mt-10 flex flex-col gap-6">
-              {tasks.map((task) => (
-                <div
-                  key={task._id}
-                  className="flex border justify-between  p-6 rounded-xl border-gray-200 shadow-md hover:shadow-lg bg-white transition"
-                >
-                  <div className="flex gap-6 items-center">
-                    <CircleCheckBig color="green" />
-                    <div className="">
-                      <p>{task.taskTitle}</p>
-                      <p className="text-sm text-gray-400">{task.status}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <p>₹{task.budget}</p>
-                    <p className="text-sm text-gray-400">
-                      {formatDate(task.startingDate.split("T")[0])}
-                    </p>
+      {!isPending && !isFetching && tasks?.length > 0 && (
+        <>
+          <div className="mt-10 flex flex-col gap-6">
+            {tasks.map((task) => (
+              <div
+                key={task._id}
+                className="flex border justify-between  p-6 rounded-xl border-gray-200 shadow-md hover:shadow-lg bg-white transition"
+              >
+                <div className="flex gap-6 items-center">
+                  <CircleCheckBig color="green" />
+                  <div className="">
+                    <p>{task.taskTitle}</p>
+                    <p className="text-sm text-gray-400">{task.status}</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          </>
-        )}
+                <div>
+                  <p>₹{task.budget}</p>
+                  <p className="text-sm text-gray-400">
+                    {formatDate(task.startingDate.split("T")[0])}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 };

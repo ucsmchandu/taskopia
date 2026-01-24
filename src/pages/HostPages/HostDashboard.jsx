@@ -11,6 +11,7 @@ import HostActiveTask from "../../components/HostDashboard.componets/Host.Active
 import HostAnalytics from "../../components/HostDashboard.componets/Host.Analytics";
 import HostCompletedTasks from "../../components/HostDashboard.componets/Host.History";
 import axios from "axios";
+import DeletedTasks from "../../components/HostDashboard.componets/DeletedTasks";
 
 // get the host profile
 const getProfileData = async () => {
@@ -19,7 +20,7 @@ const getProfileData = async () => {
       `${
         import.meta.env.VITE_BACKEND_BASE
       }/taskopia/u1/api/host-profile/get/profile`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return res.data;
   } catch (err) {
@@ -38,7 +39,7 @@ const getActiveTasks = async () => {
       `${
         import.meta.env.VITE_BACKEND_BASE
       }/taskopia/u1/api/tasks/get/all/tasks`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return res.data.tasks;
   } catch (err) {
@@ -55,9 +56,9 @@ const HostDashboard = () => {
 
   const {
     data: profileData,
-    isPending:profilePending,
-    isFetching:profileFetching,
-    isError:profileError,
+    isPending: profilePending,
+    isFetching: profileFetching,
+    isError: profileError,
   } = useQuery({
     queryKey: ["hostProfileData"],
     queryFn: getProfileData,
@@ -72,9 +73,9 @@ const HostDashboard = () => {
 
   const {
     data: tasks,
-    isPending:taskPending,
-    isFetching:taskFetching,
-    isError:taskError,
+    isPending: taskPending,
+    isFetching: taskFetching,
+    isError: taskError,
   } = useQuery({
     queryKey: ["hostTasksData"],
     queryFn: getActiveTasks,
@@ -89,13 +90,14 @@ const HostDashboard = () => {
   // console.log("tasks :",tasks)
 
   // filter the active tasks count
-  const activeTasks=tasks?.filter(t=>t.status!=="completed" && t.status!=="cancelled").length ?? 0;
+  const activeTasks =
+    tasks?.filter((t) => t.status !== "completed" && t.status !== "cancelled")
+      .length ?? 0;
 
   // get the total budget from all tasks
-  const totalInvestment=tasks?.reduce(
-    (sum,t)=>sum+Number(t.budget || 0), 0
-  ) ?? 0;
-  
+  const totalInvestment =
+    tasks?.reduce((sum, t) => sum + Number(t.budget || 0), 0) ?? 0;
+
   // console.log("profile :",profileData)
 
   return (
@@ -134,7 +136,7 @@ const HostDashboard = () => {
         <div className=" bg-gradient-to-l text-white from-[#AA5486] to-[#e69dc7] rounded-2xl h-44 w-full shadow-sm flex flex-col justify-center items-center gap-3 hover:shadow-md transition">
           <SquareCheckBig className="text-white" size={28} />
           <div className="flex flex-col text-center">
-            <p className="text-xl font-semibold">{tasks?.length ||0}</p>
+            <p className="text-xl font-semibold">{tasks?.length || 0}</p>
             <p className="text-white text-sm">Tasks Posted</p>
           </div>
         </div>
@@ -150,7 +152,9 @@ const HostDashboard = () => {
         <div className=" bg-gradient-to-l text-white from-[#AA5486] to-[#e69dc7] rounded-2xl h-44 w-full shadow-sm flex flex-col justify-center items-center gap-3 hover:shadow-md transition">
           <Star className="text-white" size={28} />
           <div className="flex flex-col text-center">
-            <p className="text-xl font-semibold">{profileData?.rating?.average ||0}</p>
+            <p className="text-xl font-semibold">
+              {profileData?.rating?.average || 0}
+            </p>
             <p className="text-white text-sm">Average Rating</p>
           </div>
         </div>
@@ -203,6 +207,17 @@ const HostDashboard = () => {
           >
             Analytics
           </button>
+
+          <button
+            onClick={() => {
+              setComponents("deletedTasks");
+            }}
+            className={`border border-gray-300 rounded-lg px-6 py-2 w-full text-sm transition cursor-pointer
+    ${components === "deletedTasks" ? "bg-black text-white" : "hover:bg-gray-100"}
+  `}
+          >
+            Deleted tasks
+          </button>
         </div>
 
         {/* here comes the three diff components  */}
@@ -210,7 +225,8 @@ const HostDashboard = () => {
         <div>
           {(components === "activeTasks" && <HostActiveTask />) ||
             (components === "completedTasks" && <HostCompletedTasks />) ||
-            (components === "analytics" && <HostAnalytics />) || (
+            (components === "analytics" && <HostAnalytics />) ||
+            (components === "deletedTasks" && <DeletedTasks />) || (
               <HostActiveTask />
             )}
         </div>

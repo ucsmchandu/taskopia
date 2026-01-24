@@ -9,23 +9,19 @@ const getTasks = async () => {
       `${
         import.meta.env.VITE_BACKEND_BASE
       }/taskopia/u1/api/tasks/get/all/tasks`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return res.data.tasks;
   } catch (err) {
     console.log(err);
-    return null;
+    if (err.response?.status === 404) return [];
+    throw err;
   }
 };
 const AllySuggestions = () => {
   const { currentUser, loading } = useAuth();
   // console.log(currentUser)
-  const {
-    data: tasks,
-    isPending,
-    isFetching,
-    isError,
-  } = useQuery({
+  const { data, isPending, isFetching, isError } = useQuery({
     queryKey: ["allyTasks"],
     queryFn: getTasks,
     staleTime: 5 * 60 * 1000,
@@ -36,6 +32,12 @@ const AllySuggestions = () => {
     placeholderData: null,
   });
   // console.log(tasks);
+  // console.log(data);
+
+  const tasks = data
+    ? data.filter((t) => t.isDeleted === false && t.assignedAlly === null)
+    : [];
+
   return (
     <div className="w-full  p-6 bg-gradient-to-b from-[#406882] to-[#1A374D]">
       <div className="max-w-4xl mx-auto">
@@ -53,9 +55,7 @@ const AllySuggestions = () => {
           {isPending || isFetching ? (
             <div className="flex flex-col items-center justify-center h-40 space-y-2">
               <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-gray-700 font-semibold">
-                Loading ...
-              </p>
+              <p className="text-gray-700 font-semibold">Loading ...</p>
             </div>
           ) : isError ? (
             <p className="text-red-400">Failed to load tasks</p>
@@ -83,7 +83,9 @@ const AllySuggestions = () => {
               </div>
             ))
           ) : (
-            <p className="text-gray-300">No tasks available</p>
+            <div className="flex justify-center">
+              <p className="text-gray-300 text-2xl font-medium">No Tasks Available Near You</p>
+            </div>
           )}
         </div>
 
