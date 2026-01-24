@@ -10,12 +10,13 @@ const getAppliedTasks = async () => {
       `${
         import.meta.env.VITE_BACKEND_BASE
       }/taskopia/u1/api/application/tasks/applications/me`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return res.data.tasks;
   } catch (err) {
     console.log(err);
-    return null;
+    if (err.response?.status === 404) return [];
+    throw err;
   }
 };
 
@@ -36,7 +37,7 @@ const AllyActiveTasks = () => {
   });
   // console.log(applications);
 
-   const formatDate = (dateString) => {
+  const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
@@ -56,13 +57,12 @@ const AllyActiveTasks = () => {
 
       {!isPending &&
         !isFetching &&
-        (applications?.length === 0 || !applications) &&
-        applications?.every(
-          (t) => t.status === "completed" || t.status === "cancelled"
-        ) && (
+        (!applications || applications?.length === 0 || applications?.every(
+          (t) => t.status === "completed" || t.status === "cancelled",
+        )) && (
           <div className="flex flex-col justify-center items-center">
             <p className="text-xl sm:text-2xl text-gray-500 italic mt-30">
-              Nothing here yet — check back soon!
+              Nothing here yet, check back soon!
             </p>
 
             <Link
@@ -76,7 +76,7 @@ const AllyActiveTasks = () => {
       {!isPending &&
         !isFetching &&
         applications?.some(
-          (t) => t.status !== "completed" && t.status !== "cancelled"
+          (t) => t.status !== "completed" && t.status !== "cancelled",
         ) && (
           <div className="w-full flex flex-col gap-6 animate-fadeIn">
             {/* Title */}
@@ -88,40 +88,44 @@ const AllyActiveTasks = () => {
             <div className="flex flex-col gap-4">
               {applications?.map((task) => (
                 <div
-                  key={task._id}
+                  key={task?._id}
                   className="border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition"
                 >
                   {/* Top Row */}
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">{task.task.taskTitle}</h3>
+                    <h3 className="text-lg font-semibold">
+                      {task?.task?.taskTitle}
+                    </h3>
                     <span
                       className={`text-xs px-3 py-1 rounded-full font-medium 
                   ${
-                    task.status === "In Progress"
+                    task?.status === "In Progress"
                       ? "bg-blue-100 text-blue-700"
                       : "bg-yellow-100 text-yellow-600"
                   }`}
                     >
-                      {task.status}
+                      {task?.status}
                     </span>
                   </div>
 
                   {/* Details Row */}
                   <div className="mt-2 flex items-center justify-between text-sm text-gray-600">
-                    <p>Location: {task.host.address}</p>
+                    <p>Location: {task?.host?.address}</p>
                     <p className="flex flex-row justify-center items-center gap-1">
-                      <CalendarDays size={16} /> {formatDate(task.createdAt.split("T")[0])}
+                      <CalendarDays size={16} />{" "}
+                      {formatDate(task.createdAt.split("T")[0])}
                     </p>
                   </div>
 
                   {/* Bottom Row */}
                   <div className="mt-3 flex items-center justify-between">
                     <p className="text-lg font-semibold text-gray-800">
-                      ₹{task.task.budget}
+                      ₹{task?.task?.budget}
                     </p>
                     <Link
-                    to={`/view/applied/task/details/${task.task._id}`}
-                    className="px-4 cursor-pointer py-2 bg-black text-white rounded-md text-sm hover:bg-gray-900 transition">
+                      to={`/view/applied/task/details/${task?.task?._id}`}
+                      className="px-4 cursor-pointer py-2 bg-black text-white rounded-md text-sm hover:bg-gray-900 transition"
+                    >
                       View Details
                     </Link>
                   </div>

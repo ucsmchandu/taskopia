@@ -110,13 +110,12 @@ const HostActiveTasks = () => {
       {/*  */}
       {!isPending &&
         !isFetching &&
-        tasks?.length === 0  &&
-        tasks?.every(
+        (!tasks || tasks?.length === 0 || tasks?.every(
           (t) => t.status === "completed" || t.status === "cancelled"
-        ) && (
+        )) && (
           <div className="flex flex-col justify-center items-center">
             <p className="text-xl sm:text-2xl text-gray-500 italic mt-30">
-              Nothing here yet — check back soon!
+              Nothing here yet, check back soon!
             </p>
 
             <Link to="/post/job" className="text-sm w-fit mt-6 px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white">

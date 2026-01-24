@@ -54,6 +54,7 @@ const Applications = () => {
   const mutation = useMutation({
     mutationFn: updateApplicationStatus,
     onSuccess: (res) => {
+      // console.log(res)
       toast.success(res.message);
       queryClient.invalidateQueries(["hostApplications", taskId]);
       setActiveAppId(null); //  RESET
@@ -92,7 +93,7 @@ const Applications = () => {
       </div>
     );
   }
-  console.log(filtered)
+  // console.log(filtered)
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-10 mt-20">
@@ -210,6 +211,11 @@ const Applications = () => {
                       {app.status === "rejected" && (
                         <span className="flex flex-row justify-center items-center gap-1 px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium">
                           <CircleX size={16}/> Rejected
+                        </span>
+                      )}
+                      {app.status === "cancelled" && (
+                        <span className="flex flex-row justify-center items-center gap-1 px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium">
+                          <CircleX size={16}/> cancelled by Ally
                         </span>
                       )}
                     </div>

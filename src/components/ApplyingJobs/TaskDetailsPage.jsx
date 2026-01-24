@@ -44,7 +44,7 @@ const TaskDetailsPage = () => {
     isFetching,
     isError,
   } = useQuery({
-    queryKey: ["fullTaskDetails"],
+    queryKey: ["fullTaskDetails",taskId],
     queryFn: () => getTask(taskId),
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
@@ -60,7 +60,7 @@ const TaskDetailsPage = () => {
     isFetching: fetching,
     isError: Error,
   } = useQuery({
-    queryKey: ["checkAllyApplyTask"],
+    queryKey: ["checkAllyApplyTask",taskId],
     queryFn: () => getConfirmCheckApplication(taskId),
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
@@ -70,7 +70,7 @@ const TaskDetailsPage = () => {
     placeholderData: null,
   });
   // console.log(task)
-  // console.log(checkApply);
+  console.log(checkApply);
   // console.log(Error)
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -93,7 +93,7 @@ const TaskDetailsPage = () => {
       {!isPending && !isFetching && !task && (
         <div className="flex flex-col justify-center items-center">
           <p className="text-xl sm:text-2xl text-gray-500 text-center italic mt-30">
-            Nothing here yet — check back soon!
+            Nothing here yet, check back soon!
           </p>
           <button className="text-sm w-fit cursor-pointer mt-6 px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition">
             Post Task

@@ -23,7 +23,7 @@ const getTask = async (id) => {
     const res = await axios.get(
       `${
         import.meta.env.VITE_BACKEND_BASE
-      }/taskopia/u1/api/tasks/get/task/${id}`
+      }/taskopia/u1/api/tasks/get/task/${id}`,
     );
     return res.data.task;
   } catch (err) {
@@ -38,16 +38,18 @@ const useDeletingTask = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (id) => {
-      const res = await axios.delete(
+      const res = await axios.patch(
         `${
           import.meta.env.VITE_BACKEND_BASE
         }/taskopia/u1/api/tasks/delete/task/${id}`,
-        { withCredentials: true }
+        {},
+        { withCredentials: true },
       );
       return res.data;
     },
     onSuccess: (res) => {
       toast.success("Task Deleted");
+      // console.log(res);
       queryClient.invalidateQueries(["hostTaskData"]);
       navigate("/host/dashboard");
     },
@@ -70,7 +72,7 @@ const ViewTaskDetails = () => {
     isFetching,
     isError,
   } = useQuery({
-    queryKey: ["singleTask",id],
+    queryKey: ["singleTask", id],
     queryFn: () => getTask(id),
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
@@ -80,7 +82,7 @@ const ViewTaskDetails = () => {
     placeholderData: null,
   });
 
-    // console.log(task);
+  console.log(task);
   // formatting the date
   const formatDate = (dateString) => {
     // console.log(id)
@@ -112,7 +114,7 @@ const ViewTaskDetails = () => {
       {!isPending && !isFetching && !task && (
         <div className="flex flex-col justify-center items-center">
           <p className="text-xl sm:text-2xl text-gray-500 text-center italic mt-30">
-            Nothing here yet — check back soon!
+            Nothing here yet, check back soon!
           </p>
           <button className="text-sm w-fit cursor-pointer mt-6 px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition">
             Post Task
@@ -263,43 +265,50 @@ const ViewTaskDetails = () => {
                 </button>
 
                 <Link
-                to={`/task/${task._id}/applications`}
-                className="flex-1 flex cursor-pointer flex-row justify-center items-center gap-2 px-6 py-3 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
-                  <Users size={18} />Applications ({task.applicationsCount})
+                  to={`/task/${task._id}/applications`}
+                  className="flex-1 flex cursor-pointer flex-row justify-center items-center gap-2 px-6 py-3 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                >
+                  <Users size={18} />
+                  Applications ({task.applicationsCount})
                 </Link>
 
-                <button
-                  onClick={handleDelete}
-                  disabled={createDelete.isPending}
-                  className="px-6 py-3 text-sm font-medium text-white bg-red-600 border rounded-lg hover:bg-red-500 cursor-pointer transition-colors"
-                >
-                  {createDelete.isPending ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                          fill="none"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                      Deleting..
-                    </span>
-                  ) : (
-                    <div className="flex flex-row items-center justify-center gap-2">
-                      <Trash2 size={18} />
-                      Delete
-                    </div>
-                  )}
-                </button>
+                {task?.isDeleted === false && !task?.assignedAlly  && (
+                  <button
+                    onClick={handleDelete}
+                    disabled={createDelete.isPending}
+                    className="px-6 py-3 text-sm font-medium text-white bg-red-600 border rounded-lg hover:bg-red-500 cursor-pointer transition-colors"
+                  >
+                    {createDelete.isPending ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg
+                          className="animate-spin h-5 w-5"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                            fill="none"
+                          />
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          />
+                        </svg>
+                        Deleting..
+                      </span>
+                    ) : (
+                      <div className="flex flex-row items-center justify-center gap-2">
+                        <Trash2 size={18} />
+                        Delete
+                      </div>
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           </div>

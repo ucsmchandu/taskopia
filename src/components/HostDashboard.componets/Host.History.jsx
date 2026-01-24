@@ -65,7 +65,7 @@ const HostCompletedTasks = () => {
         ) && (
           <div className="flex flex-col justify-center items-center">
             <p className="text-xl sm:text-2xl text-gray-500 italic mt-30">
-              Nothing here yet — check back soon!
+              Nothing here yet, check back soon!
             </p>
 
             {/* <Link

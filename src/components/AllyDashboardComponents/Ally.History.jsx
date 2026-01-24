@@ -9,7 +9,7 @@ const getAppliedTasks = async () => {
       `${
         import.meta.env.VITE_BACKEND_BASE
       }/taskopia/u1/api/application/tasks/applications/me`,
-      { withCredentials: true }
+      { withCredentials: true },
     );
     return res.data.tasks;
   } catch (err) {
@@ -34,10 +34,18 @@ const AllyHistory = () => {
     enabled: true,
   });
   const getCompletedTasks = applications?.filter(
-    (t) => t.status === "completed"
+    (t) => t.status === "completed" || t.status === "cancelled",
   );
   // console.log(getCompletedTasks);
 
+  // date formating
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
   return (
     <>
       {(isPending || isFetching) && (
@@ -48,10 +56,10 @@ const AllyHistory = () => {
       )}
       {!isPending &&
         !isFetching &&
-        (getCompletedTasks?.length === 0 || !getCompletedTasks)&& (
+        (getCompletedTasks?.length === 0 || !getCompletedTasks) && (
           <div className="flex flex-col justify-center items-center">
             <p className="text-xl sm:text-2xl text-gray-500 italic mt-30">
-              Nothing here yet — check back soon!
+              Nothing here yet, check back soon!
             </p>
 
             <Link
@@ -66,33 +74,24 @@ const AllyHistory = () => {
         <>
           <div className="mt-10 flex flex-col gap-6">
             {/* card-1 */}
-            <div className="flex border justify-between  p-6 rounded-xl border-gray-200 shadow-md hover:shadow-lg bg-white transition">
-              <div className="flex gap-6 items-center">
-                <CircleCheckBig color="green" />
-                <div className="">
-                  <p>Data Entry Project</p>
-                  <p className="text-sm text-gray-400">Task assigned</p>
+            {getCompletedTasks.map((task,index) => (
+                <div
+                  key={index}
+                  className="flex border justify-between  p-6 rounded-xl border-gray-200 shadow-md hover:shadow-lg bg-white transition"
+                >
+                  <div className="flex gap-6 items-center">
+                    <CircleCheckBig color="green" />
+                    <div className="">
+                      <p>{task?.task?.taskTitle}</p>
+                      <p className="text-sm text-gray-400">{task?.status}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <p>{task?.task?.budget}</p>
+                    <p className="text-sm text-gray-400">{formatDate(task?.createdAt.split("T")[0])}</p>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <p>$100</p>
-                <p className="text-sm text-gray-400">1/10/2023</p>
-              </div>
-            </div>
-            {/* card-2 */}
-            <div className="flex border justify-between  p-6 rounded-xl border-gray-200 shadow-md hover:shadow-lg bg-white transition">
-              <div className="flex gap-6 items-center">
-                <CircleCheckBig color="green" />
-                <div className="">
-                  <p>Data Entry Project</p>
-                  <p className="text-sm text-gray-400">Task assigned</p>
-                </div>
-              </div>
-              <div>
-                <p>$100</p>
-                <p className="text-sm text-gray-400">1/10/2023</p>
-              </div>
-            </div>
+            ))}
           </div>
         </>
       )}
