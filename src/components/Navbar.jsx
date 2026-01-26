@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContextApi/AuthContext";
+import NotificationIcon from "./Notifications/NotificationIcon";
 // import { auth } from "../Firebase/Firebase";
 const Navbar = () => {
   // getting the auth data from the auth context
-  const { currentUser,loading } = useAuth();
+  const { currentUser, loading } = useAuth();
   // console.log(currentUser);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -109,14 +110,8 @@ const Navbar = () => {
                   Profile
                 </Link>
 
-                {/* TODO: instead of this notification comes here */}
-                {/* <Link
-                  to="/"
-                  className="text-red-700 hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
-                  onClick={() => logout()}
-                >
-                  Logout
-                </Link> */}
+                {/* notifications */}
+                <NotificationIcon />
               </>
             )}
 
@@ -154,24 +149,23 @@ const Navbar = () => {
                   Profile
                 </Link>
 
-                {/* TODO: instead of this notification comes here */}
-                {/* <Link
-                  to="/"
-                  className="text-red-700 hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
-                  onClick={() => logout()}
-                >
-                  Logout
-                </Link> */}
+                {/* notification */}
+                <NotificationIcon />
               </>
             )}
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden z-50">
+          {/* Mobile Actions */}
+          <div className="md:hidden z-50 flex items-center gap-2">
+            {/* Notifications */}
+            <NotificationIcon />
+
+            {/* Hamburger */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 cursor-pointer rounded-full text-gray-700 hover:text-blue-700 focus:outline-none 
-              transition duration-200 bg-white border border-gray-400 shadow-md"
+              className="p-1 cursor-pointer rounded-full text-gray-700 hover:text-blue-700
+               bg-white border border-gray-300 shadow-md"
             >
               <svg
                 className="w-7 h-7"
@@ -275,15 +269,6 @@ const Navbar = () => {
               >
                 Profile
               </Link>
-              
-              {/* TODO: instead of this notification comes here */}
-              {/* <Link
-                to="/"
-                className="text-red-700 block hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
-                onClick={() => logout()}
-              >
-                Logout
-              </Link> */}
             </>
           )}
 
@@ -322,15 +307,6 @@ const Navbar = () => {
               >
                 Profile
               </Link>
-              
-              {/* TODO: instead of this notification comes here */}
-              {/* <Link
-                to="/"
-                className="text-red-700 block hover:bg-red-50 py-2 px-4 rounded-full text-sm font-medium transition-colors duration-200"
-                onClick={() => logout()}
-              >
-                Logout
-              </Link> */}
             </>
           )}
         </div>
