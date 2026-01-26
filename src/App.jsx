@@ -34,6 +34,8 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
+
+            {/* for host */}
             <Route
               path="post/job"
               element={
@@ -42,6 +44,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            
             <Route
               path="profile/ally"
               element={
@@ -50,6 +53,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            
             <Route
               path="profile/host"
               element={
@@ -58,6 +62,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+            
             <Route
               path="host/dashboard"
               element={
@@ -66,6 +71,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="ally/dashboard"
               element={
@@ -74,6 +80,8 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
+            {/* for ally */}
             <Route
               path="apply/job/:applyTaskId"
               element={
@@ -82,8 +90,11 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
             <Route path="job/listings" element={<JobListings />} />
             <Route path="password_reset" element={<ForgetPassword />} />
+            
+            {/* for host */}
             <Route
               path="task/details/:id"
               element={
@@ -92,6 +103,8 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
+            {/* for host */}
             <Route
               path="task/:id/applications"
               element={
@@ -101,6 +114,7 @@ const App = () => {
               }
             />
 
+            {/* for ally */}
             <Route
               path="task/:taskId"
               element={
@@ -110,6 +124,7 @@ const App = () => {
               }
             />
 
+            {/* for ally */}
             <Route
               path="applied-tasks"
               element={
@@ -119,6 +134,7 @@ const App = () => {
               }
             />
 
+            {/* for ally */}
             <Route
               path="view/applied/task/details/:taskId"
               element={
@@ -127,7 +143,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-
+            
             <Route
               path="ally/public/profile/:id"
               element={
