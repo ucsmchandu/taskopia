@@ -18,6 +18,7 @@ const useUpdateProfile = () => {
       toast.success("Profile Updated Successfully", { position: "top-left" });
       // console.log(res);
       queryClient.invalidateQueries(["hostProfileData"]);
+      queryClient.invalidateQueries(["notifications"])
     },
     onError: (err) => {
       console.log(err);

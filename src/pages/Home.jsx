@@ -10,8 +10,10 @@ import HostSuggestions from "../components/HomeComponents/Host.Suggestions";
 import HowItWorksSection from "../components/HomeComponents/HostComponents/HowItWorks";
 import WhyChoose from "../components/HomeComponents/HostComponents/WhyChoose";
 import UserSay from "../components/HomeComponents/HostComponents/UserSay";
-
-// Reusable wrapper for reveal animations 
+import axios from "axios";
+import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+// Reusable wrapper for reveal animations
 function Reveal({ as: Tag = "div", className = "", children, ...props }) {
   const ref = useReveal();
   return (
@@ -21,9 +23,28 @@ function Reveal({ as: Tag = "div", className = "", children, ...props }) {
   );
 }
 
+const getNotifications = async () => {
+  try {
+    const res = await axios.get(
+      `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/notifications/get/notifications`,
+      { withCredentials: true },
+    );
+    return res.data;
+  } catch (err) {
+    console.log(err);
+    if (err.response?.status === 404) return [];
+  }
+};
+
 const Home = () => {
   const { currentUser, loading } = useAuth();
-// console.log(currentUser)
+  const { data: notifications = [] } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: getNotifications,
+    staleTime: 3000,
+    enabled: !!currentUser, // only fetch when logged in
+  });
+  // console.log(currentUser)
   return (
     <div className="scroll-smooth">
       {/* animated home content */}

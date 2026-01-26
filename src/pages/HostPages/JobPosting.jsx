@@ -24,6 +24,7 @@ const usePostTask = () => {
       //TODO: here invalidate the query
       // console.log(res);
       queryClient.invalidateQueries(["hostTasksData"]);
+      queryClient.invalidateQueries(["notifications"])
       navigate("/host/dashboard");
       window.scrollTo(0, 0);
     },

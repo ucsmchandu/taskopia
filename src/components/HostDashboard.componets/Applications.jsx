@@ -57,6 +57,7 @@ const Applications = () => {
       // console.log(res)
       toast.success(res.message);
       queryClient.invalidateQueries(["hostApplications", taskId]);
+      queryClient.invalidateQueries(["notifications"])
       setActiveAppId(null); //  RESET
     },
     onError: (err) => {

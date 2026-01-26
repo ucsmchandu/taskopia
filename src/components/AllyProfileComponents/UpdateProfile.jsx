@@ -21,6 +21,7 @@ const useUpdateProfile = () => {
       toast.success("Profile Updated SuccessFully", { position: "top-left" });
       console.log(res);
       queryClient.invalidateQueries(["allyProfile"]);
+      queryClient.invalidateQueries(["notifications"])
     },
     onError: (err) => {
       console.log(err);

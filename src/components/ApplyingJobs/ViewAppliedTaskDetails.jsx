@@ -55,6 +55,7 @@ const useCancelApplication = () => {
       console.log(res);
       queryClient.invalidateQueries(["allyAppliedTasks"]);
       queryClient.invalidateQueries(["allyAppliedTaskDetails"]);
+      queryClient.invalidateQueries(["notifications"]);
       navigate("/applied-tasks");
     },
     onError: (err) => {
@@ -84,7 +85,7 @@ const AppliedTasksPage = () => {
     enabled: true,
     placeholderData: null,
   });
-  // console.log(tasks?.host?.firebaseUid);
+  // console.log(tasks);
 
   const statusColors = {
     applied: "bg-blue-50 text-blue-700 border-blue-200",
@@ -107,6 +108,7 @@ const AppliedTasksPage = () => {
       createCancelApplication.mutate(tasks?._id);
     } else return;
   };
+  // console.log(tasks?.task?.isDeleted)
 
   return (
     <>
@@ -163,10 +165,15 @@ const AppliedTasksPage = () => {
                         {tasks?.task?.taskCategory}
                       </span>
                       <span
-                        className={`text-xs ${tasks?.task?.urgency === "urgency" ? "text-blue-600" : "text-red-600"} border-gray-300 sm:text-sm font-medium px-3 py-1 rounded-md border`}
+                        className={`text-xs ${tasks?.task?.urgency === "urgent" ? "text-red-600" : "text-blue-600"} border-gray-300 sm:text-sm font-medium px-3 py-1 rounded-md border`}
                       >
                         {tasks?.task?.urgency}
                       </span>
+                      {tasks?.task?.isDeleted === true && (
+                        <span className="text-xs text-red-600 border-gray-300 sm:text-sm font-medium px-3 py-1 rounded-md border">
+                          Task Deleted
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="text-left sm:text-right">
@@ -323,7 +330,7 @@ const AppliedTasksPage = () => {
                           Task Status
                         </span>
                         <span className="font-medium text-gray-900 capitalize text-sm sm:text-base">
-                          {tasks?.task?.status}
+                          {tasks?.status}
                         </span>
                       </div>
                     </div>
@@ -358,8 +365,9 @@ const AppliedTasksPage = () => {
 
                 {/* Actions */}
                 <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
-                  {tasks?.status === "applied" ||
-                  tasks?.status === "accepted" ? (
+                  {(tasks?.status === "applied" ||
+                    tasks?.status === "accepted") &&
+                  !tasks?.task?.isDeleted ? (
                     <>
                       <button
                         disabled={createCancelApplication.isPending}
@@ -408,10 +416,18 @@ const AppliedTasksPage = () => {
                       )}
                     </>
                   ) : (
-                    <button className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base inline-flex items-center justify-center gap-2">
-                      <CheckCircle size={18} className="text-green-600" />
-                      {tasks?.status}
-                    </button>
+                    <>
+                      {tasks?.task.isDeleted === true ? (
+                        <p className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base inline-flex items-center justify-center gap-2">
+                          Host Deleted This Task
+                        </p>
+                      ) : (
+                        <button className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base inline-flex items-center justify-center gap-2">
+                          <CheckCircle size={18} className="text-green-600" />
+                          {tasks?.status}
+                        </button>
+                      )}
+                    </>
                   )}
 
                   {/* <button className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base">

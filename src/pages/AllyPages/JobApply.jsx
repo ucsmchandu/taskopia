@@ -23,6 +23,7 @@ const useJobApply = (id) => {
       console.log(res)
       toast.success("Your Application Send Successfully");
       queryClient.invalidateQueries(["allyAppliedTasks"]);
+      queryClient.invalidateQueries(["notifications"])
       navigate("/applied-tasks");
     },
     onError: (err) => {

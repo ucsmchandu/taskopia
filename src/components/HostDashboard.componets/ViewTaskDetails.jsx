@@ -51,6 +51,7 @@ const useDeletingTask = () => {
       toast.success("Task Deleted");
       // console.log(res);
       queryClient.invalidateQueries(["hostTaskData"]);
+      queryClient.invalidateQueries(["notifications"])
       navigate("/host/dashboard");
     },
     onError: (err) => {

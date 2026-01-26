@@ -24,7 +24,7 @@ const useCreateProfile = (onProfileCreated) => {
       toast.success("Profile Submitted Successfully", { position: "top-left" });
       console.log(res);
       queryClient.invalidateQueries(["hostProfileData"]);
-
+      queryClient.invalidateQueries(["notifications"])
       // the arrow function that called after successful of this api
       onProfileCreated?.();
     },
@@ -51,6 +51,7 @@ const useCreateUpdateUser = () => {
       toast.success("Profile setup completed");
       console.log(res);
       queryClient.invalidateQueries(["authData"]);
+      queryClient.invalidateQueries(["notifications"])
     },
     onError: (err) => {
       console.log(err);
