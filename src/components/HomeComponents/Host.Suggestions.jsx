@@ -1,64 +1,141 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
-// TODO : need to get the data from the db only for suggestions need to display like a add 
+// get tasks
+const getActiveTasks = async () => {
+  try {
+    const res = await axios.get(
+      `${
+        import.meta.env.VITE_BACKEND_BASE
+      }/taskopia/u1/api/tasks/get/host/tasks`,
+      { withCredentials: true },
+    );
+    return res.data.tasks;
+  } catch (err) {
+    console.log(err);
+    if (err.response?.status === 404) return [];
+    throw err;
+  }
+};
+
 const HostSuggestions = () => {
+  const { data, isPending, isFetching, isError } = useQuery({
+    queryKey: ["hostTasksData"],
+    queryFn: getActiveTasks,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    retry: 2,
+    refetchOnReconnect: true,
+    enabled: true,
+    placeholderData: null,
+  });
+  const tasks = data
+    ? data.filter(
+        (t) =>
+          t.isDeleted === false &&
+          t.status !== "completed" &&
+          t.status !== "cancelled",
+      )
+    : [];
+  // console.log(tasks);
+
   return (
-    <div className=' bg-gradient-to-t from-[#092635] to-[#1B4242]  mt-20 p-6'>
-      
-      <div className='max-w-4xl mx-auto'>
+    <div className="mt-20 px-4">
+      <div
+        className="max-w-5xl mx-auto rounded-2xl 
+               bg-[#0B1220] border border-[#1E293B] 
+               shadow-xl p-6 md:p-8"
+      >
         {/* Header */}
-      <div className='mb-6'>
-        <h1 className='text-3xl font-semibold text-white'>Welcome back! 👋</h1>
-        <p className='text-gray-400 text-sm mt-1'>
-          Need help today? Here are your recent tasks.
-        </p>
-      </div>
-
-      {/* Action Buttons */}
-      <div className='flex gap-4 mb-6'>
-        <Link to="/post/job" className='bg-white/10 border cursor-pointer border-white/10 text-white px-5 py-2 rounded-xl hover:bg-white/20 transition'>
-          Post a Task
-        </Link>
-
-        <Link to="/host/dashboard" className='bg-white/10 border cursor-pointer border-white/10 text-white px-5 py-2 rounded-xl hover:bg-white/20 transition'>
-          View Posted Tasks
-        </Link>
-      </div>
-
-      {/* Recent Tasks */}
-      <div className='flex flex-col gap-4'>
-        
-        {/* Task 1 */}
-        <div className='flex justify-between bg-white/10 border border-white/10 p-4 rounded-xl shadow-sm hover:bg-white/20 transition'>
-          <div>
-            <p className='text-lg font-medium text-white'>College move-out assistance</p>
-            <p className='text-gray-400 text-sm'>3 applicants</p>
-          </div>
-          <button className='text-blue-300 cursor-pointer w-fit h-fit text-sm hover:underline'>Manage</button>
+        <div className="mb-8">
+          <h1 className="text-2xl md:text-3xl font-semibold text-white">
+            Welcome back
+          </h1>
+          <p className="text-[#94A3B8] text-sm mt-1">
+            Quick access to your recent tasks.
+          </p>
         </div>
 
-        {/* Task 2 */}
-        <div className='flex justify-between bg-white/10 border border-white/10 p-4 rounded-xl shadow-sm hover:bg-white/20 transition'>
-          <div>
-            <p className='text-lg font-medium text-white'>Lawn mowing</p>
-            <p className='text-gray-400 text-sm'>5 applicants</p>
-          </div>
-          <button className='text-blue-300 cursor-pointer w-fit h-fit text-sm hover:underline'>Manage</button>
+        {/* Actions */}
+        <div className="flex flex-wrap gap-3 mb-8">
+          <Link
+            to="/post/job"
+            className="px-5 py-2 rounded-lg text-sm font-medium
+                   bg-white text-black
+                   hover:bg-gray-200 transition"
+          >
+            + Post a Task
+          </Link>
+
+          <Link
+            to="/host/dashboard"
+            className="px-5 py-2 rounded-lg text-sm font-medium
+                   border border-[#1E293B] text-white
+                   hover:bg-[#111827] transition"
+          >
+            View Posted Tasks
+          </Link>
         </div>
 
-      </div>
+        {/* Task list */}
+        <div className="space-y-4">
+          {isPending || isFetching ? (
+            <div className="flex flex-col items-center justify-center h-40 space-y-3">
+              <div className="w-10 h-10 border-4 border-[#60A5FA] border-t-transparent rounded-full animate-spin" />
+              <p className="text-[#94A3B8] text-sm">Loading tasks...</p>
+            </div>
+          ) : isError ? (
+            <p className="text-red-400 text-sm">Failed to load tasks</p>
+          ) : tasks && tasks.length > 0 ? (
+            tasks.slice(0, 2).map((task) => (
+              <div
+                key={task._id}
+                className="flex items-center justify-between 
+                       rounded-xl border border-[#1E293B]
+                       bg-[#0F172A] p-4
+                       hover:bg-[#111827] transition"
+              >
+                <div>
+                  <p className="text-white font-medium">{task?.taskTitle}</p>
+                  <p className="text-[#94A3B8] text-sm">
+                    {task?.applicationsCount || 0} applicants
+                  </p>
+                </div>
 
-      {/* Footer Button */}
-      <div className='mt-8 text-center'>
-        <Link to="/host/dashboard" className='bg-white cursor-pointer text-black font-medium px-6 py-2 rounded-full shadow hover:bg-gray-200 transition'>
-          View All My Tasks
-        </Link>
-      </div>
-      </div>
+                <Link
+                  to={`/task/details/${task._id}`}
+                  className="text-sm text-[#60A5FA] hover:underline"
+                >
+                  Manage
+                </Link>
+              </div>
+            ))
+          ) : (
+            <p className="text-[#94A3B8] text-sm text-center">
+              No tasks posted yet.
+            </p>
+          )}
+        </div>
 
+        {/* Footer */}
+        {tasks?.length > 0 && (
+          <div className="mt-10 text-center">
+            <Link
+              to="/host/dashboard"
+              className="inline-block px-6 py-2 rounded-full
+                   border border-[#1E293B]
+                   text-white text-sm
+                   hover:bg-[#111827] transition"
+            >
+              View All My Tasks
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default HostSuggestions
+export default HostSuggestions;

@@ -7,22 +7,22 @@ gsap.registerPlugin(ScrollTrigger);
 
 const reviews = [
   {
-    name: 'Sarah Johnson',
+    name: 'Lokesh',
     rating: 5,
     text: 'Found someone to help with my furniture assembly in under 10 minutes. Amazing service!',
   },
   {
-    name: 'Michael Chen',
+    name: 'Mohan',
     rating: 5,
     text: 'The helpers are professional and verified. I feel safe using this platform.',
   },
   {
-    name: 'Emily Rodriguez',
+    name: 'Pallavi',
     rating: 5,
     text: 'Quick responses and fair pricing. This is my go-to for any task I need help with.',
   },
   {
-    name: 'David Thompson',
+    name: 'Sai',
     rating: 5,
     text: 'Super easy to use. Posted my task and had multiple offers within minutes.',
   },

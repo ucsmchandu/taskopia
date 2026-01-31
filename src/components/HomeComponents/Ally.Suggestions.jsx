@@ -3,24 +3,23 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useAuth } from "../../AuthContextApi/AuthContext";
+
 const getTasks = async () => {
   try {
     const res = await axios.get(
-      `${
-        import.meta.env.VITE_BACKEND_BASE
-      }/taskopia/u1/api/tasks/get/all/tasks`,
-      { withCredentials: true },
+      `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/tasks/get/all/tasks`,
+      { withCredentials: true }
     );
     return res.data.tasks;
   } catch (err) {
-    console.log(err);
     if (err.response?.status === 404) return [];
     throw err;
   }
 };
+
 const AllySuggestions = () => {
-  const { currentUser, loading } = useAuth();
-  // console.log(currentUser)
+  const { currentUser } = useAuth();
+
   const { data, isPending, isFetching, isError } = useQuery({
     queryKey: ["allyTasks"],
     queryFn: getTasks,
@@ -28,78 +27,85 @@ const AllySuggestions = () => {
     gcTime: 30 * 60 * 1000,
     retry: 2,
     refetchOnReconnect: true,
-    enabled: true,
-    placeholderData: null,
   });
-  // console.log(tasks);
-  // console.log(data);
 
   const tasks = data
-    ? data.filter((t) => t.isDeleted === false && t.assignedAlly === null)
+    ? data.filter((t) => !t.isDeleted && t.assignedAlly === null)
     : [];
 
   return (
-    <div className="w-full  p-6 bg-gradient-to-b from-[#406882] to-[#1A374D]">
-      <div className="max-w-4xl mx-auto">
+    <section className="mt-20 px-4 bg-[#F8FAFC]">
+      <div className="max-w-5xl mx-auto rounded-2xl bg-white border border-[#E2E8F0] p-6 md:p-8">
+
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-semibold text-white">
-            Welcome back, {currentUser?.userType.toUpperCase()} 👋
+        <div className="mb-8">
+          <h1 className="text-2xl md:text-3xl font-semibold text-[#0F172A]">
+            Welcome back, {currentUser?.userType?.toUpperCase()} 👋
           </h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-[#475569] text-sm mt-1">
             Here are tasks available for you today.
           </p>
         </div>
 
-        <div className="flex flex-col gap-4">
+        {/* Task list */}
+        <div className="space-y-4">
           {isPending || isFetching ? (
-            <div className="flex flex-col items-center justify-center h-40 space-y-2">
-              <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-gray-700 font-semibold">Loading ...</p>
+            <div className="flex flex-col items-center justify-center h-40 space-y-3">
+              <div className="w-8 h-8 border-4 border-[#2563EB] border-t-transparent rounded-full animate-spin" />
+              <p className="text-[#475569] text-sm">Loading tasks...</p>
             </div>
           ) : isError ? (
-            <p className="text-red-400">Failed to load tasks</p>
-          ) : tasks && tasks.length > 0 ? (
+            <p className="text-red-500 text-sm">Failed to load tasks</p>
+          ) : tasks.length > 0 ? (
             tasks.slice(0, 2).map((task) => (
               <div
                 key={task._id}
-                className="flex justify-between bg-white/10 border border-white/10 p-4 rounded-xl shadow-sm hover:bg-white/20 transition"
+                className="flex items-center justify-between
+                           rounded-xl border border-[#E2E8F0]
+                           bg-[#F8FAFC] p-4
+                           hover:shadow-md transition"
               >
                 {/* Left */}
                 <div>
-                  <p className="text-lg font-medium text-white">
-                    {task?.taskTitle}
+                  <p className="text-[#0F172A] font-medium">
+                    {task.taskTitle}
                   </p>
-                  <p className="text-gray-400 text-sm">{task?.address}</p>
+                  <p className="text-[#475569] text-sm">
+                    {task.address}
+                  </p>
                 </div>
 
                 {/* Right */}
                 <div className="text-right">
-                  <p className="text-lg font-semibold text-white">
-                    ₹{task?.budget}
+                  <p className="text-[#0F172A] font-semibold">
+                    ₹{task.budget}
                   </p>
-                  <p className="text-gray-400 text-sm">{task?.workingHours}</p>
+                  <p className="text-[#475569] text-sm">
+                    {task.workingHours}
+                  </p>
                 </div>
               </div>
             ))
           ) : (
-            <div className="flex justify-center">
-              <p className="text-gray-300 text-2xl font-medium">No Tasks Available Near You</p>
-            </div>
+            <p className="text-[#475569] text-center text-sm">
+              No tasks available near you.
+            </p>
           )}
         </div>
 
         {/* Button */}
-        <div className="mt-8 text-center">
+        <div className="mt-10 text-center">
           <Link
             to="/job/listings"
-            className="bg-white cursor-pointer text-black font-medium px-6 py-2 rounded-full shadow hover:bg-gray-200 transition"
+            className="inline-block px-6 py-2 rounded-full
+                       bg-[#2563EB] text-white text-sm font-medium
+                       hover:bg-[#1D4ED8] transition"
           >
             View More
           </Link>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -1,10 +1,12 @@
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Navigation } from "lucide-react";
 import {
   getNotifications,
   markAsRead,
   markAllAsRead,
 } from "./NotificationService";
+import { Link } from "react-router-dom";
 
 const NotificationPanel = ({ open, onClose }) => {
   const [notifications, setNotifications] = useState([]);
@@ -19,8 +21,8 @@ const NotificationPanel = ({ open, onClose }) => {
       setLoading(true);
       const res = await getNotifications();
       // console.log(res)
-      const data=res ? res.filter((r)=>r.isRead===false) : [];
-      // console.log(data)
+      const data = res ? res.filter((r) => r.isRead === false) : [];
+      // console.log(data);
       setNotifications(data);
     } catch (err) {
       console.error(err);
@@ -88,7 +90,7 @@ const NotificationPanel = ({ open, onClose }) => {
               {unreadCount > 0 && (
                 <button
                   onClick={handleMarkAllAsRead}
-                  className="text-xs sm:text-sm text-blue-600 hover:underline"
+                  className="text-xs sm:text-sm cursor-pointer text-blue-600 hover:underline"
                 >
                   Mark all read
                 </button>
@@ -152,6 +154,12 @@ const NotificationPanel = ({ open, onClose }) => {
                     <p className="text-xs text-gray-400 mt-2">
                       {new Date(n.createdAt).toLocaleString()}
                     </p>
+                  </div>
+                  <div className="flex flex-row items-center justify-center gap-1 relative top-12 hover:underline cursor-pointer ">
+                    <Navigation size={16} className="" />
+                    <Link to={`${n?.link}`} className="cursor-pointer">
+                      Open
+                    </Link>
                   </div>
                 </div>
               </div>

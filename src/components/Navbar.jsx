@@ -27,9 +27,12 @@ const Navbar = () => {
     <nav className="fixed w-full z-50 top-0 left-0 pt-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between relative">
-          <Link
-            to="/"
-            className="text-3xl font-extrabold text-blue-700 tracking-tight z-50"
+          <Link to="/"
+            className="text-3xl font-medium text-[#2D3142]"
+            style={{
+              fontFamily: 'Georgia, "Times New Roman", serif',
+              fontStyle: "italic",
+            }}
           >
             Taskopia
           </Link>
@@ -82,7 +85,7 @@ const Navbar = () => {
                 <Link
                   to="/job/listings"
                   className={`${linkBaseClasses} ${
-                    isActive("/ally-dashboard")
+                    isActive("/job/listings")
                       ? "text-white bg-blue-600 shadow-md"
                       : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
@@ -100,6 +103,16 @@ const Navbar = () => {
                   Applied tasks
                 </Link>
                 <Link
+                  to="/ally/dashboard"
+                  className={`${linkBaseClasses} ${
+                    isActive("/ally/dashboard")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
+                  }`}
+                >
+                  Dashboard
+                </Link>
+                 <Link
                   to="/profile/ally"
                   className={`${linkBaseClasses} ${
                     isActive("/profile/ally")
@@ -257,6 +270,17 @@ const Navbar = () => {
                 }`}
               >
                 Applied tasks
+              </Link>
+              <Link
+                to="/ally/dashboard"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/ally/dashboard")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700"
+                }`}
+              >
+                Dashboard
               </Link>
               <Link
                 to="/profile/ally"

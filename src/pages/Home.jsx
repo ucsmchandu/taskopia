@@ -12,7 +12,10 @@ import WhyChoose from "../components/HomeComponents/HostComponents/WhyChoose";
 import UserSay from "../components/HomeComponents/HostComponents/UserSay";
 import axios from "axios";
 import { useEffect } from "react";
+import { auth } from "../Firebase/Firebase";
 import { useQuery } from "@tanstack/react-query";
+import NewUserHomePage from "../components/HomeComponents/NewUserHomePage";
+import HomePage from "../components/HomeComponents/HostComponents/HomePage";
 // Reusable wrapper for reveal animations
 function Reveal({ as: Tag = "div", className = "", children, ...props }) {
   const ref = useReveal();
@@ -38,6 +41,8 @@ const getNotifications = async () => {
 
 const Home = () => {
   const { currentUser, loading } = useAuth();
+  // console.log(currentUser);
+  // console.log(auth)
   const { data: notifications = [] } = useQuery({
     queryKey: ["notifications"],
     queryFn: getNotifications,
@@ -47,8 +52,13 @@ const Home = () => {
   // console.log(currentUser)
   return (
     <div className="scroll-smooth">
-      {/* animated home content */}
-      <StartHome user={currentUser} isLoading={loading} />
+      {!currentUser?.firebaseId ? (
+        <NewUserHomePage />
+      ) : currentUser.userType === "host" ? (
+        <HomePage />
+      ) : currentUser.userType === "ally" ? (
+        <StartHome user={currentUser} isLoading={loading} />
+      ) : null}
 
       {/* information content */}
       {currentUser?.userType === "host" ? <HowItWorksSection /> : <Cards />}
@@ -57,69 +67,56 @@ const Home = () => {
       {currentUser?.userType === "host" ? (
         <WhyChoose />
       ) : (
-        <section className="py-20 px-6 bg-gradient-to-b from-white to-[#8D5F8C]">
+        <section className="py-20 px-6 bg-[#F8FAFC]">
           <div className="max-w-5xl mx-auto text-center">
             <Reveal
               as="h2"
-              className="text-3xl font-semibold mb-6 text-[#6B3F69]"
+              className="text-3xl md:text-4xl font-semibold mb-6 text-[#0F172A]"
             >
               Why Choose Taskopia?
             </Reveal>
 
-            <Reveal as="p" className="text-[#131D4F] mb-10">
+            <Reveal as="p" className="text-[#475569] mb-12 max-w-2xl mx-auto">
               Taskopia bridges the gap between opportunity and talent. It’s the
-              easiest way for students to find flexible work...
+              easiest way for students to find flexible work.
             </Reveal>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-[#292fa6]">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
-                  text: "Quick Jobs Work when you’re free",
-                  from: "#0D1164",
-                  to: "#292fa6",
+                  text: "Quick Jobs — work when you’re free",
                 },
                 {
-                  text: "No Long Commitments One-day tasks only",
-                  from: "#641B2E",
-                  to: "#c14c6b",
+                  text: "No Long Commitments — one-day tasks only",
                 },
                 {
-                  text: "Flexible Timings You decide when to work",
-                  from: "#3D365C",
-                  to: "#645a90",
+                  text: "Flexible Timings — you decide when to work",
                 },
                 {
-                  text: "Trusted Network Verified local users",
-                  from: "#3F72AF",
-                  to: "#5a8cc9",
+                  text: "Trusted Network — verified local users",
                 },
               ].map((item, index) => (
                 <Reveal
                   key={index}
-                  className="p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition"
-                  style={{
-                    background: `linear-gradient(135deg, ${item.from} 0%, ${item.to} 100%)`,
-                  }}
+                  className="p-6 bg-white rounded-xl border border-[#E2E8F0]
+                     shadow-sm hover:shadow-lg transition-all"
                 >
-                  <Sparkles className="w-8 h-8 text-white mx-auto mb-3" />
-                  <p className="text-gray-100">{item.text}</p>
+                  <div
+                    className="w-12 h-12 mx-auto mb-4 rounded-full
+                          bg-[#EFF6FF] flex items-center justify-center"
+                  >
+                    <Sparkles className="w-6 h-6 text-[#2563EB]" />
+                  </div>
+
+                  <p className="text-[#0F172A] text-sm font-medium leading-relaxed">
+                    {item.text}
+                  </p>
                 </Reveal>
               ))}
             </div>
           </div>
         </section>
       )}
-
-      {/* Our mission */}
-      <section className="py-20 px-6 bg-gradient-to-b from-[#8D5F8C] to-[#6B3F69] text-white text-center">
-        <Reveal className="flex flex-col items-center">
-          <Target className="w-12 h-12 mb-4 text-emerald-100" />
-          <h2 className="text-4xl font-bold mb-6">Our Mission</h2>
-          <p className="text-lg max-w-3xl text-sky-100">
-            To empower students with real-world earning opportunities...
-          </p>
-        </Reveal>
-      </section>
 
       {/* What our users say */}
       {currentUser?.userType === "host" ? (
