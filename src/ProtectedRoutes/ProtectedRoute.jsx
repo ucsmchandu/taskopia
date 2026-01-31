@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "../AuthContextApi/AuthContext";
 import { useLocation } from "react-router-dom";
 import { Navigate } from "react-router-dom";
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRoutes }) => {
   const { currentUser, loading } = useAuth();
   const location = useLocation();
   if (loading) {
@@ -18,6 +18,10 @@ const ProtectedRoute = ({ children }) => {
     if (location.pathname !== redirectPath) {
       return <Navigate to={redirectPath} replace />;
     }
+  }
+
+  if (allowedRoutes && !allowedRoutes.includes(currentUser?.userType)) {
+    return <Navigate to="/not/found" replace />;
   }
   return children;
 };

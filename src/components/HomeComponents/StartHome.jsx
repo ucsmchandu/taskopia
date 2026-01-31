@@ -278,7 +278,7 @@ export default function StartHome({ user }) {
               </p>
             </div>
 
-            <div ref={ctaRef} className="space-y-5">
+            <div ref={ctaRef} className="space-y-5 flex justify-center">
               <div className="flex flex-wrap gap-5 text-sm text-[#2D3142]/60 font-medium">
                 <span className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#E8A75C]"></span>

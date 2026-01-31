@@ -24,6 +24,7 @@ import ViewAppliedTaskDetails from "./components/ApplyingJobs/ViewAppliedTaskDet
 import AllyPublicProfile from "./components/AllyProfileComponents/AllyPublicProfile";
 import HostPublicProfile from "./components/HostProfileComponents/HostPublicProfile";
 import Chatting from "./pages/Chatting";
+import NotFound from "./components/NotFound";
 const App = () => {
   return (
     <AuthContextProvider>
@@ -39,34 +40,34 @@ const App = () => {
             <Route
               path="post/job"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoutes={["host"]}>
                   <JobPosting />
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="profile/ally"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoutes={["ally"]}>
                   <AllyProfile />
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="profile/host"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoutes={["host"]}>
                   <HostProfile />
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="host/dashboard"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoutes={["host"]}>
                   <HostDashboard />
                 </ProtectedRoute>
               }
@@ -75,7 +76,7 @@ const App = () => {
             <Route
               path="ally/dashboard"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoutes={["ally"]}>
                   <AllyDashboard />
                 </ProtectedRoute>
               }
@@ -85,20 +86,21 @@ const App = () => {
             <Route
               path="apply/job/:applyTaskId"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoutes={["ally"]}>
                   <JobApply />
                 </ProtectedRoute>
               }
             />
 
+            <Route path="not/found" element={<NotFound />} />
             <Route path="job/listings" element={<JobListings />} />
             <Route path="password_reset" element={<ForgetPassword />} />
-            
+
             {/* for host */}
             <Route
               path="task/details/:id"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoutes={["host"]}>
                   <ViewTaskDetails />
                 </ProtectedRoute>
               }
@@ -108,7 +110,7 @@ const App = () => {
             <Route
               path="task/:id/applications"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoutes={["host"]}>
                   <Applications />
                 </ProtectedRoute>
               }
@@ -118,7 +120,7 @@ const App = () => {
             <Route
               path="task/:taskId"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoutes={["ally"]}>
                   <TaskDetailsPage />
                 </ProtectedRoute>
               }
@@ -128,7 +130,7 @@ const App = () => {
             <Route
               path="applied-tasks"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoutes={["ally"]}>
                   <AppliedTasks />
                 </ProtectedRoute>
               }
@@ -138,12 +140,12 @@ const App = () => {
             <Route
               path="view/applied/task/details/:taskId"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute allowedRoutes={["ally"]}>
                   <ViewAppliedTaskDetails />
                 </ProtectedRoute>
               }
             />
-            
+
             <Route
               path="ally/public/profile/:id"
               element={
@@ -170,6 +172,8 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
+
+            <Route path="*" element={<NotFound/>} />
           </Route>
         </Routes>
         <ToastContainer />
