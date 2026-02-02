@@ -9,6 +9,7 @@ import {
   MessageCircle,
   X,
   CheckCircle,
+  SquareCheck,
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -17,6 +18,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { useAuth } from "../../AuthContextApi/AuthContext";
 
 // to get the task details
 const getTaskDetails = async (id) => {
@@ -65,10 +67,39 @@ const useCancelApplication = () => {
   });
 };
 
+// to send the request completion
+const useRequestCompletion = (id) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (taskId) => {
+      const res = await axios.patch(
+        `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/application/tasks/request/task/completion/${taskId}`,
+        {},
+        { withCredentials: true },
+      );
+      return res.data;
+    },
+    onSuccess: (res) => {
+      toast.success("Request completion send successfully.");
+      console.log("task completion req:", res);
+      queryClient.invalidateQueries(["allyAppliedTasks"]);
+      queryClient.invalidateQueries(["allyAppliedTaskDetails", id]);
+      queryClient.invalidateQueries(["notifications"]);
+    },
+    onError: (err) => {
+      console.log(err);
+      toast.error(`${err?.response?.data?.message}`);
+    },
+  });
+};
+
 const AppliedTasksPage = () => {
+  const { currentUser } = useAuth();
+  // console.log(currentUser);
   const { taskId } = useParams();
   //   console.log(taskId);
   const createCancelApplication = useCancelApplication();
+  const createRequestCompletion = useRequestCompletion(taskId);
 
   const {
     data: tasks,
@@ -106,6 +137,13 @@ const AppliedTasksPage = () => {
     const cfrm = confirm("Are you want to withdraw the application ?");
     if (cfrm) {
       createCancelApplication.mutate(tasks?._id);
+    } else return;
+  };
+
+  const confirmRequestCompletion = () => {
+    const cfrm = confirm("Are you sure about to send the request?");
+    if (cfrm) {
+      createRequestCompletion.mutate(taskId);
     } else return;
   };
   // console.log(tasks?.task?.isDeleted)
@@ -327,11 +365,26 @@ const AppliedTasksPage = () => {
 
                       <div className="flex items-center justify-between py-3">
                         <span className="text-xs sm:text-sm text-gray-600">
-                          Task Status
+                          Application Status
                         </span>
                         <span className="font-medium text-gray-900 capitalize text-sm sm:text-base">
                           {tasks?.status}
                         </span>
+                      </div>
+
+                      <div className="flex items-center justify-between py-3">
+                        <span className="text-xs sm:text-sm text-gray-600">
+                          Task Status
+                        </span>
+                        {tasks?.task?.status === "completion_requested" ? (
+                          <span className="font-medium text-gray-900 capitalize text-sm sm:text-base">
+                            Completion requested
+                          </span>
+                        ) : (
+                          <span className="font-medium text-gray-900 capitalize text-sm sm:text-base">
+                            {tasks?.task?.status}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -367,7 +420,8 @@ const AppliedTasksPage = () => {
                 <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-100">
                   {(tasks?.status === "applied" ||
                     tasks?.status === "accepted") &&
-                  !tasks?.task?.isDeleted ? (
+                  !tasks?.task?.isDeleted &&
+                  tasks?.task?.status !== "completed" ? (
                     <>
                       <button
                         disabled={createCancelApplication.isPending}
@@ -421,6 +475,11 @@ const AppliedTasksPage = () => {
                         <p className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base inline-flex items-center justify-center gap-2">
                           Host Deleted This Task
                         </p>
+                      ) : tasks?.task?.status === "completed" ? (
+                        <button className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base inline-flex items-center justify-center gap-2">
+                          <CheckCircle size={18} className="text-green-600" />
+                          {tasks?.task?.status}
+                        </button>
                       ) : (
                         <button className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base inline-flex items-center justify-center gap-2">
                           <CheckCircle size={18} className="text-green-600" />
@@ -430,9 +489,49 @@ const AppliedTasksPage = () => {
                     </>
                   )}
 
-                  {/* <button className="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base">
-                    Contact Host
-                  </button> */}
+                  {/* req completion button */}
+                  {tasks?.task.isDeleted === false &&
+                    tasks?.task?.isActive === true &&
+                    tasks?.task?.status === "assigned" &&
+                    tasks?.status === "accepted" && (
+                      <>
+                        <button
+                          disabled={createRequestCompletion.isPending}
+                          onClick={confirmRequestCompletion}
+                          className="flex-1 flex flex-row items-center justify-center gap-2 border border-gray-300 bg-green-500 text-white  hover:bg-green-600 cursor-pointer font-medium py-3 px-6 rounded-lg transition-colors text-sm sm:text-base"
+                        >
+                          {createRequestCompletion.isPending ? (
+                            <span className="flex items-center justify-center gap-2">
+                              <svg
+                                className="animate-spin h-5 w-5"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                  fill="none"
+                                />
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
+                              </svg>
+                              Sending...
+                            </span>
+                          ) : (
+                            <>
+                              <SquareCheck size={18} />
+                              <span>Request completion</span>
+                            </>
+                          )}
+                        </button>
+                      </>
+                    )}
                 </div>
               </div>
             </div>
