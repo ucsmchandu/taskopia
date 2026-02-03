@@ -154,7 +154,7 @@ const Navbar = () => {
                 <Link
                   to="/profile/host"
                   className={`${linkBaseClasses} ${
-                    isActive("/profile")
+                    isActive("/profile/host")
                       ? "text-white bg-blue-600 shadow-md"
                       : "text-gray-900 hover:text-blue-700 hover:bg-white"
                   }`}
