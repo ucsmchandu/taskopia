@@ -25,6 +25,14 @@ import AllyPublicProfile from "./components/AllyProfileComponents/AllyPublicProf
 import HostPublicProfile from "./components/HostProfileComponents/HostPublicProfile";
 import Chatting from "./pages/Chatting";
 import NotFound from "./components/NotFound";
+import About from "./pages/About";
+import HowItWorks from "./pages/HowItWorks";
+import Contact from "./pages/Contact";
+import HelpCenter from "./pages/HelpCenter";
+import SafetyTrust from "./pages/SafetyTrust";
+import ReportProblem from "./pages/ReportProblem";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsConditions from "./pages/TermsConditions";
 const App = () => {
   return (
     <AuthContextProvider>
@@ -173,7 +181,23 @@ const App = () => {
               }
             />
 
-            <Route path="*" element={<NotFound/>} />
+            <Route path="*" element={<NotFound />} />
+
+            <Route path="about" element={<About />} />
+            <Route path="how/it/works" element={<HowItWorks />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="help-center" element={<HelpCenter />} />
+            <Route path="safety-trust" element={<SafetyTrust />} />
+            <Route
+              path="report-problem"
+              element={
+                <ProtectedRoute>
+                  <ReportProblem />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="terms-of-service" element={<TermsConditions />} />
           </Route>
         </Routes>
         <ToastContainer />

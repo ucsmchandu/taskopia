@@ -115,3 +115,7 @@ html {
 .status-dot {
   animation: pulse 2s ease-in-out infinite;
 }
+
+.footer-link {
+  @apply text-gray-600 hover:text-gray-900 transition-colors text-sm;
+}
