@@ -59,25 +59,25 @@ const Footer = () => {
             <ul className="space-y-3">
               {!role && (
                 <>
-                  <li><Link to="/" className="footer-link">Home</Link></li>
-                  <li><Link to="/how/it/works" className="footer-link">How It Works</Link></li>
-                  <li><Link to="/signup" className="footer-link">Sign Up</Link></li>
+                  <li className="hover:underline"><Link to="/" className="footer-link">Home</Link></li>
+                  <li className="hover:underline"><Link to="/how/it/works" className="footer-link">How It Works</Link></li>
+                  <li className="hover:underline"><Link to="/signup" className="footer-link">Sign Up</Link></li>
                 </>
               )}
 
               {role === "ally" && (
                 <>
-                  <li><Link to="/job/listings" className="footer-link">Browse Tasks</Link></li>
-                  <li><Link to="/applied-tasks" className="footer-link">My Applications</Link></li>
-                  <li><Link to="/ally/dashboard" className="footer-link">Dashboard</Link></li>
+                  <li className="hover:underline"><Link to="/job/listings" className="footer-link">Browse Tasks</Link></li>
+                  <li className="hover:underline"><Link to="/applied-tasks" className="footer-link">My Applications</Link></li>
+                  <li className="hover:underline"><Link to="/ally/dashboard" className="footer-link">Dashboard</Link></li>
                 </>
               )}
 
               {role === "host" && (
                 <>
-                  <li><Link to="/post/task" className="footer-link">Post a Task</Link></li>
-                  <li><Link to="/host/dashboard" className="footer-link">Dashboard</Link></li>
-                  <li><Link to="/profile/host" className="footer-link">Profile</Link></li>
+                  <li className="hover:underline"><Link to="/post/task" className="footer-link">Post a Task</Link></li>
+                  <li className="hover:underline"><Link to="/host/dashboard" className="footer-link">Dashboard</Link></li>
+                  <li className="hover:underline"><Link to="/profile/host" className="footer-link">Profile</Link></li>
                 </>
               )}
             </ul>
@@ -88,8 +88,8 @@ const Footer = () => {
               Company
             </h3>
             <ul className="space-y-3">
-              <li><Link to="/about" className="footer-link">About</Link></li>
-              <li><Link to="/contact" className="footer-link">Contact</Link></li>
+              <li className="hover:underline"><Link to="/about" className="footer-link">About</Link></li>
+              <li className="hover:underline"><Link to="/contact" className="footer-link">Contact</Link></li>
             </ul>
           </div>
 
@@ -98,11 +98,11 @@ const Footer = () => {
               Support
             </h3>
             <ul className="space-y-3">
-              <li><Link to="/help-center" className="footer-link">Help Center</Link></li>
-              <li><Link to="/how/it/works" className="footer-link">How It Works</Link></li>
-              <li><Link to="/safety-trust" className="footer-link">Safety & Trust</Link></li>
+              <li className="hover:underline"><Link to="/help-center" className="footer-link">Help Center</Link></li>
+              <li className="hover:underline"><Link to="/how/it/works" className="footer-link">How It Works</Link></li>
+              <li className="hover:underline"><Link to="/safety-trust" className="footer-link">Safety & Trust</Link></li>
               {role && (
-                <li><Link to="/report-problem" className="footer-link">Report a Problem</Link></li>
+                <li className="hover:underline"><Link to="/report-problem" className="footer-link">Report a Problem</Link></li>
               )}
             </ul>
           </div>
@@ -126,8 +126,8 @@ const Footer = () => {
           </p>
 
           <div className="flex gap-6">
-            <Link to="/privacy-policy" className="footer-link">Privacy Policy</Link>
-            <Link to="/terms-of-service" className="footer-link">Terms of Service</Link>
+            <Link to="/privacy-policy" className="footer-link hover:underline">Privacy Policy</Link>
+            <Link to="/terms-of-service" className="footer-link hover:underline">Terms of Service</Link>
           </div>
         </div>
       </div>
