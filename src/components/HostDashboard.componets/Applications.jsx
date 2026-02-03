@@ -1,18 +1,28 @@
 import { useState } from "react";
-import { Check, X, User, Clock, Star, MessageCircle, CircleX   } from "lucide-react";
+import {
+  Check,
+  X,
+  User,
+  Clock,
+  Star,
+  MessageCircle,
+  CircleX,
+  CheckCircle2,
+  Loader2,
+} from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../../AuthContextApi/AuthContext";
 
-//  API
+//
 const getApplications = async (taskId) => {
   const res = await axios.get(
     `${
       import.meta.env.VITE_BACKEND_BASE
     }/taskopia/u1/api/application/tasks/${taskId}/applicants`,
-    { withCredentials: true }
+    { withCredentials: true },
   );
   return res.data?.applications ?? [];
 };
@@ -23,7 +33,18 @@ const updateApplicationStatus = async ({ id, status }) => {
       import.meta.env.VITE_BACKEND_BASE
     }/taskopia/u1/api/application/tasks/application/${id}/status`,
     { status },
-    { withCredentials: true }
+    { withCredentials: true },
+  );
+  return res.data;
+};
+
+const completeApplication = async ({ id }) => {
+  const res = await axios.patch(
+    `${
+      import.meta.env.VITE_BACKEND_BASE
+    }/taskopia/u1/api/application/tasks/${id}/complete`,
+    {},
+    { withCredentials: true },
   );
   return res.data;
 };
@@ -33,8 +54,9 @@ const Applications = () => {
   const { id: taskId } = useParams();
   const [filter, setFilter] = useState("all");
   const [activeAppId, setActiveAppId] = useState(null);
+  const [activeAction, setActiveAction] = useState(null);
   const queryClient = useQueryClient();
-  const {currentUser}=useAuth();
+  const { currentUser } = useAuth();
   // console.log(currentUser)
 
   //  Fetch
@@ -46,9 +68,10 @@ const Applications = () => {
     queryKey: ["hostApplications", taskId],
     queryFn: () => getApplications(taskId),
     staleTime: 5 * 60 * 1000,
+    retry:2
   });
 
-  // console.log(applications)
+  console.log(applications);
 
   //  Mutation
   const mutation = useMutation({
@@ -57,27 +80,59 @@ const Applications = () => {
       // console.log(res)
       toast.success(res.message);
       queryClient.invalidateQueries(["hostApplications", taskId]);
-      queryClient.invalidateQueries(["notifications"])
+      queryClient.invalidateQueries(["notifications"]);
       setActiveAppId(null); //  RESET
+      setActiveAction(null);
     },
     onError: (err) => {
       toast.error(err?.response?.data?.message || "Action failed");
       setActiveAppId(null); //  RESET
+      setActiveAction(null);
+    },
+  });
+
+  //  Completion Mutation
+  const completionMutation = useMutation({
+    mutationFn: completeApplication,
+    onSuccess: (res) => {
+      toast.success(res.message || "Work completed successfully!");
+      queryClient.invalidateQueries(["hostApplications", taskId]);
+      queryClient.invalidateQueries(["notifications"]);
+      setActiveAppId(null);
+      setActiveAction(null);
+    },
+    onError: (err) => {
+      console.log(err);
+      toast.error(err?.response?.data?.message || "Completion failed");
+      setActiveAppId(null);
+      setActiveAction(null);
     },
   });
 
   //  Handlers
   const acceptApplication = (appId) => {
     if (confirm("Are you sure you want to accept this application?")) {
-      setActiveAppId(appId); //  SET ACTIVE
+      setActiveAppId(appId);
+      setActiveAction("accept");
       mutation.mutate({ id: appId, status: "accepted" });
     }
   };
 
   const rejectApplication = (appId) => {
     if (confirm("Are you sure you want to reject this application?")) {
-      setActiveAppId(appId); //  SET ACTIVE
+      setActiveAppId(appId);
+      setActiveAction("reject");
       mutation.mutate({ id: appId, status: "rejected" });
+    }
+  };
+
+  const acceptCompletion = (appId) => {
+    if (
+      confirm("Are you sure you want to accept the completion of this work?")
+    ) {
+      setActiveAppId(appId);
+      setActiveAction("complete");
+      completionMutation.mutate({ id: appId });
     }
   };
 
@@ -111,8 +166,8 @@ const Applications = () => {
               onClick={() => setFilter(t)}
               className={`px-4 cursor-pointer py-2 rounded-md text-sm ${
                 filter === t
-                  ? "bg-gray-900 text-white"
-                  : "bg-white border text-gray-600"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
               {t}
@@ -130,7 +185,11 @@ const Applications = () => {
         {/* List */}
         <div className="space-y-3">
           {filtered.map((app) => {
-            const isActive = mutation.isPending && activeAppId === app._id;
+            const isActive = activeAppId === app._id;
+            const isPending =
+              (mutation.isPending && activeAction === "accept") ||
+              (mutation.isPending && activeAction === "reject") ||
+              (completionMutation.isPending && activeAction === "complete");
 
             return (
               <div
@@ -174,10 +233,12 @@ const Applications = () => {
                           {/* ACCEPT */}
                           <button
                             onClick={() => acceptApplication(app._id)}
-                            disabled={isActive}
+                            disabled={isActive && isPending}
                             className="px-4 py-2 cursor-pointer bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-colors"
                           >
-                            {isActive ? (
+                            {isActive &&
+                            activeAction === "accept" &&
+                            isPending ? (
                               <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                             ) : (
                               <>
@@ -189,10 +250,12 @@ const Applications = () => {
                           {/* REJECT */}
                           <button
                             onClick={() => rejectApplication(app._id)}
-                            disabled={isActive}
+                            disabled={isActive && isPending}
                             className="px-4 py-2 cursor-pointer bg-red-600 hover:bg-red-700 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-colors"
                           >
-                            {isActive ? (
+                            {isActive &&
+                            activeAction === "reject" &&
+                            isPending ? (
                               <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                             ) : (
                               <>
@@ -203,20 +266,46 @@ const Applications = () => {
                         </>
                       )}
 
-                      {app.status === "accepted" && (
-                        <span className="px-4 py-2 flex flex-row justify-center items-center gap-1 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
-                          <Check size={16} /> Accepted
-                        </span>
+                      {app?.task?.status === "completion_requested" ? (
+                        <button
+                          onClick={() => acceptCompletion(app?.task?._id)}
+                          disabled={isActive && isPending}
+                          className="px-4 py-2 cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-colors"
+                        >
+                          {isActive &&
+                          activeAction === "complete" &&
+                          isPending ? (
+                            <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <>
+                              <CheckCircle2 size={16} /> Accept Completion
+                            </>
+                          )}
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() =>
+                            alert("Ally not send the completion request!")
+                          }
+                          className="px-4 py-2 cursor-not-allowed bg-emerald-200 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-colors"
+                        >
+                          <CheckCircle2 size={16} /> Accept Completion
+                        </button>
                       )}
 
                       {app.status === "rejected" && (
                         <span className="flex flex-row justify-center items-center gap-1 px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium">
-                          <CircleX size={16}/> Rejected
+                          <CircleX size={16} /> Rejected
                         </span>
                       )}
                       {app.status === "cancelled" && (
                         <span className="flex flex-row justify-center items-center gap-1 px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium">
-                          <CircleX size={16}/> cancelled by Ally
+                          <CircleX size={16} /> cancelled by Ally
+                        </span>
+                      )}
+                      {app.status === "completed" && (
+                        <span className="flex flex-row justify-center items-center gap-1 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg text-sm font-medium">
+                          <Check size={16} /> Completed
                         </span>
                       )}
                     </div>
@@ -224,15 +313,16 @@ const Applications = () => {
                     <div className="flex flex-wrap gap-2">
                       <Link
                         to={`/ally/public/profile/${app?.applicant?._id}`}
-                        className="px-4 py-2 cursor-pointer bg-white border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 flex items-center gap-2 text-sm font-medium transition-colors"
+                        className="px-4 py-2 cursor-pointer bg-slate-600 hover:bg-slate-700 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-colors"
                       >
                         <User size={16} /> View Profile
                       </Link>
 
                       {app.status === "accepted" && (
                         <Link
-                        to={`/chat/${taskId}/${app?.applicant?.firebaseUid}`}
-                        className="px-4 py-2 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-colors">
+                          to={`/chat/${taskId}/${app?.applicant?.firebaseUid}`}
+                          className="px-4 py-2 cursor-pointer bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-colors"
+                        >
                           <MessageCircle size={16} /> Chat
                         </Link>
                       )}

@@ -11,12 +11,8 @@ import {
   Pencil,
   Trash2,
   Users,
-  Calendar,
-  Clock,
-  MapPin,
-  Mail,
-  Briefcase,
 } from "lucide-react";
+
 // get the tasks
 const getTask = async (id) => {
   try {
@@ -49,7 +45,6 @@ const useDeletingTask = () => {
     },
     onSuccess: (res) => {
       toast.success("Task Deleted");
-      // console.log(res);
       queryClient.invalidateQueries(["hostTaskData"]);
       queryClient.invalidateQueries(["notifications"])
       navigate("/host/dashboard");
@@ -66,12 +61,11 @@ const ViewTaskDetails = () => {
   const createDelete = useDeletingTask();
   const [showModel, setShowModel] = useState(false);
   const { id } = useParams();
-  // query here
+  
   const {
     data: task,
     isPending,
     isFetching,
-    isError,
   } = useQuery({
     queryKey: ["singleTask", id],
     queryFn: () => getTask(id),
@@ -82,11 +76,9 @@ const ViewTaskDetails = () => {
     enabled: true,
     placeholderData: null,
   });
+  // console.log(task)
 
-  console.log(task);
-  // formatting the date
   const formatDate = (dateString) => {
-    // console.log(id)
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
@@ -94,195 +86,216 @@ const ViewTaskDetails = () => {
     });
   };
 
-  //   deleting the task
   const handleDelete = () => {
     const cfrm = confirm("Are you sure about to delete the task?");
     if (cfrm) {
       createDelete.mutate(task._id);
-      // console.log("hello");
-    } else return;
+    }
   };
 
   return (
     <>
       {(isPending || isFetching) && (
-        <div className="flex flex-col min-h-screen items-center justify-center h-40 space-y-2">
-          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-gray-700 font-semibold">Loading</p>
+        <div className="flex flex-col min-h-screen items-center justify-center space-y-2">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-700 text-sm sm:text-base font-semibold">Loading</p>
         </div>
       )}
 
       {!isPending && !isFetching && !task && (
-        <div className="flex flex-col justify-center items-center">
-          <p className="text-xl sm:text-2xl text-gray-500 text-center italic mt-30">
+        <div className="flex flex-col justify-center items-center min-h-screen">
+          <p className="text-lg sm:text-2xl text-gray-500 text-center italic px-4">
             Nothing here yet, check back soon!
           </p>
-          <button className="text-sm w-fit cursor-pointer mt-6 px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-sm transition">
+          <button className="text-xs sm:text-sm w-fit cursor-pointer mt-6 px-4 py-2 rounded-2xl font-medium bg-blue-600 text-white hover:bg-blue-700 transition">
             Post Task
           </button>
         </div>
       )}
 
-      {!isPending && !isFetching && (
+      {!isPending && !isFetching && task && (
         <>
           <div
-            className={`min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 ${
+            className={`min-h-screen bg-white py-6 sm:py-8 px-3 sm:px-6 lg:px-8 ${
               showModel ? "blur-sm pointer-events-none" : ""
             }`}
           >
-            <div className="max-w-4xl mx-auto mt-20">
+            <div className="max-w-4xl mx-auto mt-16 sm:mt-20">
               {/* Header */}
-              <div className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8 mb-6">
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <span className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+              <div className="border-b border-gray-200 pb-4 sm:pb-6 mb-6 sm:mb-8">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-2 sm:mb-3">
+                  <span className="px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded">
                     {task.urgency}
                   </span>
-                  <span className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                  <span className="px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded">
                     {task.status}
                   </span>
-                  <span className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-700">
+                  <span className="px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded">
                     {task.taskCategory}
                   </span>
                 </div>
 
-                <h1 className="text-3xl font-semibold text-gray-900 mb-2">
+                <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-2 sm:mb-3 break-words">
                   {task.taskTitle}
                 </h1>
 
-                <p className="text-2xl font-semibold text-blue-500">
+                <p className="text-xl sm:text-2xl font-semibold text-gray-900">
                   ₹{task.budget}
                 </p>
               </div>
 
               {/* Description */}
-              <div className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8 mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-3">
+              <div className="mb-6 sm:mb-8">
+                <h2 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3 uppercase tracking-wide">
                   Description
                 </h2>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
                   {task.description}
                 </p>
               </div>
 
               {/* Attachment */}
               {task.attachments && (
-                <div className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8 mb-6">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-3">
+                <div className="mb-6 sm:mb-8">
+                  <h2 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3 uppercase tracking-wide">
                     Attachment
                   </h2>
                   <img
                     src={task.attachments}
                     alt="Task attachment"
-                    className="w-full rounded-lg border pointer-events-none border-gray-200"
+                    className="w-full rounded border border-gray-200 max-h-96 object-cover"
                   />
                 </div>
               )}
 
               {/* Task Details */}
-              <div className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8 mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
+              <div className="mb-6 sm:mb-8">
+                <h2 className="text-xs sm:text-sm font-semibold text-gray-700 mb-3 sm:mb-4 uppercase tracking-wide">
                   Task Details
                 </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
-                      <Calendar size={18} />
-                      <span>Start Date</span>
-                    </p>
-                    <p className="text-gray-900">
-                      {formatDate(task.startingDate)}
-                    </p>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Start Date</p>
+                    <p className="text-sm sm:text-base text-gray-900">{formatDate(task.startingDate)}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
-                      <Calendar size={18} />
-                      <span>End Date</span>
-                    </p>
-                    <p className="text-gray-900">
-                      {formatDate(task.endingDate)}
-                    </p>
+                    <p className="text-xs font-medium text-gray-500 mb-1">End Date</p>
+                    <p className="text-sm sm:text-base text-gray-900">{formatDate(task.endingDate)}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
-                      <Clock size={18} />
-                      <span>Working Hours</span>
-                    </p>
-                    <p className="text-gray-900">{task.workingHours} hours</p>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Working Hours</p>
+                    <p className="text-sm sm:text-base text-gray-900">{task.workingHours} hours</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
-                      <MapPin size={18} />
-                      <span>Location</span>
-                    </p>
-                    <p className="text-gray-900">{task.address}</p>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Location</p>
+                    <p className="text-sm sm:text-base text-gray-900 break-words">{task.address}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
-                      <Users size={18} />
-                      <span>Applications</span>
-                    </p>
-                    <p className="text-gray-900">{task.applicationsCount}</p>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Applications</p>
+                    <p className="text-sm sm:text-base text-gray-900">{task.applicationsCount}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
-                      <Briefcase size={18} />
-                      <span>Status</span>
-                    </p>
-                    <p className="text-gray-900">
+                    <p className="text-xs font-medium text-gray-500 mb-1">Task Status</p>
+                    <p className="text-sm sm:text-base text-gray-900">
                       {task.isActive ? "Active" : "Inactive"}
                     </p>
                   </div>
+
+                  {task.postRemovingDate && (
+                    <div>
+                      <p className="text-xs font-medium text-gray-500 mb-1">Post Removing Date</p>
+                      <p className="text-sm sm:text-base text-gray-900">{formatDate(task.postRemovingDate)}</p>
+                    </div>
+                  )}
+
+                  {task.expiredAt && (
+                    <div>
+                      <p className="text-xs font-medium text-gray-500 mb-1">Expired At</p>
+                      <p className="text-sm sm:text-base text-gray-900">{formatDate(task.expiredAt)}</p>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Contact Information */}
-              <div className="bg-white rounded-lg border border-gray-200 p-6 sm:p-8 mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Contact Information
-                </h2>
+              {/* Timeline Section */}
+              {task.status === "completed" && (
+                <div className="mb-6 sm:mb-8">
+                  <h2 className="text-xs sm:text-sm font-semibold text-gray-700 mb-3 sm:mb-4 uppercase tracking-wide">
+                    Completion Timeline
+                  </h2>
 
-                <div>
-                  <p className="text-sm font-medium text-gray-500 mb-1 flex flex-row gap-1">
-                    <Mail size={18} />
-                    <span>Email</span>
-                  </p>
-                  <p className="text-gray-900">{task.email}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+                    {task.completionRequestedAt && (
+                      <div>
+                        <p className="text-xs font-medium text-gray-500 mb-1">Completion Requested</p>
+                        <p className="text-sm sm:text-base text-gray-900">{formatDate(task.completionRequestedAt)}</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {new Date(task.completionRequestedAt).toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit"
+                          })}
+                        </p>
+                      </div>
+                    )}
+
+                    {task.completedAt && (
+                      <div>
+                        <p className="text-xs font-medium text-gray-500 mb-1">Completed On</p>
+                        <p className="text-sm sm:text-base text-gray-900">{formatDate(task.completedAt)}</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {new Date(task.completedAt).toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit"
+                          })}
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
+              )}
+
+              {/* Contact Information */}
+              <div className="mb-6 sm:mb-8 border-t border-gray-200 pt-6 sm:pt-8">
+                <h2 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3 uppercase tracking-wide">
+                  Contact
+                </h2>
+                <p className="text-sm sm:text-base text-gray-900 break-words">{task.email}</p>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-4 flex-wrap">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full">
                 <button
                   onClick={() => setShowModel(true)}
-                  className="flex-1 flex cursor-pointer flex-row justify-center items-center gap-2 px-6 py-3 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
+                  className="flex cursor-pointer flex-row justify-center items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-white bg-gray-900 rounded hover:bg-gray-800 transition-colors flex-1 sm:flex-none"
                 >
-                  <Pencil size={18} /> <span>Edit Task</span>
+                  <Pencil size={16} /> 
+                  <span>Edit</span>
                 </button>
 
                 <Link
                   to={`/task/${task._id}/applications`}
-                  className="flex-1 flex cursor-pointer flex-row justify-center items-center gap-2 px-6 py-3 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+                  className="flex cursor-pointer flex-row justify-center items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-medium bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors flex-1 sm:flex-none"
                 >
-                  <Users size={18} />
-                  Applications ({task.applicationsCount})
+                  <Users size={16} />
+                  <span>Applications ({task.applicationsCount})</span>
                 </Link>
 
-                {task?.isDeleted === false && !task?.assignedAlly  && (
+                {task?.isDeleted === false && !task?.assignedAlly && (
                   <button
                     onClick={handleDelete}
                     disabled={createDelete.isPending}
-                    className="px-6 py-3 text-sm font-medium text-white bg-red-600 border rounded-lg hover:bg-red-500 cursor-pointer transition-colors"
+                    className="px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-white bg-red-600 rounded hover:bg-red-700 cursor-pointer transition-colors disabled:opacity-60 flex-1 sm:flex-none"
                   >
                     {createDelete.isPending ? (
                       <span className="flex items-center justify-center gap-2">
                         <svg
-                          className="animate-spin h-5 w-5"
+                          className="animate-spin h-4 w-4"
                           viewBox="0 0 24 24"
                         >
                           <circle
@@ -300,12 +313,12 @@ const ViewTaskDetails = () => {
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                           />
                         </svg>
-                        Deleting..
+                        <span>Deleting</span>
                       </span>
                     ) : (
                       <div className="flex flex-row items-center justify-center gap-2">
-                        <Trash2 size={18} />
-                        Delete
+                        <Trash2 size={16} />
+                        <span>Delete</span>
                       </div>
                     )}
                   </button>
@@ -315,18 +328,17 @@ const ViewTaskDetails = () => {
           </div>
 
           {showModel && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6">
               <div
-                className="absolute inset-0 bg-white/10 "
+                className="absolute inset-0 bg-black/20"
                 onClick={() => setShowModel(false)}
               />
 
               <div
-                className="bg-white rounded-lg shadow-lg w-full max-w-3xl p-6 z-10 relative
-                    max-h-[90vh] overflow-auto"
+                className="bg-white rounded shadow-lg w-full max-w-3xl p-4 sm:p-6 z-10 relative max-h-[90vh] overflow-auto"
               >
                 <button
-                  className="absolute top-3 right-3 cursor-pointer bg-red-300 p-0.5 rounded-4xl px-2 text-red-500 hover:"
+                  className="absolute top-3 sm:top-4 right-3 sm:right-4 cursor-pointer text-gray-400 hover:text-gray-600 text-xl"
                   onClick={() => setShowModel(false)}
                 >
                   ✕
