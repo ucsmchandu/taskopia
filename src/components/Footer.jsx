@@ -75,7 +75,7 @@ const Footer = () => {
 
               {role === "host" && (
                 <>
-                  <li className="hover:underline"><Link to="/post/task" className="footer-link">Post a Task</Link></li>
+                  <li className="hover:underline"><Link to="/post/job" className="footer-link">Post a Task</Link></li>
                   <li className="hover:underline"><Link to="/host/dashboard" className="footer-link">Dashboard</Link></li>
                   <li className="hover:underline"><Link to="/profile/host" className="footer-link">Profile</Link></li>
                 </>
