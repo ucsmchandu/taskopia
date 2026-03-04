@@ -121,8 +121,9 @@ const Footer = () => {
             gap-4
           "
         >
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-600 text-sm flex flex-col items-start">
             © {new Date().getFullYear()} Taskopia.
+            <p>Owned and operated by UPPU CHANDRA SAI MAHESH</p>
           </p>
 
           <div className="flex gap-6">
