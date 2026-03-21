@@ -33,6 +33,7 @@ import SafetyTrust from "./pages/SafetyTrust";
 import ReportProblem from "./pages/ReportProblem";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsConditions from "./pages/TermsConditions";
+import RefundPolicy from "./pages/RefundPolicy";
 const App = () => {
   return (
     <AuthContextProvider>
@@ -198,6 +199,7 @@ const App = () => {
             />
             <Route path="privacy-policy" element={<PrivacyPolicy />} />
             <Route path="terms-of-service" element={<TermsConditions />} />
+            <Route path="refund-policy" element={<RefundPolicy />} />
           </Route>
         </Routes>
         <ToastContainer />
