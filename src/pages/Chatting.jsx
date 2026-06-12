@@ -9,8 +9,6 @@ const Chatting = () => {
   const [chatReady, setChatReady] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // TODO: replace the dummy data with original data
-  // const taskId = "task123";
   const {taskId,hostId}=useParams();
   // console.log(hostId)
   // console.log(id)

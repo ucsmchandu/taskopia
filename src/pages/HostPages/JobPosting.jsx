@@ -21,7 +21,6 @@ const usePostTask = () => {
     },
     onSuccess: (res) => {
       toast.success("Task Posted successfully");
-      //TODO: here invalidate the query
       // console.log(res);
       queryClient.invalidateQueries(["hostTasksData"]);
       queryClient.invalidateQueries(["notifications"])
@@ -94,6 +93,8 @@ const JobPosting = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState("");
 
   const handleData = (e) => {
     const { name, value, files } = e.target;
@@ -126,6 +127,44 @@ const JobPosting = () => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleGenerateWithAI = async () => {
+    const promptText = aiPrompt.trim();
+
+    if (!promptText) {
+      toast.error("Please enter a simple task prompt first");
+      return;
+    }
+
+    setAiLoading(true);
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_BASE}/taskopia/ai/api/post-task`,
+        { userPrompt: promptText },
+        { withCredentials: true },
+      );
+
+      const aiData = data || {};
+
+      setTaskData((prev) => ({
+        ...prev,
+        title: aiData.taskTitle || prev.title,
+        taskDescription: aiData.taskDescription || prev.taskDescription,
+        taskCategory: aiData.category || prev.taskCategory,
+        amount: aiData.taskBudget ? String(aiData.taskBudget) : prev.amount,
+        workingHours: aiData.estimatedTimeHours
+          ? String(aiData.estimatedTimeHours)
+          : prev.workingHours,
+      }));
+
+      toast.success("AI suggestions applied");
+    } catch (err) {
+      console.error(err);
+      toast.error(err.response?.data?.error || "Failed to generate AI suggestions");
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   // submit the data
@@ -246,9 +285,32 @@ const JobPosting = () => {
         <div className="flex flex-col-reverse lg:flex-row gap-8">
           <form onSubmit={handleSubmit} className="flex-1 space-y-6">
             <div className="bg-white shadow rounded-xl p-6 space-y-5">
-              <h3 className="font-semibold text-lg text-slate-800">
-                Basic Information
-              </h3>
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="font-semibold text-lg text-slate-800">
+                  Basic Information
+                </h3>
+              </div>
+
+              <div className="rounded-lg border border-blue-100 bg-blue-50 p-4 space-y-3">
+                <label className="text-sm font-medium text-slate-700 block">
+                  AI prompt
+                </label>
+                <textarea
+                  value={aiPrompt}
+                  onChange={(e) => setAiPrompt(e.target.value)}
+                  placeholder="eg: I need a person to help me move furniture from one house to another"
+                  rows={3}
+                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-1 resize-none"
+                />
+                <button
+                  type="button"
+                  onClick={handleGenerateWithAI}
+                  disabled={aiLoading}
+                  className="px-4 py-2 cursor-pointer rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {aiLoading ? "Generating..." : "Generate with AI"}
+                </button>
+              </div>
 
               <div>
                 <label className="text-sm font-medium text-slate-700 mb-1 block">
