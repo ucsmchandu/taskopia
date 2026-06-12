@@ -23,7 +23,7 @@ const usePostTask = () => {
       toast.success("Task Posted successfully");
       // console.log(res);
       queryClient.invalidateQueries(["hostTasksData"]);
-      queryClient.invalidateQueries(["notifications"])
+      queryClient.invalidateQueries(["notifications"]);
       navigate("/host/dashboard");
       window.scrollTo(0, 0);
     },
@@ -160,8 +160,20 @@ const JobPosting = () => {
 
       toast.success("AI suggestions applied");
     } catch (err) {
+      const msg =
+        '{"error":{"code":503,"message":"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.","status":"UNAVAILABLE"}}';
       console.error(err);
-      toast.error(err.response?.data?.error || "Failed to generate AI suggestions");
+      // console.log(err.response?.data?.details)
+      const m = err.response?.data?.details;
+      if (m.toString() === msg) {
+        toast.error(
+          "Currently our model facing high traffic, please try again after some time.",
+        );
+      } else {
+        toast.error(
+          err.response?.data?.error || "Failed to generate AI suggestions",
+        );
+      }
     } finally {
       setAiLoading(false);
     }
@@ -171,9 +183,9 @@ const JobPosting = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!locationAllowed) {
-    toast.error("Please allow location access to post a task");
-    return;
-  }
+      toast.error("Please allow location access to post a task");
+      return;
+    }
     if (!validateForm()) return;
     // const detectedCity =
     //   locationName?.address?.city ||
