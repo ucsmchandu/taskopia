@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { Star } from "lucide-react";
+import { Languages, Star } from "lucide-react";
+import { toast } from "react-toastify";
+
+const translationLanguages = [
+  { label: "Telugu - తెలుగు", value: "Telugu" },
+  { label: "Hindi - हिन्दी", value: "Hindi" },
+  { label: "Tamil - தமிழ்", value: "Tamil" },
+  { label: "Kannada - ಕನ್ನಡ", value: "Kannada" },
+  { label: "Malayalam - മലയാളം", value: "Malayalam" },
+  { label: "Other", value: "other" },
+];
+
 const getTask = async (id) => {
   try {
     const res = await axios.get(
@@ -36,15 +47,22 @@ const getConfirmCheckApplication = async (id) => {
 
 const TaskDetailsPage = () => {
   const { taskId } = useParams();
+  const [selectedTranslationLanguage, setSelectedTranslationLanguage] =
+    useState("Telugu");
+  const [customTranslationLanguage, setCustomTranslationLanguage] =
+    useState("");
+  const [translatedDescription, setTranslatedDescription] = useState("");
+  const [translatedLanguageName, setTranslatedLanguageName] = useState("");
+  const [translationError, setTranslationError] = useState("");
+  const [isTranslating, setIsTranslating] = useState(false);
   // console.log(taskId);
 
   const {
     data: task,
     isPending,
     isFetching,
-    isError,
   } = useQuery({
-    queryKey: ["fullTaskDetails",taskId],
+    queryKey: ["fullTaskDetails", taskId],
     queryFn: () => getTask(taskId),
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
@@ -60,7 +78,7 @@ const TaskDetailsPage = () => {
     isFetching: fetching,
     isError: Error,
   } = useQuery({
-    queryKey: ["checkAllyApplyTask",taskId],
+    queryKey: ["checkAllyApplyTask", taskId],
     queryFn: () => getConfirmCheckApplication(taskId),
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
@@ -79,6 +97,78 @@ const TaskDetailsPage = () => {
       month: "long",
       day: "numeric",
     });
+  };
+
+  const getTranslatedText = (data) => {
+    return data?.translatedText || "";
+  };
+
+  const handleTranslateDescription = async () => {
+    const description = task?.description?.trim();
+    const language =
+      selectedTranslationLanguage === "other"
+        ? customTranslationLanguage.trim()
+        : selectedTranslationLanguage;
+
+    if (!description) {
+      toast.error("No task description available to translate");
+      return;
+    }
+
+    if (!language) {
+      toast.error("Please enter a language to translate into");
+      return;
+    }
+
+    setIsTranslating(true);
+    setTranslationError("");
+
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_BASE}/taskopia/ai/api/translate-task`,
+        {
+          taskDescription: description,
+          requestedLanguage:language,
+        },
+        { withCredentials: true },
+      );
+
+      const translatedText = getTranslatedText(data);
+
+      if (!translatedText) {
+        setTranslationError("Translation was not available. Please try again.");
+        toast.error("Translation was not available");
+        return;
+      }
+
+      setTranslatedDescription(translatedText);
+      setTranslatedLanguageName(language);
+    } catch (err) {
+      console.log(err);
+      const highDemandMessage =
+        '{"error":{"code":503,"message":"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.","status":"UNAVAILABLE"}}';
+      const details = err?.response?.data?.details;
+      const detailsText =
+        typeof details === "string" ? details : JSON.stringify(details);
+
+      if (detailsText === highDemandMessage) {
+        const message =
+          "Currently our model facing high traffic, please try again after some time.";
+        setTranslationError(message);
+        toast.error(message);
+        return;
+      }
+
+      const message =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "Failed to translate task description";
+
+      setTranslationError(message);
+      toast.error(message);
+    } finally {
+      setIsTranslating(false);
+    }
   };
 
   return (
@@ -101,7 +191,7 @@ const TaskDetailsPage = () => {
         </div>
       )}
 
-      {!isPending && !isFetching && (
+      {!isPending && !isFetching && task && (
         <>
           <div className="min-h-screen bg-gray-50">
             {/* Header */}
@@ -137,12 +227,97 @@ const TaskDetailsPage = () => {
 
                   {/* Description */}
                   <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 sm:p-8">
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">
-                      Description
-                    </h2>
-                    <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    <div className="flex flex-col gap-3 mb-4">
+                      <h2 className="text-xl font-bold text-gray-900">
+                        Description
+                      </h2>
+                      <div className="flex flex-col gap-2 w-full sm:flex-row sm:flex-wrap sm:items-center">
+                        <select
+                          value={selectedTranslationLanguage}
+                          onChange={(e) => {
+                            setSelectedTranslationLanguage(e.target.value);
+                            setTranslationError("");
+                          }}
+                          className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 outline-none transition focus:ring-1 focus:ring-gray-500 sm:w-48"
+                        >
+                          {translationLanguages.map((language) => (
+                            <option key={language.value} value={language.value}>
+                              {language.label}
+                            </option>
+                          ))}
+                        </select>
+                        {selectedTranslationLanguage === "other" && (
+                          <input
+                            type="text"
+                            value={customTranslationLanguage}
+                            onChange={(e) =>
+                              setCustomTranslationLanguage(e.target.value)
+                            }
+                            placeholder="Enter language"
+                            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-700 outline-none transition focus:ring-1 focus:ring-gray-500 sm:w-44"
+                          />
+                        )}
+                        <button
+                          type="button"
+                          onClick={handleTranslateDescription}
+                          disabled={isTranslating}
+                          className="inline-flex cursor-pointer w-full items-center justify-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                        >
+                          {isTranslating ? (
+                            <span className="flex items-center justify-center gap-2">
+                              <svg
+                                className="h-4 w-4 animate-spin"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                  fill="none"
+                                />
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                />
+                              </svg>
+                              Translating...
+                            </span>
+                          ) : (
+                            <>
+                              <Languages size={16} />
+                              {translatedDescription
+                                ? "Translate Again"
+                                : "Translate"}
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-line break-words">
                       {task?.description}
                     </p>
+                    {translatedDescription && (
+                      <div className="mt-5 rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+                        <p className="mb-2 text-sm font-semibold text-emerald-800">
+                          Translated Description
+                          {translatedLanguageName
+                            ? ` (${translatedLanguageName})`
+                            : ""}
+                        </p>
+                        <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                          {translatedDescription}
+                        </p>
+                      </div>
+                    )}
+                    {translationError && (
+                      <p className="mt-3 text-sm text-red-600">
+                        {translationError}
+                      </p>
+                    )}
                   </div>
 
                   {/* Timeline & Hours */}
