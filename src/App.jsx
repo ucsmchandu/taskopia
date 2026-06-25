@@ -1,42 +1,46 @@
 import React, { useEffect } from "react";
+import { lazy,Suspense } from "react";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import FullscreenLoader from './components/FullScreenLoader'
 import Layout from "./MainLayout/Layout";
 import ProtectedRoute from "./ProtectedRoutes/ProtectedRoute";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import JobPosting from "./pages/HostPages/JobPosting";
 import AuthContextProvider from "./AuthContextApi/AuthContext";
-import AllyProfile from "./pages/AllyPages/AllyProfile";
-import HostProfile from "./pages/HostPages/HostProfile";
-import AllyDashboard from "./pages/AllyPages/AllyDashboard";
-import HostDashboard from "./pages/HostPages/HostDashboard";
 import Scroll from "./components/Scroll";
-import JobApply from "./pages/AllyPages/JobApply";
-import JobListings from "./pages/AllyPages/JobListings";
-import ForgetPassword from "./components/Authentication/ForgetPassword";
-import ViewTaskDetails from "./components/HostDashboard.componets/ViewTaskDetails";
-import Applications from "./components/HostDashboard.componets/Applications";
-import TaskDetailsPage from "./components/ApplyingJobs/TaskDetailsPage";
-import AppliedTasks from "./components/ApplyingJobs/AppliedTasks";
-import ViewAppliedTaskDetails from "./components/ApplyingJobs/ViewAppliedTaskDetails";
-import AllyPublicProfile from "./components/AllyProfileComponents/AllyPublicProfile";
-import HostPublicProfile from "./components/HostProfileComponents/HostPublicProfile";
-import Chatting from "./pages/Chatting";
-import NotFound from "./components/NotFound";
-import About from "./pages/About";
-import HowItWorks from "./pages/HowItWorks";
-import Contact from "./pages/Contact";
-import HelpCenter from "./pages/HelpCenter";
-import SafetyTrust from "./pages/SafetyTrust";
-import ReportProblem from "./pages/ReportProblem";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsConditions from "./pages/TermsConditions";
-import RefundPolicy from "./pages/RefundPolicy";
+// lazy loading pages
+const Login = lazy(()=>import("./pages/Login"));
+const Signup = lazy(()=>import("./pages/Signup"));
+const JobPosting = lazy(()=>import("./pages/HostPages/JobPosting"));
+const AllyProfile = lazy(()=>import("./pages/AllyPages/AllyProfile"));
+const HostProfile = lazy(()=>import("./pages/HostPages/HostProfile"));
+const AllyDashboard = lazy(()=>import("./pages/AllyPages/AllyDashboard"));
+const HostDashboard = lazy(()=>import("./pages/HostPages/HostDashboard"));
+const JobApply = lazy(()=>import("./pages/AllyPages/JobApply"));
+const JobListings = lazy(()=>import("./pages/AllyPages/JobListings"));
+const ForgetPassword = lazy(()=>import("./components/Authentication/ForgetPassword"));
+const ViewTaskDetails = lazy(()=>import("./components/HostDashboard.componets/ViewTaskDetails"));
+const Applications = lazy(()=>import("./components/HostDashboard.componets/Applications"));
+const TaskDetailsPage = lazy(()=>import("./components/ApplyingJobs/TaskDetailsPage"));
+const AppliedTasks = lazy(()=>import("./components/ApplyingJobs/AppliedTasks"));
+const ViewAppliedTaskDetails = lazy(()=>import("./components/ApplyingJobs/ViewAppliedTaskDetails"));
+const AllyPublicProfile = lazy(()=>import("./components/AllyProfileComponents/AllyPublicProfile"));
+const HostPublicProfile = lazy(()=>import("./components/HostProfileComponents/HostPublicProfile"));
+const Chatting = lazy(()=>import("./pages/Chatting"));
+const NotFound = lazy(()=>import("./components/NotFound"));
+const About = lazy(()=>import("./pages/About"));
+const HowItWorks = lazy(()=>import("./pages/HowItWorks"));
+const Contact = lazy(()=>import("./pages/Contact"));
+const HelpCenter = lazy(()=>import("./pages/HelpCenter"));
+const SafetyTrust = lazy(()=>import("./pages/SafetyTrust"));
+const ReportProblem = lazy(()=>import("./pages/ReportProblem"));
+const PrivacyPolicy = lazy(()=>import("./pages/PrivacyPolicy"));
+const TermsConditions = lazy(()=>import("./pages/TermsConditions"));
+const RefundPolicy = lazy(()=>import("./pages/RefundPolicy"));
 const App = () => {
   return (
-    <AuthContextProvider>
+    <Suspense fallback={<FullscreenLoader/>}>
+      <AuthContextProvider>
       <Router>
         <Scroll />
         <Routes>
@@ -205,6 +209,7 @@ const App = () => {
         <ToastContainer />
       </Router>
     </AuthContextProvider>
+    </Suspense>
   );
 };
 
