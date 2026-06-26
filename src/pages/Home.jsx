@@ -1,6 +1,5 @@
 import React from "react";
 import { useAuth } from "../AuthContextApi/AuthContext";
-import { Sparkles, Target } from "lucide-react";
 import useReveal from "../components/HomeComponents/UseReveal";
 import Cards from "../components/HomeComponents/Cards";
 import StartHome from "../components/HomeComponents/StartHome";
@@ -67,16 +66,19 @@ const Home = () => {
       {currentUser?.userType === "host" ? (
         <WhyChoose />
       ) : (
-        <section className="py-20 px-6 bg-[#F8FAFC]">
-          <div className="max-w-5xl mx-auto text-center">
+        <section className="relative overflow-hidden py-24 px-6 bg-[#F8FAFC]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.12),_transparent_45%),radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.10),_transparent_35%)]" />
+          <div className="relative max-w-6xl mx-auto text-center">
+           
+
             <Reveal
               as="h2"
-              className="text-3xl md:text-4xl font-semibold mb-6 text-[#0F172A]"
+              className="text-3xl md:text-5xl font-semibold mb-6 text-[#0F172A] leading-tight"
             >
               Why Choose Taskopia?
             </Reveal>
 
-            <Reveal as="p" className="text-[#475569] mb-12 max-w-2xl mx-auto">
+            <Reveal as="p" className="text-[#475569] mb-14 max-w-2xl mx-auto text-base md:text-lg">
               Taskopia bridges the gap between opportunity and talent. It’s the
               easiest way for students to find flexible work.
             </Reveal>
@@ -84,31 +86,36 @@ const Home = () => {
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
-                  text: "Quick Jobs — work when you’re free",
+                  title: "Quick Jobs",
+                  text: "Find flexible work that fits around classes and weekends.",
                 },
                 {
-                  text: "No Long Commitments — one-day tasks only",
+                  title: "No Long Commitments",
+                  text: "Pick one-day tasks without getting locked into long shifts.",
                 },
                 {
-                  text: "Flexible Timings — you decide when to work",
+                  title: "Flexible Timings",
+                  text: "Choose when you want to work and keep full control of your schedule.",
                 },
                 {
-                  text: "Trusted Network — verified local users",
+                  title: "Trusted Network",
+                  text: "Connect with verified local users and safer task opportunities.",
                 },
               ].map((item, index) => (
                 <Reveal
                   key={index}
-                  className="p-6 bg-white rounded-xl border border-[#E2E8F0]
-                     shadow-sm hover:shadow-lg transition-all"
+                  className="group relative p-6 text-left bg-white rounded-2xl border border-[#E2E8F0]
+                     shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                 >
-                  <div
-                    className="w-12 h-12 mx-auto mb-4 rounded-full
-                          bg-[#EFF6FF] flex items-center justify-center"
-                  >
-                    <Sparkles className="w-6 h-6 text-[#2563EB]" />
+                  <div className="w-11 h-11 mb-5 rounded-full bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 font-semibold">
+                    0{index + 1}
                   </div>
 
-                  <p className="text-[#0F172A] text-sm font-medium leading-relaxed">
+                  <h3 className="text-lg font-semibold text-[#0F172A] mb-3">
+                    {item.title}
+                  </h3>
+
+                  <p className="text-[#475569] text-sm leading-relaxed">
                     {item.text}
                   </p>
                 </Reveal>
