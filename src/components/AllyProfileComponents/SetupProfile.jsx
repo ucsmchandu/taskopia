@@ -22,14 +22,17 @@ const useCreateProfile = (onProfileCreated) => {
     onSuccess: (res) => {
       toast.success("Profile Submitted Successfully", { position: "top-left" });
       console.log(res);
-      queryClient.invalidateQueries(["allyProfile"]);
-      queryClient.invalidateQueries(["notifications"])
+      queryClient.invalidateQueries({ queryKey: ["allyProfile"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] })
       // the arrow function that called after successful of this api
       onProfileCreated?.();
     },
     onError: (err) => {
       console.log(err);
       console.log(err.message);
+      if (err?.response?.status === 429) {
+        return;
+      }
       toast.error("Something Went Wrong");
     },
   });
@@ -51,11 +54,14 @@ const useCreateUpdateUser = () => {
     onSuccess: (res) => {
       toast.success("Profile setup completed");
       console.log(res);
-      queryClient.invalidateQueries(["authData"]);
-      queryClient.invalidateQueries(["notifications"])
+      queryClient.invalidateQueries({ queryKey: ["authData"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] })
     },
     onError: (err) => {
       console.log(err);
+      if (err?.response?.status === 429) {
+        return;
+      }
       toast.error("something went wrong");
     },
   });
@@ -81,16 +87,6 @@ const SetupProfile = () => {
     latitude: null,
     longitude: null,
   });
-
-  if (loading)
-    return (
-      <>
-        <div className="flex flex-col items-center min-h-screen justify-center h-40 space-y-2">
-          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-gray-700 font-semibold">Loading...</p>
-        </div>
-      </>
-    );
 
   // get the location name form the api
   const {
@@ -226,6 +222,16 @@ const SetupProfile = () => {
     // console.log(formObject);
     createProfile.mutate(formData);
   };
+
+  if (loading)
+    return (
+      <>
+        <div className="flex flex-col items-center min-h-screen justify-center h-40 space-y-2">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-700 font-semibold">Loading...</p>
+        </div>
+      </>
+    );
 
   if (locationError) {
     return (

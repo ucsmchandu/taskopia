@@ -58,10 +58,13 @@ const Login = () => {
         { withCredentials: true }
       );
       // console.log(res);
-      queryClient.invalidateQueries(["authData"]);
+      queryClient.invalidateQueries({ queryKey: ["authData"] });
       toast.success("Login successful!");
     } catch (err) {
       console.log(err);
+      if (err?.response?.status === 429) {
+        return;
+      }
       toast.error("Invalid credentials!");
       return;
     } finally {

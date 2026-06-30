@@ -22,8 +22,8 @@ const usePostTask = () => {
     onSuccess: (res) => {
       toast.success("Task Posted successfully");
       // console.log(res);
-      queryClient.invalidateQueries(["hostTasksData"]);
-      queryClient.invalidateQueries(["notifications"]);
+      queryClient.invalidateQueries({ queryKey: ["hostTasksData"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
       navigate("/host/dashboard");
       window.scrollTo(0, 0);
     },

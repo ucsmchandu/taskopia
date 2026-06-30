@@ -62,6 +62,10 @@ const GoogleAuth = () => {
       // console.log(err);
       console.log(err?.response?.data?.message);
 
+      if (err?.response?.status === 429) {
+        return;
+      }
+
       toast.error(
         err?.response?.data?.message ||
           "Something went wrong. Please try again.",

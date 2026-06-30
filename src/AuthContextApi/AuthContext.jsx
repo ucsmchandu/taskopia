@@ -17,6 +17,9 @@ const checkAuth = async () => {
   } catch (err) {
     console.log(err);
     console.log(err.message);
+    if (err?.response?.status === 429) {
+      return null;
+    }
     return null;
   }
 };
@@ -28,7 +31,7 @@ const AuthContextProvider = ({ children }) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["authData"],
     queryFn: checkAuth,
-    retry: 1,
+    retry: (failureCount, error) => error?.response?.status !== 429 && failureCount < 1,
     refetchOnMount: true,
     refetchOnWindowFocus: true,
     staleTime: 0,

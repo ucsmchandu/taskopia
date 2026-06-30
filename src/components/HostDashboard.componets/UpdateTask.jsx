@@ -20,9 +20,9 @@ const useUpdateTask = (id) => {
     },
     onSuccess: (res) => {
       toast.success("Task Updated Successfully");
-      queryClient.invalidateQueries(["singleTask"]);
-      queryClient.invalidateQueries(["hostTasksData"]);
-      queryClient.invalidateQueries(["notifications"])
+      queryClient.invalidateQueries({ queryKey: ["singleTask"] });
+      queryClient.invalidateQueries({ queryKey: ["hostTasksData"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] })
     },
     onError: (err) => {
       console.log(err);

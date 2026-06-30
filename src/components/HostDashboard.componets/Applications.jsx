@@ -79,8 +79,8 @@ const Applications = () => {
     onSuccess: (res) => {
       // console.log(res)
       toast.success(res.message);
-      queryClient.invalidateQueries(["hostApplications", taskId]);
-      queryClient.invalidateQueries(["notifications"]);
+      queryClient.invalidateQueries({ queryKey: ["hostApplications", taskId] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
       setActiveAppId(null); //  RESET
       setActiveAction(null);
     },
@@ -96,8 +96,8 @@ const Applications = () => {
     mutationFn: completeApplication,
     onSuccess: (res) => {
       toast.success(res.message || "Work completed successfully!");
-      queryClient.invalidateQueries(["hostApplications", taskId]);
-      queryClient.invalidateQueries(["notifications"]);
+      queryClient.invalidateQueries({ queryKey: ["hostApplications", taskId] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
       setActiveAppId(null);
       setActiveAction(null);
     },

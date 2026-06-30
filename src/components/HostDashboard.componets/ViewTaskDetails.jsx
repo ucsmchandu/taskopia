@@ -45,8 +45,8 @@ const useDeletingTask = () => {
     },
     onSuccess: (res) => {
       toast.success("Task Deleted");
-      queryClient.invalidateQueries(["hostTaskData"]);
-      queryClient.invalidateQueries(["notifications"])
+      queryClient.invalidateQueries({ queryKey: ["hostTaskData"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] })
       navigate("/host/dashboard");
     },
     onError: (err) => {

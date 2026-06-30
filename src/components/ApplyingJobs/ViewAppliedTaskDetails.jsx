@@ -55,9 +55,9 @@ const useCancelApplication = () => {
     onSuccess: (res) => {
       toast.success("Task is cancelled Successfully");
       console.log(res);
-      queryClient.invalidateQueries(["allyAppliedTasks"]);
-      queryClient.invalidateQueries(["allyAppliedTaskDetails"]);
-      queryClient.invalidateQueries(["notifications"]);
+      queryClient.invalidateQueries({ queryKey: ["allyAppliedTasks"] });
+      queryClient.invalidateQueries({ queryKey: ["allyAppliedTaskDetails"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
       navigate("/applied-tasks");
     },
     onError: (err) => {
@@ -82,9 +82,9 @@ const useRequestCompletion = (id) => {
     onSuccess: (res) => {
       toast.success("Request completion send successfully.");
       console.log("task completion req:", res);
-      queryClient.invalidateQueries(["allyAppliedTasks"]);
-      queryClient.invalidateQueries(["allyAppliedTaskDetails", id]);
-      queryClient.invalidateQueries(["notifications"]);
+      queryClient.invalidateQueries({ queryKey: ["allyAppliedTasks"] });
+      queryClient.invalidateQueries({ queryKey: ["allyAppliedTaskDetails", id] });
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: (err) => {
       console.log(err);
