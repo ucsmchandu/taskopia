@@ -217,6 +217,28 @@ The backend checks the `jwt` HTTP-only cookie and returns the current user. Reac
 - Redirecting users without completed profile setup to `/profile/ally` or `/profile/host`
 - Blocking role-restricted routes when `allowedRoutes` does not include the user type
 
+## Rate Limiting and 429 Errors
+
+The frontend now listens for backend rate-limit responses and shows a clear user-facing error when the limit is hit.
+
+What happens in the app:
+
+- A shared Axios response interceptor is loaded from [src/utils/axiosRateLimitInterceptor.js](src/utils/axiosRateLimitInterceptor.js).
+- When the backend returns `429 Too Many Requests`, the interceptor shows a React Toastify error message.
+- If the backend includes a custom message, that message is shown to the user.
+- React Query retry behavior is adjusted so `429` responses are not retried repeatedly.
+
+Why this matters:
+
+- Users can immediately understand that they triggered the rate limit instead of seeing a generic failure.
+- Login, signup, profile setup, task actions, and other Axios-based screens all benefit from the same behavior.
+- The UI stays responsive and does not keep re-sending the same rate-limited request.
+
+Frontend note:
+
+- The visible error is meant to explain what happened in plain language, such as “Too many requests” or the backend’s custom message.
+- This works for requests that use Axios with the app’s shared interceptor and `withCredentials: true` calls.
+
 ## Backend API Integration
 
 Most backend calls use:
