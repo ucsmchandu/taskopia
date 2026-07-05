@@ -12,6 +12,7 @@ import {
   Trash2,
   Users,
 } from "lucide-react";
+import RatingForm from "../Ratings/RatingForm";
 
 // get the tasks
 const getTask = async (id) => {
@@ -43,7 +44,7 @@ const useDeletingTask = () => {
       );
       return res.data;
     },
-    onSuccess: (res) => {
+    onSuccess: () => {
       toast.success("Task Deleted");
       queryClient.invalidateQueries({ queryKey: ["hostTaskData"] });
       queryClient.invalidateQueries({ queryKey: ["notifications"] })
@@ -260,6 +261,10 @@ const ViewTaskDetails = () => {
                 </div>
               )}
 
+              {task.status === "completed" && (
+                <RatingForm taskId={task._id} title="Rate the ally" />
+              )}
+
               {/* Contact Information */}
               <div className="mb-6 sm:mb-8 border-t border-gray-200 pt-6 sm:pt-8">
                 <h2 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2 sm:mb-3 uppercase tracking-wide">
@@ -270,13 +275,17 @@ const ViewTaskDetails = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full">
-                <button
+                {
+                  task.status==="posted" && (
+                    <button
                   onClick={() => setShowModel(true)}
                   className="flex cursor-pointer flex-row justify-center items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-white bg-gray-900 rounded hover:bg-gray-800 transition-colors flex-1 sm:flex-none"
                 >
                   <Pencil size={16} /> 
                   <span>Edit</span>
                 </button>
+                  )
+                }
 
                 <Link
                   to={`/task/${task._id}/applications`}

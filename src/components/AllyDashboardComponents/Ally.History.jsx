@@ -23,7 +23,6 @@ const AllyHistory = () => {
     data: applications,
     isPending,
     isFetching,
-    isError,
   } = useQuery({
     queryKey: ["allyAppliedTasks"],
     queryFn: getAppliedTasks,
@@ -75,7 +74,8 @@ const AllyHistory = () => {
           <div className="mt-10 flex flex-col gap-6">
             {/* card-1 */}
             {getCompletedTasks.map((task,index) => (
-                <div
+                <Link
+                  to={`/view/applied/task/details/${task?.task?._id}`}
                   key={index}
                   className="flex border justify-between  p-6 rounded-xl border-gray-200 shadow-md hover:shadow-lg bg-white transition"
                 >
@@ -90,7 +90,7 @@ const AllyHistory = () => {
                     <p>{task?.task?.budget}</p>
                     <p className="text-sm text-gray-400">{formatDate(task?.createdAt.split("T")[0])}</p>
                   </div>
-                </div>
+                </Link>
             ))}
           </div>
         </>

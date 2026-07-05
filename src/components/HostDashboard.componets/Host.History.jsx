@@ -30,7 +30,7 @@ const formatDate = (dateString) => {
 };
 
 const HostCompletedTasks = () => {
-  const { data, isPending, isFetching, isError } = useQuery({
+  const { data, isPending, isFetching } = useQuery({
     queryKey: ["hostTasksData"],
     queryFn: getTasks,
     staleTime: 5 * 60 * 1000,
@@ -77,7 +77,8 @@ const HostCompletedTasks = () => {
         <>
           <div className="mt-10 flex flex-col gap-6">
             {tasks.map((task) => (
-              <div
+              <Link
+                to={`/task/details/${task._id}`}
                 key={task._id}
                 className="flex border justify-between  p-6 rounded-xl border-gray-200 shadow-md hover:shadow-lg bg-white transition"
               >
@@ -94,7 +95,7 @@ const HostCompletedTasks = () => {
                     {formatDate(task.startingDate.split("T")[0])}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </>

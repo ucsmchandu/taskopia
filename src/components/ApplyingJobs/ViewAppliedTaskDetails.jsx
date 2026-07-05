@@ -18,7 +18,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { useAuth } from "../../AuthContextApi/AuthContext";
+import RatingForm from "../Ratings/RatingForm";
 
 // to get the task details
 const getTaskDetails = async (id) => {
@@ -94,8 +94,6 @@ const useRequestCompletion = (id) => {
 };
 
 const AppliedTasksPage = () => {
-  const { currentUser } = useAuth();
-  // console.log(currentUser);
   const { taskId } = useParams();
   //   console.log(taskId);
   const createCancelApplication = useCancelApplication();
@@ -533,6 +531,10 @@ const AppliedTasksPage = () => {
                       </>
                     )}
                 </div>
+
+                {tasks?.task?.status === "completed" && (
+                  <RatingForm taskId={tasks?.task?._id} title="Rate the host" />
+                )}
               </div>
             </div>
           </div>
