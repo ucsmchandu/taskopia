@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { auth } from "../../Firebase/Firebase";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getApiErrorMessage, SKIP_RATE_LIMIT_TOAST_FLAG } from "../../utils/apiError";
 
 const GoogleAuth = () => {
   const queryClient = useQueryClient();
@@ -42,7 +43,7 @@ const GoogleAuth = () => {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/auto/signin`,
         { firebaseToken, userType: selectedUserType },
-        { withCredentials: true },
+        { withCredentials: true, [SKIP_RATE_LIMIT_TOAST_FLAG]: true },
       );
 
       // reload the auth data from cache to update the ui
@@ -62,7 +63,17 @@ const GoogleAuth = () => {
       // console.log(err);
       console.log(err?.response?.data?.message);
 
+      if (err?.code === "auth/too-many-requests") {
+        toast.error(getApiErrorMessage(err), {
+          position: "top-right",
+        });
+        return;
+      }
+
       if (err?.response?.status === 429) {
+        toast.error(getApiErrorMessage(err), {
+          position: "top-right",
+        });
         return;
       }
 

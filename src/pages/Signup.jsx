@@ -10,6 +10,7 @@ import { setDoc, doc } from "firebase/firestore";
 import EmailButton from "../components/styles/EmailButton/EmailButton";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { getApiErrorMessage, SKIP_RATE_LIMIT_TOAST_FLAG } from "../utils/apiError";
 const Signup = () => {
   const navigate = useNavigate();
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -74,13 +75,18 @@ const Signup = () => {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/register`,
         sendData,
-        { withCredentials: true }
+        { withCredentials: true, [SKIP_RATE_LIMIT_TOAST_FLAG]: true }
       );
       // console.log(res);
     } catch (err) {
       console.log(err);
       console.log("message :", err.message);
+      if (err?.code === "auth/too-many-requests") {
+        toast.error(getApiErrorMessage(err));
+        return;
+      }
       if (err?.response?.status === 429) {
+        toast.error(getApiErrorMessage(err));
         return;
       }
       if (err.message == "Firebase: Error (auth/email-already-in-use).") {
@@ -89,7 +95,7 @@ const Signup = () => {
         });
         return;
       }
-      toast.error("Registration Failed", {
+      toast.error(err?.response?.data?.message || "Registration Failed", {
         position: "top-right",
       });
       return;

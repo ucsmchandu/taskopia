@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { SKIP_RATE_LIMIT_TOAST_FLAG } from "./apiError";
 
 const RATE_LIMIT_TOAST_FLAG = "__taskopiaRateLimitToastShown";
 
@@ -11,7 +12,8 @@ if (!globalThis.__taskopiaRateLimitInterceptorInstalled) {
     (error) => {
       if (
         error?.response?.status === 429 &&
-        !error?.config?.[RATE_LIMIT_TOAST_FLAG]
+        !error?.config?.[RATE_LIMIT_TOAST_FLAG] &&
+        !error?.config?.[SKIP_RATE_LIMIT_TOAST_FLAG]
       ) {
         const message =
           error?.response?.data?.message ||

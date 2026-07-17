@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../AuthContextApi/AuthContext";
 import { useQuery } from "@tanstack/react-query";
+import { getApiErrorMessage, SKIP_RATE_LIMIT_TOAST_FLAG } from "../../utils/apiError";
 
 const useCreateProfile = (onProfileCreated) => {
   const queryClient = useQueryClient();
@@ -16,7 +17,7 @@ const useCreateProfile = (onProfileCreated) => {
           import.meta.env.VITE_BACKEND_BASE
         }/taskopia/u1/api/host-profile/upload/profile`,
         formData,
-        { withCredentials: true },
+        { withCredentials: true, [SKIP_RATE_LIMIT_TOAST_FLAG]: true },
       );
       return res.data;
     },
@@ -30,10 +31,7 @@ const useCreateProfile = (onProfileCreated) => {
     },
     onError: (err) => {
       console.log(err);
-      if (err?.response?.status === 429) {
-        return;
-      }
-      toast.error("something went wrong");
+      toast.error(getApiErrorMessage(err, "Something went wrong"));
     },
   });
 };
@@ -46,7 +44,7 @@ const useCreateUpdateUser = () => {
       const res = await axios.patch(
         `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/update/user`,
         {},
-        { withCredentials: true },
+        { withCredentials: true, [SKIP_RATE_LIMIT_TOAST_FLAG]: true },
       );
       return res.data;
     },
@@ -58,10 +56,7 @@ const useCreateUpdateUser = () => {
     },
     onError: (err) => {
       console.log(err);
-      if (err?.response?.status === 429) {
-        return;
-      }
-      toast.error("something went wrong");
+      toast.error(getApiErrorMessage(err, "Something went wrong"));
     },
   });
 };

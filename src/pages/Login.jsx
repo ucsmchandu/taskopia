@@ -7,6 +7,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
+import { getApiErrorMessage, SKIP_RATE_LIMIT_TOAST_FLAG } from "../utils/apiError";
 const Login = () => {
   const queryClient=useQueryClient();
   const navigate = useNavigate();
@@ -55,17 +56,22 @@ const Login = () => {
       const res = await axios.post(
         `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/login`,
         { firebaseToken },
-        { withCredentials: true }
+        { withCredentials: true, [SKIP_RATE_LIMIT_TOAST_FLAG]: true }
       );
       // console.log(res);
       queryClient.invalidateQueries({ queryKey: ["authData"] });
       toast.success("Login successful!");
     } catch (err) {
       console.log(err);
-      if (err?.response?.status === 429) {
+      if (err?.code === "auth/too-many-requests") {
+        toast.error(getApiErrorMessage(err));
         return;
       }
-      toast.error("Invalid credentials!");
+      if (err?.response?.status === 429) {
+        toast.error(getApiErrorMessage(err));
+        return;
+      }
+      toast.error(err?.response?.data?.message || "Invalid credentials!");
       return;
     } finally {
       setLoading(false);
