@@ -109,7 +109,6 @@ const AppliedTasksPage = () => {
     queryFn: () => getTaskDetails(taskId),
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
-    retry: 2,
     refetchOnReconnect: true,
     enabled: true,
     placeholderData: null,

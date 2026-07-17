@@ -68,7 +68,6 @@ const Applications = () => {
     queryKey: ["hostApplications", taskId],
     queryFn: () => getApplications(taskId),
     staleTime: 5 * 60 * 1000,
-    retry:2
   });
 
   console.log(applications);

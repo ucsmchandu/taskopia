@@ -88,7 +88,6 @@ const JobListings = () => {
     enabled: !isNearby || !!coords,
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000,
-    retry: 2,
   });
 
   const tasks = data ? data.filter((t) => t.isDeleted === false) : [];
