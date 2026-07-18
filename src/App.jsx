@@ -37,6 +37,8 @@ const ReportProblem = lazy(()=>import("./pages/ReportProblem"));
 const PrivacyPolicy = lazy(()=>import("./pages/PrivacyPolicy"));
 const TermsConditions = lazy(()=>import("./pages/TermsConditions"));
 const RefundPolicy = lazy(()=>import("./pages/RefundPolicy"));
+const AiHelpAssistant=lazy(()=>import('./components/AiHelpAssistant'));
+
 const App = () => {
   return (
     <Suspense fallback={<FullscreenLoader/>}>
@@ -182,6 +184,16 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Chatting />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* AI chat bot */}
+            <Route
+              path="ai/help/center"
+              element={
+                <ProtectedRoute>
+                  <AiHelpAssistant />
                 </ProtectedRoute>
               }
             />

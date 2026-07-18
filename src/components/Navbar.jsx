@@ -123,6 +123,17 @@ const Navbar = () => {
                   Profile
                 </Link>
 
+                <Link
+                  to="ai/help/center"
+                  className={`${linkBaseClasses} ${
+                    isActive("/profile/ally")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
+                  }`}
+                >
+                  Help
+                </Link>
+
                 {/* notifications */}
                 <NotificationIcon />
               </>
@@ -160,6 +171,16 @@ const Navbar = () => {
                   }`}
                 >
                   Profile
+                </Link>
+                <Link
+                  to="/ai/help/center"
+                  className={`${linkBaseClasses} ${
+                    isActive("/profile/host")
+                      ? "text-white bg-blue-600 shadow-md"
+                      : "text-gray-900 hover:text-blue-700 hover:bg-white"
+                  }`}
+                >
+                  Help
                 </Link>
 
                 {/* notification */}
@@ -293,6 +314,17 @@ const Navbar = () => {
               >
                 Profile
               </Link>
+              <Link
+                to="/ai/help/center"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/profile")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700"
+                }`}
+              >
+                Help
+              </Link>
             </>
           )}
 
@@ -330,6 +362,17 @@ const Navbar = () => {
                 }`}
               >
                 Profile
+              </Link>
+              <Link
+                to="/ai/help/center"
+                onClick={() => setMenuOpen(false)}
+                className={`block px-3 py-2 text-base font-medium rounded-lg ${
+                  isActive("/profile")
+                    ? "text-white bg-blue-600"
+                    : "text-gray-800 hover:bg-gray-100 hover:text-blue-700"
+                }`}
+              >
+                Help
               </Link>
             </>
           )}
