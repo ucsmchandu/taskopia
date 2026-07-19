@@ -123,7 +123,7 @@ const Navbar = () => {
                   Profile
                 </Link>
 
-                <Link
+                {/* <Link
                   to="ai/help/center"
                   className={`${linkBaseClasses} ${
                     isActive("/profile/ally")
@@ -132,7 +132,7 @@ const Navbar = () => {
                   }`}
                 >
                   Help
-                </Link>
+                </Link> */}
 
                 {/* notifications */}
                 <NotificationIcon />
@@ -172,7 +172,7 @@ const Navbar = () => {
                 >
                   Profile
                 </Link>
-                <Link
+                {/* <Link
                   to="/ai/help/center"
                   className={`${linkBaseClasses} ${
                     isActive("/profile/host")
@@ -181,7 +181,7 @@ const Navbar = () => {
                   }`}
                 >
                   Help
-                </Link>
+                </Link> */}
 
                 {/* notification */}
                 <NotificationIcon />
@@ -314,7 +314,7 @@ const Navbar = () => {
               >
                 Profile
               </Link>
-              <Link
+              {/* <Link
                 to="/ai/help/center"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
@@ -324,7 +324,7 @@ const Navbar = () => {
                 }`}
               >
                 Help
-              </Link>
+              </Link> */}
             </>
           )}
 
@@ -363,7 +363,7 @@ const Navbar = () => {
               >
                 Profile
               </Link>
-              <Link
+              {/* <Link
                 to="/ai/help/center"
                 onClick={() => setMenuOpen(false)}
                 className={`block px-3 py-2 text-base font-medium rounded-lg ${
@@ -373,7 +373,7 @@ const Navbar = () => {
                 }`}
               >
                 Help
-              </Link>
+              </Link> */}
             </>
           )}
         </div>

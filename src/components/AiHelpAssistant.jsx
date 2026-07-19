@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ragChat from "../services/ragChat";
-import { Send, Sparkles, Loader2 } from "lucide-react";
+import { Send, Sparkles, Loader2, MessageCircleMore, X } from "lucide-react";
 import { toast } from "react-toastify";
 
 // pre questions
@@ -11,7 +11,8 @@ const suggestedQuestions = [
   "Is Taskopia safe to use?",
 ];
 
-const AiHelpAssistant = () => {
+const AiHelpAssistant = ({ variant = "page" }) => {
+  const [isOpen, setIsOpen] = useState(variant === "page");
   // state to store the messages.
   const [messages, setMessages] = useState([
     {
@@ -23,6 +24,31 @@ const AiHelpAssistant = () => {
 
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
+
+  if (variant === "widget" && !isOpen) {
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="pointer-events-auto cursor-pointer fixed right-0 top-1/2 hidden -translate-y-1/2 rounded-l-2xl border border-gray-200 bg-white px-3 py-4 text-sm font-semibold text-gray-900 shadow-[0_12px_30px_rgba(0,0,0,0.18)] transition hover:bg-gray-50 md:flex md:items-center md:gap-2 z-50"
+          aria-label="Open AI help"
+        >
+          <MessageCircleMore className="h-5 w-5" />
+          AI Help
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="pointer-events-auto cursor-pointer fixed bottom-4 right-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-900 text-white shadow-2xl transition hover:scale-105 md:hidden z-50"
+          aria-label="Open AI help"
+        >
+          <MessageCircleMore className="h-6 w-6" />
+        </button>
+      </>
+    );
+  }
 
   // fun to send the question
   const handleSend = async (inputQuestion) => {
@@ -74,20 +100,44 @@ const AiHelpAssistant = () => {
     }
   };
 
+  const shellClassName =
+    variant === "widget"
+      ? "pointer-events-auto fixed inset-x-3 bottom-3 top-auto h-[72vh] md:inset-y-6 md:left-auto md:right-6 md:top-6 md:bottom-6 md:w-[390px] md:h-auto md:max-h-[calc(100vh-3rem)] z-50"
+      : "max-w-4xl mx-auto px-4 py-10 mt-40";
+
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10 mt-40">
-      <div className="rounded-3xl border border-gray-200 bg-white shadow-xl overflow-hidden">
+    <div className={shellClassName}>
+      {variant === "widget" && (
+        <button
+          type="button"
+          onClick={() => setIsOpen(false)}
+          className="absolute inset-0 z-0 bg-black/30 md:bg-transparent"
+          aria-label="Close AI help overlay"
+        />
+      )}
+
+      <div className="relative z-10 flex h-full min-h-0 flex-col rounded-3xl border border-gray-200 bg-white shadow-xl overflow-hidden">
         <div className="bg-gray-900 text-white px-6 py-5 flex items-center gap-3">
           <Sparkles className="w-5 h-5" />
-          <div>
+          <div className="min-w-0 flex-1">
             <h2 className="text-lg font-semibold">Taskopia AI Support</h2>
             <p className="text-sm text-gray-300">
               Ask questions about posting, applying, chat, safety, or support.
             </p>
           </div>
+          {variant === "widget" && (
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition hover:bg-white/20"
+              aria-label="Close AI help"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
         </div>
 
-        <div className="p-6 space-y-5 max-h-[520px] overflow-y-auto">
+        <div className="min-h-0 flex-1 p-6 space-y-5 overflow-y-auto">
           {messages.map((msg, index) => (
             <div
               key={index}
@@ -160,7 +210,7 @@ const AiHelpAssistant = () => {
               type="button"
               onClick={() => handleSend()}
               disabled={loading || !question.trim()}
-              className="h-[52px] px-5 rounded-2xl bg-gray-900 text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="h-[52px] px-5 cursor-pointer rounded-2xl bg-gray-900 text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               <Send className="w-4 h-4" />
               Send
