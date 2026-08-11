@@ -123,7 +123,7 @@ const Footer = () => {
         >
           <p className="text-gray-600 text-sm flex flex-col items-start">
             © {new Date().getFullYear()} Taskopia.
-            <span>Owned and operated by UCSM.</span>
+            <span>Owned and operated by UPPU CHANDRA SAI MAHESH.</span>
           </p>
 
           <div className="flex gap-6">
