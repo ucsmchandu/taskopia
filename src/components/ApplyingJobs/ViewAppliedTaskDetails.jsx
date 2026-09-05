@@ -96,13 +96,6 @@ const useRequestCompletion = (id) => {
   });
 };
 
-// ---------------------------------------------------------------------------
-// Design tokens
-// ---------------------------------------------------------------------------
-// One warm brass accent carries every "this matters" signal in the page:
-// primary actions and the live data pulled from the backend. Everything
-// else stays quiet ink/graphite so the accent and the data it marks are
-// the only things competing for attention.
 const GLASS =
   "bg-white/55 backdrop-blur-xl border border-white/70 shadow-[0_10px_36px_rgba(0,0,0,0.06)] rounded-2xl";
 const GLASS_STRONG =
