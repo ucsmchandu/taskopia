@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../../AuthContextApi/AuthContext";
 import PostTaskButton from "../../components/JobPostingComponents/PostTaskButton";
 import axios from "axios";
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+
 // post task
 const usePostTask = () => {
   const queryClient = useQueryClient();
@@ -21,7 +21,6 @@ const usePostTask = () => {
     },
     onSuccess: (res) => {
       toast.success("Task Posted successfully");
-      // console.log(res);
       queryClient.invalidateQueries({ queryKey: ["hostTasksData"] });
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
       navigate("/host/dashboard");
@@ -40,11 +39,6 @@ const getLocationName = async (lat, lng) => {
     const response = await axios.get(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`,
     );
-    // console.log(data)
-    // const address = data.address;
-
-    // const city = // 90 lat 180 long
-    //   address.city || address.town || address.village || address.county;
     return response.data;
   } catch (err) {
     console.log(err);
@@ -52,12 +46,33 @@ const getLocationName = async (lat, lng) => {
   }
 };
 
+const SECTIONS = [
+  { id: "basics", label: "Basics" },
+  { id: "details", label: "Budget & location" },
+  { id: "schedule", label: "Schedule" },
+  { id: "files", label: "Attachments" },
+];
+
+// shared tailwind fragments — neutral, glass-only palette, no color tints
+const FIELD =
+  "w-full px-3.5 py-3 rounded-xl bg-white/60 border border-black/10 text-[#1f1f1f] placeholder-[#9a9a9a] transition focus:outline-none focus:border-[#1f1f1f]/40 focus:bg-white/85 focus:ring-4 focus:ring-black/5";
+const FIELD_ERROR = "border-[#b3392c] focus:border-[#b3392c]";
+const LABEL = "text-sm font-medium mb-1.5 block text-[#5c5c5c]";
+const ERROR_TEXT = "text-sm mt-1 text-[#b3392c]";
+const GLASS =
+  "bg-white/55 backdrop-blur-xl border border-white/70 shadow-[0_10px_36px_rgba(0,0,0,0.06)] rounded-2xl";
+const GLASS_STRONG =
+  "bg-white/70 backdrop-blur-2xl border border-white/70 shadow-[0_14px_44px_rgba(0,0,0,0.08)] rounded-2xl";
+
 const JobPosting = () => {
   const [coordinates, setCoordinates] = useState({
     lat: null,
     lng: null,
   });
   const [locationAllowed, setLocationAllowed] = useState(false);
+  const [activeSection, setActiveSection] = useState("basics");
+
+  const sectionRefs = useRef({});
 
   // get the location name from the api
   const {
@@ -68,16 +83,15 @@ const JobPosting = () => {
   } = useQuery({
     queryKey: ["hostLocationName", coordinates.lat, coordinates.lng],
     queryFn: () => getLocationName(coordinates.lat, coordinates.lng),
-    staleTime: 6 * 60 * 60 * 1000, //6 hours
-    gcTime: 24 * 60 * 60 * 1000, //24 hours
+    staleTime: 6 * 60 * 60 * 1000,
+    gcTime: 24 * 60 * 60 * 1000,
     refetchOnWindowFocus: false,
     enabled: !!coordinates.lat && !!coordinates.lng,
   });
 
   const { currentUser } = useAuth();
   const createTask = usePostTask();
-  // console.log(currentUser.email);
-  // console.log(currentUser.uid); firebase uid for the user
+
   const [taskData, setTaskData] = useState({
     title: "",
     taskDescription: "",
@@ -102,7 +116,6 @@ const JobPosting = () => {
     else setTaskData({ ...taskData, [name]: value });
   };
 
-  // func to validate the form
   const validateForm = () => {
     const newErrors = {};
 
@@ -163,9 +176,8 @@ const JobPosting = () => {
       const msg =
         '{"error":{"code":503,"message":"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.","status":"UNAVAILABLE"}}';
       console.error(err);
-      // console.log(err.response?.data?.details)
       const m = err.response?.data?.details;
-      if (m.toString() === msg) {
+      if (m && m.toString() === msg) {
         toast.error(
           "Currently our model facing high traffic, please try again after some time.",
         );
@@ -179,7 +191,6 @@ const JobPosting = () => {
     }
   };
 
-  // submit the data
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!locationAllowed) {
@@ -187,23 +198,6 @@ const JobPosting = () => {
       return;
     }
     if (!validateForm()) return;
-    // const detectedCity =
-    //   locationName?.address?.city ||
-    //   locationName?.address?.town ||
-    //   locationName?.address?.village;
-    // ("");
-    // const normalizedDetectedCity = detectedCity.toLowerCase().trim();
-    // const normalizedTaskCity = taskData.location.toLowerCase().trim();
-
-    // if (
-    //   normalizedDetectedCity &&
-    //   normalizedTaskCity &&
-    //   normalizedDetectedCity !== normalizedTaskCity
-    // ) {
-    //   alert(
-    //     "You are posting a task for a different location than your current location. Please make sure the task is genuine. Posting fake or misleading tasks may lead to account restrictions.",
-    //   );
-    // }
 
     setLoading(true);
     try {
@@ -227,12 +221,8 @@ const JobPosting = () => {
       formData.append("lat", coordinates?.lat);
       formData.append("lng", coordinates?.lng);
 
-      // const formValues = Object.fromEntries(formData.entries());
-      // console.log(formValues);
-
       createTask.mutate(formData);
 
-      // toast.success("Task posted successfully!");
       setTaskData({
         title: "",
         taskDescription: "",
@@ -253,7 +243,6 @@ const JobPosting = () => {
     }
   };
 
-  // get the coordinates
   useEffect(() => {
     if (!navigator.geolocation) {
       alert("Geolocation is not supported by your browser");
@@ -277,358 +266,395 @@ const JobPosting = () => {
     );
   }, []);
 
-  // console.log(locationName);
+  const scrollToSection = (id) => {
+    setActiveSection(id);
+    sectionRefs.current[id]?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
 
   return (
-    <div className="min-h-screen px-4 lg:px-12 py-10 bg-slate-50">
-      <section className="py-8 mb-8 mt-20">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-4xl font-bold mb-2 text-slate-900">
-            Post a Task
+    <div className="relative min-h-screen bg-[#eef0f2] text-[#1f1f1f] px-4 lg:px-12 py-10 overflow-x-hidden">
+      {/* pure glass depth — soft white highlights only, no color */}
+      <div className="pointer-events-none fixed -top-40 -right-32 w-[560px] h-[560px] rounded-full blur-[100px] opacity-70 bg-[radial-gradient(circle,rgba(255,255,255,0.9),transparent_70%)]" />
+      <div className="pointer-events-none fixed -bottom-44 -left-40 w-[500px] h-[500px] rounded-full blur-[100px] opacity-60 bg-[radial-gradient(circle,rgba(255,255,255,0.8),transparent_70%)]" />
+      <div className="pointer-events-none fixed top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full blur-[120px] opacity-30 bg-[radial-gradient(circle,rgba(0,0,0,0.06),transparent_70%)]" />
+
+      <div className="relative">
+        {/* Hero */}
+        <section className="max-w-6xl mx-auto pt-16 pb-10">
+          <p className="text-sm font-medium mb-3 text-[#6b6b6b]">New task</p>
+          <h1 className="text-4xl lg:text-5xl font-semibold mb-3 tracking-tight text-[#1f1f1f]">
+            Tell us what needs doing
           </h1>
-          <p className="text-slate-600 text-lg">
-            Tell us about your project and find the perfect person to complete
-            it
+          <p className="text-base lg:text-lg max-w-xl text-[#5c5c5c]">
+            A clear brief gets better replies. Fill in the details below, or
+            describe it in your own words and let AI draft it for you.
           </p>
-        </div>
-      </section>
+        </section>
 
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col-reverse lg:flex-row gap-8">
-          <form onSubmit={handleSubmit} className="flex-1 space-y-6">
-            <div className="bg-white shadow rounded-xl p-6 space-y-5">
-              <div className="flex items-center justify-between gap-3">
-                <h3 className="font-semibold text-lg text-slate-800">
-                  Basic Information
-                </h3>
-              </div>
-
-              <div className="rounded-lg border border-blue-100 bg-blue-50 p-4 space-y-3">
-                <label className="text-sm font-medium text-slate-700 block">
-                  AI prompt
-                </label>
-                <textarea
-                  value={aiPrompt}
-                  onChange={(e) => setAiPrompt(e.target.value)}
-                  placeholder="eg: I need a person to help me move furniture from one house to another"
-                  rows={3}
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-1 resize-none"
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[180px_1fr_340px] gap-6 items-start">
+          {/* Section rail */}
+          <nav className={`hidden lg:flex flex-col gap-1 sticky top-32 p-3 ${GLASS}`}>
+            {SECTIONS.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => scrollToSection(s.id)}
+                className={`flex items-center gap-2.5 w-full px-3.5 py-2.5 rounded-full text-sm text-left transition ${
+                  activeSection === s.id
+                    ? "bg-white/80 border border-white/80 text-[#1f1f1f] font-semibold"
+                    : "text-[#6b6b6b] hover:bg-white/50 border border-transparent"
+                }`}
+              >
+                <span
+                  className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                    activeSection === s.id ? "bg-[#1f1f1f]" : "bg-[#b5b5b5]"
+                  }`}
                 />
-                <button
-                  type="button"
-                  onClick={handleGenerateWithAI}
-                  disabled={aiLoading}
-                  className="px-4 py-2 cursor-pointer rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {aiLoading ? "Generating..." : "Generate with AI"}
-                </button>
-              </div>
+                {s.label}
+              </button>
+            ))}
+          </nav>
 
-              <div>
-                <label className="text-sm font-medium text-slate-700 mb-1 block">
-                  Title
-                </label>
+          {/* Mobile section pills */}
+          <div className="lg:hidden flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+            {SECTIONS.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => scrollToSection(s.id)}
+                className={`bg-white/60 backdrop-blur-md border border-white/70 rounded-full px-4 py-2 text-sm whitespace-nowrap ${
+                  activeSection === s.id ? "font-semibold text-[#1f1f1f]" : "text-[#6b6b6b]"
+                }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className={`p-6 lg:p-10 ${GLASS_STRONG}`}>
+            {/* AI assist — same glass treatment, no color tint */}
+            <div className="rounded-xl p-5 mb-8 bg-white/50 border border-white/70">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold bg-[#1f1f1f] text-white">
+                  AI
+                </span>
+                <p className="text-sm font-semibold text-[#1f1f1f]">
+                  Describe it in one line
+                </p>
+              </div>
+              <textarea
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                placeholder="e.g. I need someone to help move furniture between two houses this weekend"
+                rows={3}
+                className={`${FIELD} resize-none mb-3`}
+              />
+              <button
+                type="button"
+                onClick={handleGenerateWithAI}
+                disabled={aiLoading}
+                className="bg-[#1f1f1f] text-white rounded-full px-6 py-2.5 text-sm font-semibold transition hover:bg-[#333] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {aiLoading ? "Drafting..." : "Draft with AI"}
+              </button>
+            </div>
+
+            {/* Basics */}
+            <div id="basics" ref={(el) => (sectionRefs.current.basics = el)}>
+              <h3 className="text-xl font-semibold mb-5 text-[#1f1f1f]">Basics</h3>
+
+              <div className="mb-5">
+                <label className={LABEL}>Title</label>
                 <input
                   type="text"
                   name="title"
-                  placeholder="Task Title"
+                  placeholder="What's the task called?"
                   value={taskData.title}
                   onChange={handleData}
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`${FIELD} ${errors.title ? FIELD_ERROR : ""}`}
                 />
-                {errors.title && (
-                  <p className="text-red-500 text-sm mt-1">{errors.title}</p>
-                )}
+                {errors.title && <p className={ERROR_TEXT}>{errors.title}</p>}
               </div>
 
-              <div>
-                <label className="text-sm font-medium text-slate-700 mb-1 block">
-                  Description
-                </label>
+              <div className="mb-5">
+                <label className={LABEL}>Description</label>
                 <textarea
                   name="taskDescription"
-                  placeholder="Description of the task"
+                  placeholder="What does the work involve?"
                   value={taskData.taskDescription}
                   onChange={handleData}
                   rows={4}
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  className={`${FIELD} resize-none ${errors.taskDescription ? FIELD_ERROR : ""}`}
                 />
                 {errors.taskDescription && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.taskDescription}
-                  </p>
+                  <p className={ERROR_TEXT}>{errors.taskDescription}</p>
                 )}
               </div>
 
               <div>
-                <label className="text-sm font-medium text-slate-700 mb-1 block">
-                  Category
-                </label>
-                {/* <select
-                  name="taskCategory"
-                  value={taskData.taskCategory}
-                  onChange={handleData}
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((c, i) => (
-                    <option key={i}>{c}</option>
-                  ))}
-                </select> */}
+                <label className={LABEL}>Category</label>
                 <input
                   type="text"
                   name="taskCategory"
-                  placeholder="eg: Customer Service, Design"
+                  placeholder="e.g. Customer service, Design"
                   value={taskData.taskCategory}
                   onChange={handleData}
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`${FIELD} ${errors.taskCategory ? FIELD_ERROR : ""}`}
                 />
                 {errors.taskCategory && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.taskCategory}
-                  </p>
+                  <p className={ERROR_TEXT}>{errors.taskCategory}</p>
                 )}
               </div>
             </div>
 
-            <div className="bg-white shadow rounded-xl p-6 space-y-5">
-              <h3 className="font-semibold text-lg text-slate-800">
-                Job Details
+            {/* Budget & location */}
+            <div
+              id="details"
+              ref={(el) => (sectionRefs.current.details = el)}
+              className="mt-8 pt-8 border-t border-black/10"
+            >
+              <h3 className="text-xl font-semibold mb-5 text-[#1f1f1f]">
+                Budget & location
               </h3>
 
-              <div>
-                <label className="text-sm font-medium text-slate-700 mb-1 block">
-                  Budget
-                </label>
-                <input
-                  type="number"
-                  name="amount"
-                  placeholder="Budget"
-                  value={taskData.amount}
-                  onChange={handleData}
-                  min="0"
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                {errors.amount && (
-                  <p className="text-red-500 text-sm mt-1">{errors.amount}</p>
-                )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+                <div>
+                  <label className={LABEL}>Budget</label>
+                  <input
+                    type="number"
+                    name="amount"
+                    placeholder="0"
+                    value={taskData.amount}
+                    onChange={handleData}
+                    min="0"
+                    className={`${FIELD} ${errors.amount ? FIELD_ERROR : ""}`}
+                  />
+                  {errors.amount && <p className={ERROR_TEXT}>{errors.amount}</p>}
+                </div>
+
+                <div>
+                  <label className={LABEL}>Urgency</label>
+                  <select
+                    name="urgencyLevel"
+                    value={taskData.urgencyLevel}
+                    onChange={handleData}
+                    className={`${FIELD} ${errors.urgencyLevel ? FIELD_ERROR : ""}`}
+                  >
+                    <option value="">Select urgency</option>
+                    <option value="urgent">Urgent</option>
+                    <option value="notUrgent">Not urgent</option>
+                  </select>
+                  {errors.urgencyLevel && (
+                    <p className={ERROR_TEXT}>{errors.urgencyLevel}</p>
+                  )}
+                </div>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-slate-700 mb-1 block">
-                  Location
-                </label>
+                <label className={LABEL}>Location</label>
                 <input
                   type="text"
                   name="location"
-                  placeholder="Location"
+                  placeholder="Where does this need to happen?"
                   value={taskData.location}
                   onChange={handleData}
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className={`${FIELD} ${errors.location ? FIELD_ERROR : ""}`}
                 />
-                {errors.location && (
-                  <p className="text-red-500 text-sm mt-1">{errors.location}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-slate-700 mb-1 block">
-                  Urgency
-                </label>
-                <select
-                  name="urgencyLevel"
-                  value={taskData.urgencyLevel}
-                  onChange={handleData}
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                >
-                  <option value="">Select Urgency</option>
-                  <option value="urgent">Urgent</option>
-                  <option value="notUrgent">Not Urgent</option>
-                </select>
-                {errors.urgencyLevel && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.urgencyLevel}
+                {errors.location && <p className={ERROR_TEXT}>{errors.location}</p>}
+                {!locationAllowed && (
+                  <p className="text-xs mt-2 text-[#9a9a9a]">
+                    We use your device location to confirm this task is genuine
+                    — allow location access in your browser if you haven't
+                    already.
                   </p>
                 )}
               </div>
             </div>
 
-            <div className="bg-white shadow rounded-xl p-6 space-y-5">
-              <h3 className="font-semibold text-lg text-slate-800">
-                Dates & Working Hours
-              </h3>
+            {/* Schedule */}
+            <div
+              id="schedule"
+              ref={(el) => (sectionRefs.current.schedule = el)}
+              className="mt-8 pt-8 border-t border-black/10"
+            >
+              <h3 className="text-xl font-semibold mb-5 text-[#1f1f1f]">Schedule</h3>
 
-              <div>
-                <label className="text-sm font-medium text-slate-700 mb-1 block">
-                  Task starting date
-                </label>
-                <input
-                  type="date"
-                  name="startingDate"
-                  value={taskData.startingDate}
-                  onChange={handleData}
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                {errors.startingDate && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.startingDate}
-                  </p>
-                )}
-              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label className={LABEL}>Start date</label>
+                  <input
+                    type="date"
+                    name="startingDate"
+                    value={taskData.startingDate}
+                    onChange={handleData}
+                    className={`${FIELD} ${errors.startingDate ? FIELD_ERROR : ""}`}
+                  />
+                  {errors.startingDate && (
+                    <p className={ERROR_TEXT}>{errors.startingDate}</p>
+                  )}
+                </div>
 
-              <div>
-                <label className="text-sm font-medium text-slate-700 mb-1 block">
-                  End date
-                </label>
-                <input
-                  type="date"
-                  name="endingDate"
-                  value={taskData.endingDate}
-                  onChange={handleData}
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                {errors.endingDate && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.endingDate}
-                  </p>
-                )}
-              </div>
+                <div>
+                  <label className={LABEL}>End date</label>
+                  <input
+                    type="date"
+                    name="endingDate"
+                    value={taskData.endingDate}
+                    onChange={handleData}
+                    className={`${FIELD} ${errors.endingDate ? FIELD_ERROR : ""}`}
+                  />
+                  {errors.endingDate && (
+                    <p className={ERROR_TEXT}>{errors.endingDate}</p>
+                  )}
+                </div>
 
-              <div>
-                <label className="text-sm font-medium text-slate-700 mb-1 block">
-                  Automatic Post Delete Date
-                </label>
-                <input
-                  type="date"
-                  name="postRemovingDate"
-                  value={taskData.postRemovingDate}
-                  onChange={handleData}
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                {errors.postRemovingDate && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.postRemovingDate}
-                  </p>
-                )}
-              </div>
+                <div>
+                  <label className={LABEL}>Working hours per day</label>
+                  <input
+                    type="number"
+                    min="0"
+                    name="workingHours"
+                    placeholder="0"
+                    value={taskData.workingHours}
+                    onChange={handleData}
+                    className={`${FIELD} ${errors.workingHours ? FIELD_ERROR : ""}`}
+                  />
+                  {errors.workingHours && (
+                    <p className={ERROR_TEXT}>{errors.workingHours}</p>
+                  )}
+                </div>
 
-              <div>
-                <label className="text-sm font-medium text-slate-700 mb-1 block">
-                  Working Hours per Day
-                </label>
-                <input
-                  type="number"
-                  min="0"
-                  name="workingHours"
-                  placeholder="Working Hours per Day"
-                  value={taskData.workingHours}
-                  onChange={handleData}
-                  className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                {errors.workingHours && (
-                  <p className="text-red-600 text-sm mt-1">
-                    {errors.workingHours}
-                  </p>
-                )}
+                <div>
+                  <label className={LABEL}>Post removes itself on</label>
+                  <input
+                    type="date"
+                    name="postRemovingDate"
+                    value={taskData.postRemovingDate}
+                    onChange={handleData}
+                    className={`${FIELD} ${errors.postRemovingDate ? FIELD_ERROR : ""}`}
+                  />
+                  {errors.postRemovingDate && (
+                    <p className={ERROR_TEXT}>{errors.postRemovingDate}</p>
+                  )}
+                </div>
               </div>
             </div>
 
-            <div className="bg-white shadow rounded-xl p-6 space-y-4">
-              <h3 className="font-semibold text-lg text-slate-800">
-                Attachments (optional)
+            {/* Attachments */}
+            <div
+              id="files"
+              ref={(el) => (sectionRefs.current.files = el)}
+              className="mt-8 pt-8 border-t border-black/10"
+            >
+              <h3 className="text-xl font-semibold mb-5 text-[#1f1f1f]">
+                Attachments
               </h3>
-
+              <p className="text-sm mb-3 text-[#9a9a9a]">
+                Optional — a photo or document helps people understand the job
+                faster.
+              </p>
               <input
                 type="file"
                 name="attachments"
                 accept="image/*,.pdf,.doc,.docx"
                 onChange={handleData}
-                className="w-full p-2 border border-slate-300 rounded-lg file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer hover:file:bg-blue-700"
+                className={`${FIELD} file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:cursor-pointer file:bg-[#1f1f1f] file:text-white hover:file:bg-[#333]`}
               />
             </div>
 
-            <div className="flex justify-center">
-              <div
+            {errors.locationAccess && (
+              <p className="text-sm mt-6 text-center text-[#b3392c]">
+                {errors.locationAccess}
+              </p>
+            )}
+
+            <div className="flex justify-center mt-8">
+              <button
                 type="submit"
-                disabled={loading || !locationAllowed}
-                className={`px-8 py-3 rounded-lg text-white font-semibold ${
-                  loading ? "bg-slate-400 cursor-not-allowed" : ""
-                }`}
+                disabled={loading || createTask.isPending || !locationAllowed}
+                className="bg-[#1f1f1f] text-white rounded-full px-9 py-3.5 font-semibold transition hover:bg-[#333] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {createTask.isPending ? (
                   <PostTaskButton text={"Posting..."} />
                 ) : (
-                  <PostTaskButton text={"Post Job"} />
+                  <PostTaskButton text={"Post job"} />
                 )}
-              </div>
+              </button>
             </div>
           </form>
 
-          <div className="lg:w-96 space-y-6 ">
-            <div className="bg-white shadow lg:sticky lg:top-32 rounded-xl p-6 space-y-4">
-              <h2 className="font-semibold text-xl text-slate-800 text-center">
-                Task Preview
-              </h2>
+          {/* Preview + tips */}
+          <aside className="space-y-5 lg:sticky lg:top-32">
+            <div className={`p-6 ${GLASS}`}>
+              <h2 className="text-lg font-semibold mb-4 text-[#1f1f1f]">Preview</h2>
 
-              <div className="space-y-3">
-                <div className="border-b border-slate-200 pb-3">
-                  <p className="text-xs text-slate-500 uppercase font-medium mb-1">
-                    Title
-                  </p>
-                  <p className="font-semibold text-slate-900">
-                    {taskData.title || "Task title will appear here"}
+              <div className="space-y-4">
+                <div>
+                  <p className="text-xs mb-1 text-[#9a9a9a]">Title</p>
+                  <p className="font-medium text-[#1f1f1f]">
+                    {taskData.title || "Untitled task"}
                   </p>
                 </div>
 
-                <div className="border-b border-slate-200 pb-3">
-                  <p className="text-xs text-slate-500 uppercase font-medium mb-1">
-                    Budget
-                  </p>
-                  <p className="text-blue-600 font-bold text-2xl">
+                <div className="pt-3 border-t border-black/10">
+                  <p className="text-xs mb-1 text-[#9a9a9a]">Budget</p>
+                  <p className="text-3xl font-semibold text-[#1f1f1f]">
                     ${taskData.amount || "0"}
                   </p>
                 </div>
 
-                <div>
-                  <p className="text-xs text-slate-500 uppercase font-medium mb-1">
-                    Category
-                  </p>
-                  <p className="font-semibold text-slate-800">
-                    {taskData.taskCategory || "Not selected"}
-                  </p>
+                <div className="pt-3 border-t border-black/10 flex flex-wrap gap-2">
+                  <span className="bg-white/60 backdrop-blur-md border border-white/70 rounded-full px-3 py-1 text-xs text-[#5c5c5c]">
+                    {taskData.taskCategory || "No category yet"}
+                  </span>
+                  {taskData.urgencyLevel && (
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                        taskData.urgencyLevel === "urgent"
+                          ? "bg-[#b3392c]/10 text-[#b3392c] border-[#b3392c]/20"
+                          : "bg-white/60 backdrop-blur-md text-[#5c5c5c] border-white/70"
+                      }`}
+                    >
+                      {taskData.urgencyLevel === "urgent" ? "Urgent" : "Not urgent"}
+                    </span>
+                  )}
                 </div>
+
+                {taskData.location && (
+                  <div className="pt-3 border-t border-black/10">
+                    <p className="text-xs mb-1 text-[#9a9a9a]">Location</p>
+                    <p className="text-sm text-[#5c5c5c]">{taskData.location}</p>
+                  </div>
+                )}
               </div>
             </div>
 
-            <div className="bg-slate-800 shadow rounded-xl p-6 space-y-4">
-              <h2 className="font-semibold text-lg text-white text-center">
-                Tips for Success
+            <div className={`p-6 ${GLASS}`}>
+              <h2 className="text-lg font-semibold mb-4 text-[#1f1f1f]">
+                Tips for a good post
               </h2>
-
-              <ul className="space-y-2 text-sm text-slate-200">
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-400 mt-1">•</span>
-                  <span>Write a clear, detailed description</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-400 mt-1">•</span>
-                  <span>Set a fair budget for quality work</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-400 mt-1">•</span>
-                  <span>Be specific about requirements</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-400 mt-1">•</span>
-                  <span>Include relevant files and examples</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-400 mt-1">•</span>
-                  <span>Respond quickly to proposals</span>
-                </li>
-              </ul>
+              <div className="space-y-3">
+                {[
+                  "Write a clear, specific description",
+                  "Set a fair budget for the work involved",
+                  "Say exactly what you need done",
+                  "Attach a photo or file when it helps",
+                  "Reply to offers quickly",
+                ].map((tip) => (
+                  <div key={tip} className="flex items-start gap-2.5 text-sm text-[#5c5c5c]">
+                    <span className="mt-0.5 w-4 h-4 rounded-full bg-white/70 border border-white/80 text-[#1f1f1f] flex items-center justify-center text-[10px] flex-shrink-0">
+                      ✓
+                    </span>
+                    {tip}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </div>

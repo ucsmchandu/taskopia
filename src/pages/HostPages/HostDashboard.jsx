@@ -49,6 +49,13 @@ const getActiveTasks = async () => {
   }
 };
 
+// shared glass tokens — kept consistent with the rest of the app
+const GLASS =
+  "bg-white/55 backdrop-blur-xl border border-white/70 shadow-[0_10px_36px_rgba(0,0,0,0.06)] rounded-2xl";
+
+const TAB_BASE =
+  "rounded-lg px-6 py-2 w-full text-sm transition cursor-pointer border border-transparent";
+
 const HostDashboard = () => {
   const { currentUser } = useAuth();
   // console.log(currentUser)
@@ -99,134 +106,157 @@ const HostDashboard = () => {
   // console.log("profile :",profileData)
 
   return (
-    <div className="mt-20 lg:mt-30 p-8 text-gray-800 lg:m-30">
-      {/* for the top bar section heading */}
-      <div className="flex flex-col md:flex-row justify-between md:items-center">
-        {/* left heading */}
-        <div>
-          <h1 className="text-4xl font-semibold">Host Dashboard</h1>
-          <h2 className="text-gray-500">
-            Welcome back! Here's your performance overview
-          </h2>
-        </div>
+    <div className="relative min-h-screen bg-[#eef0f2]">
+      {/* pure glass depth — soft white highlights only, no color */}
+      <div className="pointer-events-none fixed -top-40 -right-32 w-[560px] h-[560px] rounded-full blur-[100px] opacity-70 bg-[radial-gradient(circle,rgba(255,255,255,0.9),transparent_70%)]" />
+      <div className="pointer-events-none fixed -bottom-44 -left-40 w-[500px] h-[500px] rounded-full blur-[100px] opacity-60 bg-[radial-gradient(circle,rgba(255,255,255,0.8),transparent_70%)]" />
 
-        {/* right buttons */}
-        <div className="">
-          <Link
-            to="/post/job"
-            className="text-sm shadow-lg flex flex-row items-center justify-center text-white gap-1 bg-gradient-to-r from-[#257180] to-[#85cfca] hover:scale-105 rounded-2xl mt-4 md:mt-0 py-2 px-4 cursor-pointer transition"
-          >
-            Post New Task <ChevronRight size={15} />
-          </Link>
-        </div>
-      </div>
+      <div className="relative mt-20 lg:mt-30 p-8 text-[#1f1f1f] lg:m-30">
+        {/* for the top bar section heading */}
+        <div className="flex flex-col md:flex-row justify-between md:items-center">
+          {/* left heading */}
+          <div>
+            <h1 className="text-4xl font-semibold tracking-tight text-[#1f1f1f]">
+              Host Dashboard
+            </h1>
+            <h2 className="text-[#6b6b6b]">
+              Welcome back! Here's your performance overview
+            </h2>
+          </div>
 
-      {/* boxes for the different activities */}
-      <div className="grid gap-6 mt-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 justify-items-center">
-        <div className=" text-white bg-gradient-to-l from-[#AA5486] to-[#e69dc7] rounded-2xl h-44 w-full shadow-sm flex flex-col justify-center items-center gap-3 hover:shadow-md transition">
-          <TrendingUp className=" text-white" size={28} />
-          <div className="flex flex-col text-center">
-            <p className="text-xl font-semibold">₹{totalInvestment}</p>
-            <p className="text-white text-sm">Total Investment</p>
+          {/* right buttons */}
+          <div className="">
+            <Link
+              to="/post/job"
+              className="text-sm flex flex-row items-center justify-center text-white gap-1 bg-[#1f1f1f] hover:bg-[#333] rounded-full mt-4 md:mt-0 py-2.5 px-5 cursor-pointer transition"
+            >
+              Post New Task <ChevronRight size={15} />
+            </Link>
           </div>
         </div>
 
-        <div className=" bg-gradient-to-l text-white from-[#AA5486] to-[#e69dc7] rounded-2xl h-44 w-full shadow-sm flex flex-col justify-center items-center gap-3 hover:shadow-md transition">
-          <SquareCheckBig className="text-white" size={28} />
-          <div className="flex flex-col text-center">
-            <p className="text-xl font-semibold">{tasks?.length || 0}</p>
-            <p className="text-white text-sm">Tasks Posted</p>
+        {/* boxes for the different activities */}
+        <div className="grid gap-6 mt-10 grid-cols-1 sm:grid-cols-2 md:grid-cols-4 justify-items-center">
+          <div
+            className={`${GLASS} text-[#1f1f1f] h-44 w-full flex flex-col justify-center items-center gap-3 hover:bg-white/70 transition`}
+          >
+            <span className="w-11 h-11 rounded-full bg-white/70 border border-white/80 flex items-center justify-center">
+              <TrendingUp className="text-[#1f1f1f]" size={22} />
+            </span>
+            <div className="flex flex-col text-center">
+              <p className="text-xl font-semibold">₹{totalInvestment}</p>
+              <p className="text-[#6b6b6b] text-sm">Total Investment</p>
+            </div>
+          </div>
+
+          <div
+            className={`${GLASS} text-[#1f1f1f] h-44 w-full flex flex-col justify-center items-center gap-3 hover:bg-white/70 transition`}
+          >
+            <span className="w-11 h-11 rounded-full bg-white/70 border border-white/80 flex items-center justify-center">
+              <SquareCheckBig className="text-[#1f1f1f]" size={22} />
+            </span>
+            <div className="flex flex-col text-center">
+              <p className="text-xl font-semibold">{tasks?.length || 0}</p>
+              <p className="text-[#6b6b6b] text-sm">Tasks Posted</p>
+            </div>
+          </div>
+
+          <div
+            className={`${GLASS} text-[#1f1f1f] h-44 w-full flex flex-col justify-center items-center gap-3 hover:bg-white/70 transition`}
+          >
+            <span className="w-11 h-11 rounded-full bg-white/70 border border-white/80 flex items-center justify-center">
+              <ClockArrowUp className="text-[#1f1f1f]" size={22} />
+            </span>
+            <div className="flex flex-col text-center">
+              <p className="text-xl font-semibold">{activeTasks}</p>
+              <p className="text-[#6b6b6b] text-sm">Active Tasks</p>
+            </div>
+          </div>
+
+          <div
+            className={`${GLASS} text-[#1f1f1f] h-44 w-full flex flex-col justify-center items-center gap-3 hover:bg-white/70 transition`}
+          >
+            <span className="w-11 h-11 rounded-full bg-white/70 border border-white/80 flex items-center justify-center">
+              <Star className="text-[#1f1f1f]" size={22} />
+            </span>
+            <div className="flex flex-col text-center">
+              <p className="text-xl font-semibold">
+                {profileData?.rating?.average || 0}
+              </p>
+              <p className="text-[#6b6b6b] text-sm">Average Rating</p>
+            </div>
           </div>
         </div>
 
-        <div className=" bg-gradient-to-l text-white from-[#AA5486] to-[#e69dc7] rounded-2xl h-44 w-full shadow-sm flex flex-col justify-center items-center gap-3 hover:shadow-md transition">
-          <ClockArrowUp className="text-white" size={28} />
-          <div className="flex flex-col text-center">
-            <p className="text-xl font-semibold">{activeTasks}</p>
-            <p className="text-white text-sm">Active Tasks</p>
+        {/* placing different components at single place */}
+        <div className="mt-16">
+          {/* buttons */}
+          <div
+            className={`${GLASS} p-2 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4`}
+          >
+            <button
+              onClick={() => {
+                setComponents("activeTasks");
+              }}
+              className={`${TAB_BASE} ${
+                components === "activeTasks"
+                  ? "bg-[#1f1f1f] text-white"
+                  : "text-[#5c5c5c] hover:bg-white/60 border-black/10"
+              }`}
+            >
+              Active Task
+            </button>
+
+            <button
+              onClick={() => {
+                setComponents("completedTasks");
+              }}
+              className={`${TAB_BASE} ${
+                components === "completedTasks"
+                  ? "bg-[#1f1f1f] text-white"
+                  : "text-[#5c5c5c] hover:bg-white/60 border-black/10"
+              }`}
+            >
+              History
+            </button>
+
+            <button
+              onClick={() => {
+                setComponents("analytics");
+              }}
+              className={`${TAB_BASE} ${
+                components === "analytics"
+                  ? "bg-[#1f1f1f] text-white"
+                  : "text-[#5c5c5c] hover:bg-white/60 border-black/10"
+              }`}
+            >
+              Analytics
+            </button>
+
+            <button
+              onClick={() => {
+                setComponents("deletedTasks");
+              }}
+              className={`${TAB_BASE} ${
+                components === "deletedTasks"
+                  ? "bg-[#1f1f1f] text-white"
+                  : "text-[#5c5c5c] hover:bg-white/60 border-black/10"
+              }`}
+            >
+              Deleted tasks
+            </button>
           </div>
-        </div>
 
-        <div className=" bg-gradient-to-l text-white from-[#AA5486] to-[#e69dc7] rounded-2xl h-44 w-full shadow-sm flex flex-col justify-center items-center gap-3 hover:shadow-md transition">
-          <Star className="text-white" size={28} />
-          <div className="flex flex-col text-center">
-            <p className="text-xl font-semibold">
-              {profileData?.rating?.average || 0}
-            </p>
-            <p className="text-white text-sm">Average Rating</p>
+          {/* here comes the three diff components  */}
+
+          <div className="mt-6">
+            {(components === "activeTasks" && <HostActiveTask />) ||
+              (components === "completedTasks" && <HostCompletedTasks />) ||
+              (components === "analytics" && <HostAnalytics />) ||
+              (components === "deletedTasks" && <DeletedTasks />) || (
+                <HostActiveTask />
+              )}
           </div>
-        </div>
-      </div>
-
-      {/* placing different components at single place */}
-      <div className="mt-16">
-        {/* buttons */}
-        <div
-          className="
-  border border-gray-300 p-2 bg-white rounded-xl shadow-sm
-  flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4
-"
-        >
-          <button
-            onClick={() => {
-              setComponents("activeTasks");
-            }}
-            className={`border border-gray-300 rounded-lg px-6 py-2 w-full text-sm transition cursor-pointer
-    ${
-      components === "activeTasks" ? "bg-black text-white" : "hover:bg-gray-100"
-    }
-  `}
-          >
-            Active Task
-          </button>
-
-          <button
-            onClick={() => {
-              setComponents("completedTasks");
-            }}
-            className={`border border-gray-300 rounded-lg px-6 py-2 w-full text-sm transition cursor-pointer
-    ${
-      components === "completedTasks"
-        ? "bg-black text-white"
-        : "hover:bg-gray-100"
-    }
-  `}
-          >
-            History
-          </button>
-
-          <button
-            onClick={() => {
-              setComponents("analytics");
-            }}
-            className={`border border-gray-300 rounded-lg px-6 py-2 w-full text-sm transition cursor-pointer
-    ${components === "analytics" ? "bg-black text-white" : "hover:bg-gray-100"}
-  `}
-          >
-            Analytics
-          </button>
-
-          <button
-            onClick={() => {
-              setComponents("deletedTasks");
-            }}
-            className={`border border-gray-300 rounded-lg px-6 py-2 w-full text-sm transition cursor-pointer
-    ${components === "deletedTasks" ? "bg-black text-white" : "hover:bg-gray-100"}
-  `}
-          >
-            Deleted tasks
-          </button>
-        </div>
-
-        {/* here comes the three diff components  */}
-
-        <div>
-          {(components === "activeTasks" && <HostActiveTask />) ||
-            (components === "completedTasks" && <HostCompletedTasks />) ||
-            (components === "analytics" && <HostAnalytics />) ||
-            (components === "deletedTasks" && <DeletedTasks />) || (
-              <HostActiveTask />
-            )}
         </div>
       </div>
     </div>
