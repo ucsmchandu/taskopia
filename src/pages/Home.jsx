@@ -66,58 +66,110 @@ const Home = () => {
       {currentUser?.userType === "host" ? (
         <WhyChoose />
       ) : (
-        <section className="relative overflow-hidden py-24 px-6 bg-[#F8FAFC]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(14,165,233,0.12),_transparent_45%),radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.10),_transparent_35%)]" />
-          <div className="relative max-w-6xl mx-auto text-center">
-           
+        <section
+          className="relative overflow-hidden py-24 md:py-32 px-6"
+          style={{ backgroundColor: "#F5F3EC", color: "#141413" }}
+        >
+          {/* Background Grid Pattern (Plain lines only, no blur/noise) */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-40"
+            aria-hidden="true"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, #DCD8CE 1px, transparent 1px),
+                linear-gradient(to bottom, #DCD8CE 1px, transparent 1px)
+              `,
+              backgroundSize: "4rem 4rem",
+            }}
+          />
+
+          <div className="relative max-w-[85rem] mx-auto z-10 text-center">
+            <span
+              className="text-[10px] tracking-[0.3em] uppercase font-bold mb-6 px-4 py-1.5 border inline-block"
+              style={{ color: "#141413", borderColor: "#141413" }}
+            >
+              The Advantage
+            </span>
 
             <Reveal
               as="h2"
-              className="text-3xl md:text-5xl font-semibold mb-6 text-[#0F172A] leading-tight"
+              className="font-serif text-4xl md:text-5xl lg:text-6xl tracking-tight text-balance mb-6 text-[#141413]"
             >
               Why Choose Taskopia?
             </Reveal>
 
-            <Reveal as="p" className="text-[#475569] mb-14 max-w-2xl mx-auto text-base md:text-lg">
+            <div
+              className="w-16 h-px mb-6 mx-auto"
+              style={{ backgroundColor: "#5A5752" }}
+            ></div>
+
+            <Reveal
+              as="p"
+              className="text-lg font-medium mb-16 max-w-2xl mx-auto leading-relaxed text-[#5A5752]"
+            >
               Taskopia bridges the gap between opportunity and talent. It’s the
               easiest way for students to find flexible work.
             </Reveal>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 text-left">
               {[
                 {
                   title: "Quick Jobs",
-                  text: "Find flexible work that fits around classes and weekends.",
+                  text: "Find flexible work that fits cleanly around classes and weekends.",
+                  number: "01",
                 },
                 {
                   title: "No Long Commitments",
-                  text: "Pick one-day tasks without getting locked into long shifts.",
+                  text: "Pick one-day tasks without getting locked into long shifts or obligations.",
+                  number: "02",
                 },
                 {
                   title: "Flexible Timings",
                   text: "Choose when you want to work and keep full control of your schedule.",
+                  number: "03",
                 },
                 {
                   title: "Trusted Network",
                   text: "Connect with verified local users and safer task opportunities.",
+                  number: "04",
                 },
               ].map((item, index) => (
                 <Reveal
                   key={index}
-                  className="group relative p-6 text-left bg-white rounded-2xl border border-[#E2E8F0]
-                     shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                  className="group relative p-8 bg-[#FCFBFA] transition-all duration-300 hover:-translate-y-1.5"
+                  style={{
+                    border: "1px solid #DCD8CE",
+                    boxShadow: "6px 6px 0px 0px #DCD8CE",
+                  }}
                 >
-                  <div className="w-11 h-11 mb-5 rounded-full bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 font-semibold">
-                    0{index + 1}
+                  <div
+                    className="flex justify-between items-center mb-10 border-b pb-5"
+                    style={{ borderColor: "#DCD8CE" }}
+                  >
+                    <div
+                      className="w-10 h-10 rounded-full border flex items-center justify-center font-bold text-xs tracking-wider"
+                      style={{
+                        borderColor: "#DCD8CE",
+                        backgroundColor: "#F5F3EC",
+                        color: "#141413",
+                      }}
+                    >
+                      {item.number}
+                    </div>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-[#0F172A] mb-3">
+                  <h3 className="font-serif text-2xl mb-3 leading-tight text-[#141413]">
                     {item.title}
                   </h3>
 
-                  <p className="text-[#475569] text-sm leading-relaxed">
+                  <p className="text-sm font-medium leading-[1.7] text-[#5A5752]">
                     {item.text}
                   </p>
+
+                  <div
+                    className="absolute bottom-3 right-3 w-1.5 h-1.5 border-r border-b opacity-40"
+                    style={{ borderColor: "#141413" }}
+                  />
                 </Reveal>
               ))}
             </div>
@@ -129,41 +181,83 @@ const Home = () => {
       {currentUser?.userType === "host" ? (
         <UserSay />
       ) : (
-        <section className="py-20 px-6 bg-white text-center">
-          <Reveal as="h2" className="text-3xl font-semibold mb-10 text-sky-700">
-            What Our Users Say 💬
-          </Reveal>
+        <section
+          className="relative overflow-hidden py-24 px-6"
+          style={{ backgroundColor: "#F5F3EC", color: "#141413" }}
+        >
+          {/* Background Grid Pattern (Plain lines only, no blur/noise) */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-40"
+            aria-hidden="true"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, #DCD8CE 1px, transparent 1px),
+                linear-gradient(to bottom, #DCD8CE 1px, transparent 1px)
+              `,
+              backgroundSize: "4rem 4rem",
+            }}
+          />
 
-          <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
-            {[
-              {
-                quote:
-                  "Taskopia helped me earn extra money during weekends! So easy to use.",
-                name: "Aisha, Student",
-              },
-              {
-                quote:
-                  "I found an ally in 10 minutes when my staff didn’t show up. Brilliant idea!",
-                name: "Rajesh, Shop host",
-              },
-              {
-                quote:
-                  "It’s the perfect bridge between students and local jobs. Great UX too!",
-                name: "Meena, College Student",
-              },
-            ].map((t, i) => (
-              <Reveal
-                key={i}
-                className="p-6 bg-sky-50 rounded-2xl shadow border border-sky-100"
-              >
-                <p className="text-gray-700 italic mb-3">“{t.quote}”</p>
-                <p className="text-emerald-700 font-semibold">{t.name}</p>
-              </Reveal>
-            ))}
+          <div className="relative max-w-5xl mx-auto text-center z-10">
+            <Reveal
+              as="h2"
+              className="font-serif text-3xl md:text-4xl font-semibold mb-4 text-[#141413]"
+            >
+              What Our Users Say
+            </Reveal>
+
+            <p
+              className="text-sm md:text-base mb-16 max-w-lg mx-auto font-medium"
+              style={{ color: "#5A5752" }}
+            >
+              Hear from the students and hosts building the Taskopia community.
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-8 text-left">
+              {[
+                {
+                  quote:
+                    "Taskopia helped me earn extra money during weekends! So easy to use.",
+                  name: "Aisha, Student",
+                },
+                {
+                  quote:
+                    "I found an ally in 10 minutes when my staff didn’t show up. Brilliant idea!",
+                  name: "Rajesh, Shop host",
+                },
+                {
+                  quote:
+                    "It’s the perfect bridge between students and local jobs. Great UX too!",
+                  name: "Meena, College Student",
+                },
+              ].map((t, i) => (
+                <Reveal
+                  key={i}
+                  className="p-8 bg-[#FCFBFA] border flex flex-col justify-between transition-all duration-300 hover:-translate-y-1"
+                  style={{
+                    borderColor: "#DCD8CE",
+                    boxShadow: "6px 6px 0px 0px #DCD8CE",
+                  }}
+                >
+                  <p
+                    className="text-sm md:text-base leading-relaxed mb-8 font-normal"
+                    style={{ color: "#5A5752" }}
+                  >
+                    “{t.quote}”
+                  </p>
+                  <p
+                    className="font-bold text-sm tracking-wide text-[#141413] pt-4 border-t"
+                    style={{ borderColor: "#DCD8CE" }}
+                  >
+                    {t.name}
+                  </p>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </section>
       )}
-
+      
       {/* ready to experience */}
       {(!currentUser && <Path />) ||
         (currentUser?.userType === "ally" && <AllySuggestions />) ||
