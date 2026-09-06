@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import "./PostTaskButtonCss.css"; // CSS moved to a separate file
 
-const PostTaskButton = ({text}) => {
+const PostTaskButton = ({text, type = "button", disabled = false, className = ""}) => {
   const btnRef = useRef(null);
 
   const handleMouseMove = (e) => {
@@ -13,10 +13,14 @@ const PostTaskButton = ({text}) => {
     btn.style.setProperty("--y", `${y}px`);
   };
 
+  const baseClasses = "glow-btn bg-[#1f1f1f] text-white rounded-full px-9 py-3.5 font-semibold transition hover:bg-[#333] disabled:opacity-50 disabled:cursor-not-allowed";
+
   return (
     <button
       ref={btnRef}
-      className="glow-btn"
+      type={type}
+      disabled={disabled}
+      className={`${baseClasses} ${className}`}
       onMouseMove={handleMouseMove}
     >
       <span className="icon-box">

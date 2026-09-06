@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
@@ -35,6 +35,11 @@ const useUpdateTask = (id) => {
 const UpdateTask = ({ data }) => {
   // console.log(data)
   const createUpdate = useUpdateTask(data._id);
+  const [coordinates, setCoordinates] = useState({
+    lat: data?.location?.coordinates?.[1] ?? null,
+    lng: data?.location?.coordinates?.[0] ?? null,
+  });
+  const [locationAllowed, setLocationAllowed] = useState(false);
   
   const [formData, setFormData] = useState({
     title: data?.taskTitle || "",
@@ -43,10 +48,10 @@ const UpdateTask = ({ data }) => {
     location: data?.address || "",
     amount: data?.budget || "",
     urgencyLevel: data?.urgency || "",
-    startingDate: data?.startingDate.split("T")[0] || "",
-    endingDate: data?.endingDate.split("T")[0] || "",
+    startingDate: data?.startingDate ? data.startingDate.split("T")[0] : "",
+    endingDate: data?.endingDate ? data.endingDate.split("T")[0] : "",
     workingHours: data?.workingHours || "",
-    postRemovingDate: data?.postRemovingDate.split("T")[0] || "",
+    postRemovingDate: data?.postRemovingDate ? data.postRemovingDate.split("T")[0] : "",
     attachments: null,
   });
 
@@ -63,10 +68,74 @@ const UpdateTask = ({ data }) => {
     setFormData((prev) => ({ ...prev, attachments: e.target.files[0] }));
   };
 
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setCoordinates({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+        setLocationAllowed(true);
+      },
+      () => {
+        setLocationAllowed(false);
+      },
+    );
+  }, []);
+
   //   updating the task
   const handleSubmit = (e) => {
     e.preventDefault();
-    const cfrm = confirm("Are you want to update?");
+
+    // Validation checks
+    if (!formData.title.trim()) {
+      toast.error("Task title is required");
+      return;
+    }
+    if (!formData.taskDescription.trim()) {
+      toast.error("Task description is required");
+      return;
+    }
+    if (!formData.taskCategory) {
+      toast.error("Please select a category");
+      return;
+    }
+    if (!formData.location.trim()) {
+      toast.error("Location is required");
+      return;
+    }
+    if (!formData.amount || Number(formData.amount) <= 0) {
+      toast.error("Budget must be greater than 0");
+      return;
+    }
+    if (!formData.workingHours || Number(formData.workingHours) <= 0) {
+      toast.error("Working hours must be greater than 0");
+      return;
+    }
+    if (!formData.startingDate) {
+      toast.error("Start date is required");
+      return;
+    }
+    if (!formData.endingDate) {
+      toast.error("End date is required");
+      return;
+    }
+    if (new Date(formData.startingDate) >= new Date(formData.endingDate)) {
+      toast.error("End date must be after start date");
+      return;
+    }
+    if (!formData.postRemovingDate) {
+      toast.error("Post removal date is required");
+      return;
+    }
+    if (!formData.urgencyLevel) {
+      toast.error("Please select urgency level");
+      return;
+    }
+
+    const cfrm = confirm("Are you sure you want to update this task?");
     if (cfrm) {
       const sendFormData = new FormData();
       sendFormData.append("taskTitle", formData.title);
@@ -79,10 +148,17 @@ const UpdateTask = ({ data }) => {
       sendFormData.append("endingDate", formData.endingDate);
       sendFormData.append("workingHours", formData.workingHours);
       sendFormData.append("postRemovingDate", formData.postRemovingDate);
-      sendFormData.append("attachments", formData.attachments);
+      
+      // Only append attachments if a file is selected
+      if (formData.attachments) {
+        sendFormData.append("attachments", formData.attachments);
+      }
+      
+      if (coordinates?.lat !== null && coordinates?.lng !== null) {
+        sendFormData.append("lat", coordinates.lat);
+        sendFormData.append("lng", coordinates.lng);
+      }
 
-      // const formObject=Object.fromEntries(sendFormData.entries())
-      // console.log(formObject)
       createUpdate.mutate(sendFormData);
     } else return;
   };
@@ -180,6 +256,11 @@ const UpdateTask = ({ data }) => {
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition"
                   placeholder="Enter location"
                 />
+                <p className="mt-2 text-xs text-gray-500">
+                  {locationAllowed
+                    ? "Current browser location will be saved with the task."
+                    : "Location permission was not available, so the task keeps its existing coordinates unless you add them later."}
+                </p>
               </div>
 
               <div>

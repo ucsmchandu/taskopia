@@ -573,17 +573,11 @@ const JobPosting = () => {
             )}
 
             <div className="flex justify-center mt-8">
-              <button
+              <PostTaskButton
                 type="submit"
                 disabled={loading || createTask.isPending || !locationAllowed}
-                className="bg-[#1f1f1f] text-white rounded-full px-9 py-3.5 font-semibold transition hover:bg-[#333] disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {createTask.isPending ? (
-                  <PostTaskButton text={"Posting..."} />
-                ) : (
-                  <PostTaskButton text={"Post job"} />
-                )}
-              </button>
+                text={createTask.isPending ? "Posting..." : "Post job"}
+              />
             </div>
           </form>
 
