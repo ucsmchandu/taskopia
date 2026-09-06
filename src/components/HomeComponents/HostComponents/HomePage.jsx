@@ -4,40 +4,42 @@ import { Link } from "react-router-dom";
 import Button from "../../styles/button/Button";
 
 /**
- * Loads the two display/body fonts once, on mount, so the typography
- * renders identically across every browser/OS (no reliance on system fonts).
+ * Loads Plus Jakarta Sans and Playfair Display Google fonts for an elegant, warm, and sophisticated palette.
  */
 function useFonts() {
   useEffect(() => {
-    const id = "gf-anton-worksans";
+    const id = "gf-playfair-jakarta";
     if (document.getElementById(id)) return;
     const link = document.createElement("link");
     link.id = id;
     link.rel = "stylesheet";
     link.href =
-      "https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&display=swap";
+      "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap";
     document.head.appendChild(link);
   }, []);
 }
 
-const displayFont = '"Anton", "Arial Narrow", sans-serif';
-const bodyFont = '"Work Sans", Arial, sans-serif';
+const displayFont = '"Playfair Display", serif';
+const bodyFont = '"Plus Jakarta Sans", sans-serif';
 
+// Warm, sophisticated, earthy terracotta and cream palette
 const COLORS = {
-  paper: "#FFF8EC",
-  paperDark: "#FCE7B8",
-  ink: "#4A2F1C",
-  rust: "#E8502B",
-  mustard: "#F4B400",
-  clay: "#F2903D",
+  bg: "#FBF9F5",         // Warm, creamy off-white background
+  paper: "#FFFFFF",      // Clean white paper card
+  ink: "#2C221E",        // Deep warm espresso/charcoal
+  terracotta: "#C86D51", // Warm, welcoming terracotta accent
+  sand: "#E6D5C3",       // Soft sandy beige accent
+  clay: "#A3523B",       // Rich deeper clay tone
+  cardShadow: "rgba(44, 34, 30, 0.05)",
+  border: "#EADCCF",     // Warm subtle border
 };
 
 function Pushpin({ color }) {
   return (
-    <svg viewBox="0 0 24 24" className="w-6 h-6 drop-shadow-md" style={{ filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.25))" }}>
-      <circle cx="12" cy="9" r="7" fill={color} stroke={COLORS.ink} strokeWidth="1" />
-      <circle cx="9.5" cy="6.5" r="2" fill="#FFFFFF" opacity="0.35" />
-      <path d="M12 15 L12 22" stroke={COLORS.ink} strokeWidth="2" strokeLinecap="round" />
+    <svg viewBox="0 0 24 24" className="w-7 h-7 drop-shadow-xl" style={{ filter: "drop-shadow(0 3px 3px rgba(44,34,30,0.15))" }}>
+      <circle cx="12" cy="9" r="7" fill={color} stroke={COLORS.ink} strokeWidth="1.2" />
+      <circle cx="9.5" cy="6.5" r="2" fill="#FFFFFF" opacity="0.45" />
+      <path d="M12 16 L12 23" stroke={COLORS.ink} strokeWidth="2.2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -46,44 +48,47 @@ function NoticeCard({ cardRef, rotate, tapeColor, pinColor, accentColor, title, 
   return (
     <div
       ref={cardRef}
-      className="relative flex flex-col items-center text-center p-6 pt-10 rounded-2xl"
+      className="relative flex flex-col items-center text-center p-7 pt-12 rounded-2xl transition-transform duration-300 hover:scale-[1.02]"
       style={{
         backgroundColor: COLORS.paper,
-        border: `2.5px solid ${accentColor}`,
-        boxShadow: `6px 6px 0px ${accentColor}33`,
+        border: `1px solid ${COLORS.border}`,
+        boxShadow: `0 10px 30px -10px ${COLORS.cardShadow}`,
         transform: `rotate(${rotate}deg)`,
       }}
     >
-      {/* Tape strip */}
+      {/* Semi-transparent Washi Tape */}
       <div
-        className="absolute -top-3 left-1/2 -translate-x-1/2 w-20 h-6 rounded-sm opacity-90"
+        className="absolute -top-3.5 left-1/2 -translate-x-1/2 w-24 h-7 rounded-sm opacity-85 backdrop-blur-[1px]"
         style={{
           backgroundColor: tapeColor,
-          transform: "rotate(-2deg)",
-          boxShadow: "0 2px 4px rgba(74,47,28,0.25)",
+          transform: "rotate(-1.5deg)",
+          boxShadow: "0 2px 5px rgba(44,34,30,0.08)",
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.3), rgba(0,0,0,0.03))",
         }}
       />
-      {/* Pushpin */}
-      <div className="absolute -top-4 right-6">
+      
+      {/* Realistic Pushpin */}
+      <div className="absolute -top-4 right-7 z-20">
         <Pushpin color={pinColor} />
       </div>
 
       <div
-        className="w-40 h-40 mb-5 flex items-center justify-center rounded-xl"
-        style={{ backgroundColor: COLORS.paperDark, border: `2px dashed ${accentColor}` }}
+        className="w-44 h-44 mb-6 flex items-center justify-center rounded-2xl transition-colors duration-300"
+        style={{ backgroundColor: "#F7F4EE", border: `1.5px dashed ${COLORS.border}` }}
       >
-        <svg viewBox="0 0 240 280" className="w-32 h-36" fontFamily={bodyFont}>
+        <svg viewBox="0 0 240 280" className="w-36 h-40" fontFamily={bodyFont}>
           {svgContent}
         </svg>
       </div>
 
       <h3
-        className="text-2xl mb-2 uppercase tracking-wide"
+        className="text-xl mb-3 font-semibold tracking-wide"
         style={{ fontFamily: displayFont, color: COLORS.ink }}
       >
         {title}
       </h3>
-      <p className="text-base" style={{ fontFamily: bodyFont, color: "#5A4A3A" }}>
+      
+      <p className="text-base leading-relaxed font-normal" style={{ fontFamily: bodyFont, color: "#7A6B63" }}>
         {description}
       </p>
     </div>
@@ -102,19 +107,20 @@ export default function HomePage() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.set([titleRef.current, descRef.current], { opacity: 0, y: 30 });
+      gsap.set([titleRef.current, descRef.current], { opacity: 0, y: 35 });
       gsap.set([char1Ref.current, char2Ref.current, char3Ref.current], {
         opacity: 0,
-        scale: 0.6,
+        scale: 0.85,
+        y: 20,
       });
 
       gsap
         .timeline({ defaults: { ease: "power3.out" } })
-        .to(titleRef.current, { opacity: 1, y: 0, duration: 0.8 })
-        .to(descRef.current, { opacity: 1, y: 0, duration: 0.7 }, "-=0.5")
-        .to(char1Ref.current, { opacity: 1, scale: 1, duration: 0.6 }, "-=0.5")
-        .to(char2Ref.current, { opacity: 1, scale: 1, duration: 0.6 }, "-=0.4")
-        .to(char3Ref.current, { opacity: 1, scale: 1, duration: 0.6 }, "-=0.4");
+        .to(titleRef.current, { opacity: 1, y: 0, duration: 0.9 })
+        .to(descRef.current, { opacity: 1, y: 0, duration: 0.8 }, "-=0.6")
+        .to(char1Ref.current, { opacity: 1, scale: 1, y: 0, duration: 0.7 }, "-=0.5")
+        .to(char2Ref.current, { opacity: 1, scale: 1, y: 0, duration: 0.7 }, "-=0.45")
+        .to(char3Ref.current, { opacity: 1, scale: 1, y: 0, duration: 0.7 }, "-=0.45");
     }, containerRef);
 
     return () => ctx.revert();
@@ -124,46 +130,44 @@ export default function HomePage() {
     <div
       ref={containerRef}
       className="min-h-screen relative overflow-hidden"
-      style={{ backgroundColor: COLORS.paperDark }}
+      style={{ backgroundColor: COLORS.bg }}
     >
-      {/* Cork-board texture */}
+      {/* Warm, minimalist subtle dot/grid pattern */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 opacity-25 pointer-events-none"
         style={{
-          backgroundImage:
-            "radial-gradient(rgba(43,33,25,0.12) 1.5px, transparent 1.5px)",
-          backgroundSize: "18px 18px",
+          backgroundImage: `
+            linear-gradient(to right, ${COLORS.border} 1px, transparent 1px),
+            linear-gradient(to bottom, ${COLORS.border} 1px, transparent 1px)
+          `,
+          backgroundSize: "4rem 4rem",
         }}
       />
-      {/* Soft warm frame — a thin rust line instead of a heavy black border */}
-      <div
-        className="absolute inset-4 sm:inset-8 pointer-events-none rounded-2xl"
-        style={{ border: `3px solid ${COLORS.rust}`, opacity: 0.5 }}
-      />
 
-      <main className="relative z-10 pt-20 px-6 mt-6 lg:px-20 pb-24">
+      <main className="relative z-10 pt-24 px-6 mt-4 lg:px-20 pb-32">
         <div className="max-w-6xl mx-auto">
+          
           {/* Header section */}
-          <div className="text-center mb-20 lg:mb-24">
+          <div className="text-center mb-24 lg:mb-28">
             <h1
               ref={titleRef}
-              className="text-5xl sm:text-6xl lg:text-8xl leading-[0.95] mb-6 uppercase"
-              style={{ fontFamily: displayFont, color: COLORS.ink, letterSpacing: "0.01em" }}
+              className="text-5xl sm:text-6xl lg:text-7xl leading-tight mb-8 font-bold tracking-tight"
+              style={{ fontFamily: displayFont, color: COLORS.ink, letterSpacing: "-0.02em" }}
             >
               Post Tasks,
               <br />
-              <span className="relative inline-block" style={{ color: COLORS.rust }}>
+              <span className="relative inline-block text-transparent bg-clip-text" style={{ backgroundImage: `linear-gradient(135deg, ${COLORS.terracotta}, ${COLORS.clay})` }}>
                 Get Help Fast
                 <svg
-                  className="absolute -bottom-3 left-0 w-full h-6"
+                  className="absolute -bottom-4 left-0 w-full h-8"
                   viewBox="0 0 400 30"
                   preserveAspectRatio="none"
                   style={{ overflow: "visible" }}
                 >
                   <path
-                    d="M 5 20 Q 100 10 200 18 Q 300 8 395 22"
-                    stroke={COLORS.mustard}
-                    strokeWidth="4"
+                    d="M 5 22 Q 100 6 200 18 Q 300 4 395 24"
+                    stroke={COLORS.sand}
+                    strokeWidth="5.5"
                     fill="none"
                     strokeLinecap="round"
                   />
@@ -173,53 +177,53 @@ export default function HomePage() {
 
             <p
               ref={descRef}
-              className="text-lg lg:text-xl max-w-2xl mx-auto leading-relaxed"
-              style={{ fontFamily: bodyFont, color: "#5A4A3A" }}
+              className="text-base lg:text-lg max-w-2xl mx-auto leading-relaxed font-normal"
+              style={{ fontFamily: bodyFont, color: "#7A6B63" }}
             >
               Post short-term tasks and find reliable workers near you. No
-              hiring, no paperwork. Get your work done today with trusted
+              hiring friction, no heavy paperwork. Get your work done today with trusted
               local helpers.
             </p>
           </div>
 
-          {/* Notice board cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-16 mb-16 lg:mb-20 px-2">
+          {/* Notice board cards grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-20 mb-20 lg:mb-24 px-2">
             <NoticeCard
               cardRef={char1Ref}
-              rotate={-2}
-              tapeColor={COLORS.mustard}
-              pinColor={COLORS.rust}
-              accentColor={COLORS.rust}
+              rotate={-2.5}
+              tapeColor={COLORS.sand}
+              pinColor={COLORS.terracotta}
+              accentColor={COLORS.terracotta}
               title="Post Tasks Easily"
-              description="Create short-term tasks in just a few simple steps."
+              description="Create short-term community tasks in just a few straightforward steps."
               svgContent={
                 <>
-                  <rect x="60" y="40" width="120" height="160" rx="8" fill="none" stroke={COLORS.rust} strokeWidth="3" />
-                  <rect x="65" y="50" width="110" height="15" rx="3" fill={COLORS.rust} opacity="0.6" />
-                  <line x1="75" y1="75" x2="185" y2="75" stroke={COLORS.rust} strokeWidth="2" />
-                  <line x1="75" y1="90" x2="185" y2="90" stroke={COLORS.rust} strokeWidth="2" />
-                  <line x1="75" y1="105" x2="150" y2="105" stroke={COLORS.rust} strokeWidth="2" />
-                  <rect x="75" y="130" width="16" height="16" rx="2" fill="none" stroke={COLORS.rust} strokeWidth="2" />
-                  <polyline points="80,140 85,145 95,135" fill="none" stroke={COLORS.rust} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                  <text x="100" y="148" fontSize="12" fill={COLORS.rust} fontWeight="bold">Task Details</text>
+                  <rect x="60" y="40" width="120" height="160" rx="8" fill="none" stroke={COLORS.terracotta} strokeWidth="3" />
+                  <rect x="65" y="50" width="110" height="15" rx="3" fill={COLORS.terracotta} opacity="0.6" />
+                  <line x1="75" y1="75" x2="185" y2="75" stroke={COLORS.terracotta} strokeWidth="2" />
+                  <line x1="75" y1="90" x2="185" y2="90" stroke={COLORS.terracotta} strokeWidth="2" />
+                  <line x1="75" y1="105" x2="150" y2="105" stroke={COLORS.terracotta} strokeWidth="2" />
+                  <rect x="75" y="130" width="16" height="16" rx="2" fill="none" stroke={COLORS.terracotta} strokeWidth="2" />
+                  <polyline points="80,140 85,145 95,135" fill="none" stroke={COLORS.terracotta} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                  <text x="100" y="148" fontSize="12" fill={COLORS.terracotta} fontWeight="normal">Task Details</text>
                   <g transform="rotate(-45 180 60)">
                     <rect x="175" y="50" width="10" height="40" rx="5" fill={COLORS.ink} />
                     <polygon points="175,45 180,35 185,45" fill={COLORS.ink} />
                   </g>
-                  <circle cx="200" cy="200" r="8" fill={COLORS.mustard} opacity="0.6" />
-                  <circle cx="60" cy="220" r="6" fill={COLORS.mustard} opacity="0.5" />
+                  <circle cx="200" cy="200" r="8" fill={COLORS.sand} opacity="0.6" />
+                  <circle cx="60" cy="220" r="6" fill={COLORS.sand} opacity="0.5" />
                 </>
               }
             />
 
             <NoticeCard
               cardRef={char2Ref}
-              rotate={1.5}
-              tapeColor={COLORS.rust}
-              pinColor={COLORS.mustard}
+              rotate={1.8}
+              tapeColor={COLORS.terracotta}
+              pinColor={COLORS.sand}
               accentColor={COLORS.clay}
               title="Find Local Helpers"
-              description="Connect with verified people ready to help near you."
+              description="Connect smoothly with verified people ready to pitch in right around you."
               svgContent={
                 <>
                   <rect x="40" y="40" width="160" height="150" rx="8" fill="none" stroke={COLORS.clay} strokeWidth="3" />
@@ -245,22 +249,22 @@ export default function HomePage() {
 
             <NoticeCard
               cardRef={char3Ref}
-              rotate={-1}
+              rotate={-1.2}
               tapeColor={COLORS.clay}
-              pinColor={COLORS.rust}
-              accentColor={COLORS.mustard}
+              pinColor={COLORS.terracotta}
+              accentColor={COLORS.sand}
               title="Instant Payments"
-              description="Get paid fast for completed tasks. No waiting, no hassle."
+              description="Get compensated fast upon completed work. Zero hassle, total transparency."
               svgContent={
                 <>
-                  <rect x="45" y="60" width="150" height="110" rx="10" fill="none" stroke={COLORS.mustard} strokeWidth="3" />
-                  <rect x="50" y="55" width="140" height="35" rx="6" fill={COLORS.mustard} opacity="0.7" />
-                  <rect x="70" y="110" width="100" height="40" rx="4" fill={COLORS.rust} />
-                  <text x="85" y="137" fontSize="10" fontWeight="bold" fill="#F1E6D2">₹500</text>
+                  <rect x="45" y="60" width="150" height="110" rx="10" fill="none" stroke={COLORS.terracotta} strokeWidth="3" />
+                  <rect x="50" y="55" width="140" height="35" rx="6" fill={COLORS.terracotta} opacity="0.7" />
+                  <rect x="70" y="110" width="100" height="40" rx="4" fill={COLORS.terracotta} />
+                  <text x="85" y="137" fontSize="10" fontWeight="normal" fill="#FBF9F5">₹500</text>
                   <rect x="75" y="100" width="100" height="40" rx="4" fill={COLORS.clay} />
-                  <text x="90" y="127" fontSize="10" fontWeight="bold" fill="#F1E6D2">₹500</text>
-                  <rect x="80" y="90" width="100" height="40" rx="4" fill={COLORS.mustard} />
-                  <text x="95" y="117" fontSize="10" fontWeight="bold" fill={COLORS.ink}>₹500</text>
+                  <text x="90" y="127" fontSize="10" fontWeight="normal" fill="#FBF9F5">₹500</text>
+                  <rect x="80" y="90" width="100" height="40" rx="4" fill={COLORS.sand} />
+                  <text x="95" y="117" fontSize="10" fontWeight="normal" fill={COLORS.ink}>₹500</text>
                   <circle cx="165" cy="75" r="16" fill={COLORS.ink} />
                   <polyline points="158,73 162,77 172,67" fill="none" stroke={COLORS.paper} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
                   <rect x="55" y="175" width="35" height="22" rx="2" fill="none" stroke={COLORS.ink} strokeWidth="1.5" />
@@ -268,31 +272,33 @@ export default function HomePage() {
                   <rect x="100" y="175" width="25" height="40" rx="2" fill="none" stroke={COLORS.ink} strokeWidth="1.5" />
                   <circle cx="112" cy="210" r="3" fill={COLORS.ink} />
                   <circle cx="150" cy="195" r="12" fill="none" stroke={COLORS.ink} strokeWidth="1.5" />
-                  <text x="146" y="200" fontSize="12" fontWeight="bold" fill={COLORS.ink}>₹</text>
+                  <text x="146" y="200" fontSize="12" fontWeight="normal" fill={COLORS.ink}>₹</text>
                 </>
               }
             />
           </div>
 
-          {/* Call to action — styled like a rubber ink stamp */}
-          <div className="text-center">
-            <div className="inline-block" style={{ transform: "rotate(-1.5deg)" }}>
+          {/* Call to action container */}
+          <div className="text-center pt-4">
+            <div className="inline-block transition-transform duration-300 hover:rotate-0 hover:scale-105" style={{ transform: "rotate(-1.5deg)" }}>
               <div
-                className="p-1"
-                style={{ border: `3px solid ${COLORS.rust}`, borderRadius: "6px" }}
+                className="p-1.5 shadow-sm bg-white"
+                style={{ border: `2px solid ${COLORS.terracotta}`, borderRadius: "10px" }}
               >
                 <Link to="/post/job">
                   <Button text="Post Task" />
                 </Link>
               </div>
             </div>
+            
             <p
-              className="font-semibold mt-6 uppercase text-sm tracking-wider"
-              style={{ fontFamily: bodyFont, color: COLORS.ink }}
+              className="font-normal mt-8 uppercase text-xs sm:text-sm tracking-widest"
+              style={{ fontFamily: bodyFont, color: "#7A6B63" }}
             >
               No contracts &nbsp;·&nbsp; Verified workers &nbsp;·&nbsp; Pay only after work is done
             </p>
           </div>
+
         </div>
       </main>
     </div>

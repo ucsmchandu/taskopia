@@ -22,11 +22,15 @@ export default function NewUserHomePage() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      const title = titleRef.current;
+      const description = descriptionRef.current;
+      const actions = actionsRef.current;
+      const visual = visualRef.current;
       const introTargets = [
-        titleRef.current,
-        descriptionRef.current,
-        actionsRef.current,
-        visualRef.current,
+        title,
+        description,
+        actions,
+        visual,
       ].filter(Boolean);
 
       gsap.set(introTargets, { opacity: 0, y: 24 });
@@ -35,10 +39,18 @@ export default function NewUserHomePage() {
         defaults: { ease: "power2.out" },
       });
 
-      tl.to(titleRef.current, { opacity: 1, y: 0, duration: 0.9 })
-        .to(descriptionRef.current, { opacity: 1, y: 0, duration: 0.7 }, "-=0.6")
-        .to(actionsRef.current, { opacity: 1, y: 0, duration: 0.7 }, "-=0.5")
-        .to(visualRef.current, { opacity: 1, y: 0, duration: 1.1 }, "-=0.7");
+      if (title) {
+        tl.to(title, { opacity: 1, y: 0, duration: 0.9 });
+      }
+      if (description) {
+        tl.to(description, { opacity: 1, y: 0, duration: 0.7 }, "-=0.6");
+      }
+      if (actions) {
+        tl.to(actions, { opacity: 1, y: 0, duration: 0.7 }, "-=0.5");
+      }
+      if (visual) {
+        tl.to(visual, { opacity: 1, y: 0, duration: 1.1 }, "-=0.7");
+      }
 
       // Subtle, organic sway for the central connection elements
       gsap.to(".print-node", {
@@ -91,17 +103,6 @@ export default function NewUserHomePage() {
           
           {/* LEFT: EDITORIAL COPY */}
           <section className="relative z-20">
-            {/* Eyebrow */}
-            {/* <div ref={eyebrowRef} className="mb-8 flex items-center gap-4"> */}
-              {/* <span className="w-8 h-[1px]" style={{ backgroundColor: COLORS.ink }} /> */}
-              {/* <span 
-                className="text-xs tracking-[0.2em] uppercase font-semibold"
-                style={{ color: COLORS.ink }}
-              >
-                Taskopia
-              </span> */}
-            {/* </div> */}
-
             {/* Main heading */}
             <div ref={titleRef}>
               <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[1.05] text-balance">
@@ -243,53 +244,7 @@ export default function NewUserHomePage() {
             </div>
           </section>
         </div>
-
-        {/* -------------------------------------------------------
-            BOTTOM FEATURE STRIP
-        // ------------------------------------------------------- */}
-        {/* // <div */}
-        {/* //   ref={bottomRef}
-        //   className="mt-16 lg:mt-20 pt-12 border-t grid sm:grid-cols-3 gap-12 sm:gap-8"
-        //   style={{ borderColor: COLORS.line }}
-        // > */}
-        {/* //   <Feature */}
-        {/* //     number="I"
-        //     title="Post a task"
-        //     description="Clearly outline what you need done, where, and your budget."
-        //   /> */}
-        {/* //   <Feature */}
-        {/* //     number="II"
-        //     title="Find your match"
-        //     description="Review local people who are ready and available to step in."
-        //   /> */}
-        {/* //   <Feature */}
-        {/* //     number="III"
-        //     title="Get it settled"
-        //     description="Complete the work and handle the exchange cleanly and securely."
-        //   />
-        // </div> */}
       </main>
-    </div>
-  );
-}
-
-function Feature({ number, title, description }) {
-  return (
-    <div className="flex flex-col gap-3">
-      <span 
-        className="font-serif text-xl" 
-        style={{ color: COLORS.soft }}
-      >
-        {number}.
-      </span>
-      <div>
-        <h3 className="text-base font-bold tracking-wide" style={{ color: COLORS.ink }}>
-          {title}
-        </h3>
-        <p className="text-sm mt-2 font-medium leading-relaxed max-w-sm" style={{ color: COLORS.muted }}>
-          {description}
-        </p>
-      </div>
     </div>
   );
 }

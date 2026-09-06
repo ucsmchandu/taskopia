@@ -3,6 +3,19 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+// Palette matching the notice-board / vintage editorial theme
+const COLORS = {
+  paper: "#FFFDF9",
+  paperDark: "#F4DEC2",
+  ink: "#3A2414",
+  rust: "#D9401C",
+  mustard: "#E8A800",
+  clay: "#E57D30",
+  line: "#DCD8CE",
+  surface: "#FCFBFA",
+  muted: "#5A5752",
+};
+
 // get tasks
 const getActiveTasks = async () => {
   try {
@@ -30,6 +43,7 @@ const HostSuggestions = () => {
     enabled: true,
     placeholderData: null,
   });
+
   const tasks = data
     ? data.filter(
         (t) =>
@@ -38,41 +52,63 @@ const HostSuggestions = () => {
           t.status !== "cancelled",
       )
     : [];
-  // console.log(tasks);
 
   return (
-    <div className="mt-20 px-4">
-      <div
-        className="max-w-5xl mx-auto rounded-2xl 
-               bg-[#0B1220] border border-[#1E293B] 
-               shadow-xl p-6 md:p-8"
+    <section 
+      className="py-20 px-6 relative overflow-hidden"
+      style={{ backgroundColor: COLORS.bg, color: COLORS.ink }}
+    >
+      {/* Background Texture & Grid */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div 
+          className="absolute inset-0 opacity-[0.35] mix-blend-multiply"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+          }}
+        />
+        <div
+          className="absolute inset-0 opacity-40"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, ${COLORS.line} 1px, transparent 1px),
+              linear-gradient(to bottom, ${COLORS.line} 1px, transparent 1px)
+            `,
+            backgroundSize: "4rem 4rem",
+            maskImage: "radial-gradient(ellipse at center, black 15%, transparent 75%)",
+            WebkitMaskImage: "radial-gradient(ellipse at center, black 15%, transparent 75%)",
+          }}
+        />
+      </div>
+
+      <div 
+        className="max-w-4xl mx-auto relative z-10 bg-[#FCFBFA] border p-8 md:p-12"
+        style={{ borderColor: COLORS.line, boxShadow: `8px 8px 0px 0px ${COLORS.line}` }}
       >
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-semibold text-white">
+        <div className="mb-8 pb-6 border-b" style={{ borderColor: COLORS.line }}>
+          <span className="text-[10px] tracking-[0.3em] uppercase font-bold mb-3 block" style={{ color: COLORS.muted }}>
+            Host Dashboard
+          </span>
+          <h1 className="font-serif text-3xl md:text-4xl text-[#141413]">
             Welcome back
           </h1>
-          <p className="text-[#94A3B8] text-sm mt-1">
+          <p className="text-[#5A5752] text-sm mt-2 font-medium">
             Quick access to your recent tasks.
           </p>
         </div>
 
         {/* Actions */}
-        <div className="flex flex-wrap gap-3 mb-8">
+        <div className="flex flex-wrap gap-4 mb-10">
           <Link
             to="/post/job"
-            className="px-5 py-2 rounded-lg text-sm font-medium
-                   bg-white text-black
-                   hover:bg-gray-200 transition"
+            className="px-6 py-3.5 bg-[#141413] text-white text-xs font-bold tracking-widest uppercase transition-all hover:-translate-y-0.5"
           >
             + Post a Task
           </Link>
 
           <Link
             to="/host/dashboard"
-            className="px-5 py-2 rounded-lg text-sm font-medium
-                   border border-[#1E293B] text-white
-                   hover:bg-[#111827] transition"
+            className="px-6 py-3.5 border-2 border-[#141413] text-[#141413] text-xs font-bold tracking-widest uppercase transition-all hover:bg-[#141413] hover:text-white"
           >
             View Posted Tasks
           </Link>
@@ -82,37 +118,35 @@ const HostSuggestions = () => {
         <div className="space-y-4">
           {isPending || isFetching ? (
             <div className="flex flex-col items-center justify-center h-40 space-y-3">
-              <div className="w-10 h-10 border-4 border-[#60A5FA] border-t-transparent rounded-full animate-spin" />
-              <p className="text-[#94A3B8] text-sm">Loading tasks...</p>
+              <div className="w-8 h-8 border-4 border-[#141413] border-t-transparent rounded-full animate-spin" />
+              <p className="text-[#5A5752] text-sm font-medium">Loading tasks...</p>
             </div>
           ) : isError ? (
-            <p className="text-red-400 text-sm">Failed to load tasks</p>
+            <p className="text-red-600 text-sm font-medium">Failed to load tasks</p>
           ) : tasks && tasks.length > 0 ? (
             tasks.slice(0, 2).map((task) => (
               <div
                 key={task._id}
-                className="flex items-center justify-between 
-                       rounded-xl border border-[#1E293B]
-                       bg-[#0F172A] p-4
-                       hover:bg-[#111827] transition"
+                className="flex items-center justify-between p-5 border bg-[#F5F3EC] transition-all hover:translate-x-1"
+                style={{ borderColor: COLORS.line }}
               >
                 <div>
-                  <p className="text-white font-medium">{task?.taskTitle}</p>
-                  <p className="text-[#94A3B8] text-sm">
+                  <p className="text-[#141413] font-bold text-base">{task?.taskTitle}</p>
+                  <p className="text-[#5A5752] text-xs font-medium mt-1">
                     {task?.applicationsCount || 0} applicants
                   </p>
                 </div>
 
                 <Link
                   to={`/task/details/${task._id}`}
-                  className="text-sm text-[#60A5FA] hover:underline"
+                  className="text-xs font-bold uppercase tracking-wider text-[#141413] hover:underline"
                 >
-                  Manage
+                  Manage →
                 </Link>
               </div>
             ))
           ) : (
-            <p className="text-[#94A3B8] text-sm text-center">
+            <p className="text-[#5A5752] text-sm text-center font-medium py-6">
               No tasks posted yet.
             </p>
           )}
@@ -120,20 +154,17 @@ const HostSuggestions = () => {
 
         {/* Footer */}
         {tasks?.length > 0 && (
-          <div className="mt-10 text-center">
+          <div className="mt-12 text-center pt-8 border-t" style={{ borderColor: COLORS.line }}>
             <Link
               to="/host/dashboard"
-              className="inline-block px-6 py-2 rounded-full
-                   border border-[#1E293B]
-                   text-white text-sm
-                   hover:bg-[#111827] transition"
+              className="inline-block px-8 py-3.5 border-2 border-[#141413] text-[#141413] text-xs font-bold tracking-widest uppercase transition-all hover:bg-[#141413] hover:text-white"
             >
               View All My Tasks
             </Link>
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

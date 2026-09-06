@@ -7,32 +7,51 @@ import { Link } from "react-router-dom";
 export default function StartHome({ user }) {
   // console.log(user)
   const heroRef = useRef(null);
-  const headlineRef = useRef(null);
+  const mobileHeadlineRef = useRef(null);
+  const desktopHeadlineRef = useRef(null);
   const subheadRef = useRef(null);
   const ctaRef = useRef(null);
-  const navRef = useRef(null);
   const illustrationRef = useRef(null);
-  const statsRef = useRef(null);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.set(navRef.current, { opacity: 0, y: -20 });
-      gsap.set([headlineRef.current, subheadRef.current, ctaRef.current], {
+      const mobileHeadline = mobileHeadlineRef.current;
+      const desktopHeadline = desktopHeadlineRef.current;
+      const subhead = subheadRef.current;
+      const cta = ctaRef.current;
+      const illustration = illustrationRef.current;
+      const headlineTargets = [
+        mobileHeadline,
+        desktopHeadline,
+      ].filter(Boolean);
+      const copyTargets = [
+        ...headlineTargets,
+        subhead,
+        cta,
+      ].filter(Boolean);
+
+      gsap.set(copyTargets, {
         opacity: 0,
         y: 30,
       });
-      gsap.set(illustrationRef.current, { opacity: 0, x: 50 });
-      gsap.set(statsRef.current, { opacity: 0, y: 20 });
+      if (illustration) {
+        gsap.set(illustration, { opacity: 0, x: 50 });
+      }
 
-      gsap
-        .timeline({ defaults: { ease: "power3.out" } })
-        .to(navRef.current, { opacity: 1, y: 0, duration: 0.8 })
-        .to(headlineRef.current, { opacity: 1, y: 0, duration: 0.9 }, "-=0.4")
-        .to(subheadRef.current, { opacity: 1, y: 0, duration: 0.8 }, "-=0.5")
-        .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.8 }, "-=0.4")
-        .to(illustrationRef.current, { opacity: 1, x: 0, duration: 1 }, "-=0.8")
-        .to(statsRef.current, { opacity: 1, y: 0, duration: 0.7 }, "-=0.4");
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+      if (headlineTargets.length > 0) {
+        tl.to(headlineTargets, { opacity: 1, y: 0, duration: 0.9 });
+      }
+      if (subhead) {
+        tl.to(subhead, { opacity: 1, y: 0, duration: 0.8 }, "-=0.5");
+      }
+      if (cta) {
+        tl.to(cta, { opacity: 1, y: 0, duration: 0.8 }, "-=0.4");
+      }
+      if (illustration) {
+        tl.to(illustration, { opacity: 1, x: 0, duration: 1 }, "-=0.8");
+      }
     }, heroRef);
 
     return () => ctx.revert();
@@ -74,7 +93,7 @@ export default function StartHome({ user }) {
             {/* MAIN HERO TEXT — HANDWRITTEN STYLE */}
             {/* only visible when less than large screens */}
             <div
-              ref={headlineRef}
+              ref={mobileHeadlineRef}
               className="relative lg:hidden flex justify-center"
             >
               <h1 className="leading-[1.1]">
@@ -178,7 +197,7 @@ export default function StartHome({ user }) {
             </div>
 
             {/* MAIN HERO TEXT — HANDWRITTEN STYLE (LG SCREENS) */}
-            <div ref={headlineRef} className="relative hidden lg:flex">
+            <div ref={desktopHeadlineRef} className="relative hidden lg:flex">
               <h1 className="leading-[1.1]">
                 <div className="flex flex-col items-center lg:items-start">
                   {/* Line 1: Earn */}
