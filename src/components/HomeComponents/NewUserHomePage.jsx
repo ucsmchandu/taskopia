@@ -15,37 +15,30 @@ const COLORS = {
 export default function NewUserHomePage() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
-  const eyebrowRef = useRef(null);
   const titleRef = useRef(null);
   const descriptionRef = useRef(null);
   const actionsRef = useRef(null);
   const visualRef = useRef(null);
-  const bottomRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.set(
-        [
-          eyebrowRef.current,
-          titleRef.current,
-          descriptionRef.current,
-          actionsRef.current,
-          visualRef.current,
-          bottomRef.current,
-        ],
-        { opacity: 0, y: 24 }
-      );
+      const introTargets = [
+        titleRef.current,
+        descriptionRef.current,
+        actionsRef.current,
+        visualRef.current,
+      ].filter(Boolean);
+
+      gsap.set(introTargets, { opacity: 0, y: 24 });
 
       const tl = gsap.timeline({
         defaults: { ease: "power2.out" },
       });
 
-      tl.to(eyebrowRef.current, { opacity: 1, y: 0, duration: 0.7 })
-        .to(titleRef.current, { opacity: 1, y: 0, duration: 0.9 }, "-=0.5")
+      tl.to(titleRef.current, { opacity: 1, y: 0, duration: 0.9 })
         .to(descriptionRef.current, { opacity: 1, y: 0, duration: 0.7 }, "-=0.6")
         .to(actionsRef.current, { opacity: 1, y: 0, duration: 0.7 }, "-=0.5")
-        .to(visualRef.current, { opacity: 1, y: 0, duration: 1.1 }, "-=0.7")
-        .to(bottomRef.current, { opacity: 1, y: 0, duration: 0.7 }, "-=0.6");
+        .to(visualRef.current, { opacity: 1, y: 0, duration: 1.1 }, "-=0.7");
 
       // Subtle, organic sway for the central connection elements
       gsap.to(".print-node", {
