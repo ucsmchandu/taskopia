@@ -5,7 +5,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../AuthContextApi/AuthContext";
 import { useQuery } from "@tanstack/react-query";
-import { getApiErrorMessage, SKIP_RATE_LIMIT_TOAST_FLAG } from "../../utils/apiError";
+import { LogOut } from "lucide-react";
+import {
+  getApiErrorMessage,
+  SKIP_RATE_LIMIT_TOAST_FLAG,
+} from "../../utils/apiError";
+import { useNavigate } from "react-router-dom";
+import { auth } from "../../Firebase/Firebase";
 
 const useCreateProfile = (onProfileCreated) => {
   const queryClient = useQueryClient();
@@ -25,7 +31,7 @@ const useCreateProfile = (onProfileCreated) => {
       toast.success("Profile Submitted Successfully", { position: "top-left" });
       console.log(res);
       queryClient.invalidateQueries({ queryKey: ["hostProfileData"] });
-      queryClient.invalidateQueries({ queryKey: ["notifications"] })
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
       // the arrow function that called after successful of this api
       onProfileCreated?.();
     },
@@ -52,7 +58,7 @@ const useCreateUpdateUser = () => {
       toast.success("Profile setup completed");
       console.log(res);
       queryClient.invalidateQueries({ queryKey: ["authData"] });
-      queryClient.invalidateQueries({ queryKey: ["notifications"] })
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: (err) => {
       console.log(err);
@@ -74,6 +80,37 @@ const getLocationName = async (lat, lng) => {
   }
 };
 
+// logout mutation
+const useLogout=()=>{
+  const queryClient=useQueryClient();
+  const navigate=useNavigate();
+
+  return useMutation({
+    mutationFn:async()=>{
+      const res=await axios.post(
+        `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/logout`,
+        {},
+        {withCredentials:true}
+      );
+      return res.data;
+    },
+    onSuccess:async()=>{
+      await auth.signOut();
+      await queryClient.invalidateQueries({
+        queryKey:["authData"],
+        refetchType:"active"
+      });
+      queryClient.clear();
+      toast.success("Logout successful");
+      navigate("/");
+    },
+    onError:()=>{
+      toast.error("something went wrong!");
+      return null;
+    }
+  });
+};
+
 const SetupProfile = () => {
   const { currentUser, loading } = useAuth();
   const [locationError, setLocationError] = useState(false);
@@ -81,6 +118,14 @@ const SetupProfile = () => {
     latitude: null,
     longitude: null,
   });
+
+  const createLogout=useLogout();
+
+  const logout=()=>{
+    const cfrm=confirm("Are you want to logout ?");
+    if(cfrm) createLogout.mutate();
+    else return;
+  }
 
   // get the location form the api
   const {
@@ -249,16 +294,53 @@ const SetupProfile = () => {
       )}
       {
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 py-12 px-4">
-          <form onSubmit={submit} className="max-w-4xl mx-auto mt-20">
-            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-10 space-y-8">
-              <div className="border-b border-slate-200 pb-6">
-                <h1 className="text-3xl font-bold text-slate-900">
-                  Host Profile Setup
-                </h1>
-                <p className="text-slate-600 mt-2">
-                  Complete your profile to get started
-                </p>
+          <div className="max-w-4xl mx-auto mt-20">
+            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-10">
+              <div className="flex justify-end mb-5">
+                <button
+                  type="button"
+                  disabled={createLogout.isPending}
+                  onClick={logout}
+                  className="flex items-center cursor-pointer justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {createLogout.isPending ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Loading...
+                    </span>
+                  ) : (
+                    <>
+                      <LogOut size={18} className="shrink-0" />
+                      <span className="truncate text-white">Logout</span>
+                    </>
+                  )}
+                </button>
               </div>
+
+              <form onSubmit={submit} className="space-y-8">
+                <div className="border-b border-slate-200 pb-6">
+                  <h1 className="text-3xl font-bold text-slate-900">
+                    Host Profile Setup
+                  </h1>
+                  <p className="text-slate-600 mt-2">
+                    Complete your profile to get started
+                  </p>
+                </div>
 
               {/* Photo Upload Section */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -529,8 +611,9 @@ const SetupProfile = () => {
                   )}
                 </button>
               </div>
+            </form>
             </div>
-          </form>
+          </div>
         </div>
       }
     </>

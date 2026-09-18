@@ -3,8 +3,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../AuthContextApi/AuthContext";
-import { useLocation } from "react-router-dom";
-import { getApiErrorMessage, SKIP_RATE_LIMIT_TOAST_FLAG } from "../../utils/apiError";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  getApiErrorMessage,
+  SKIP_RATE_LIMIT_TOAST_FLAG,
+} from "../../utils/apiError";
+import { auth } from "../../Firebase/Firebase";
+import { LogOut } from "lucide-react";
 
 const useCreateProfile = (onProfileCreated) => {
   const queryClient = useQueryClient();
@@ -24,7 +29,7 @@ const useCreateProfile = (onProfileCreated) => {
       toast.success("Profile Submitted Successfully", { position: "top-left" });
       console.log(res);
       queryClient.invalidateQueries({ queryKey: ["allyProfile"] });
-      queryClient.invalidateQueries({ queryKey: ["notifications"] })
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
       // the arrow function that called after successful of this api
       onProfileCreated?.();
     },
@@ -53,7 +58,7 @@ const useCreateUpdateUser = () => {
       toast.success("Profile setup completed");
       console.log(res);
       queryClient.invalidateQueries({ queryKey: ["authData"] });
-      queryClient.invalidateQueries({ queryKey: ["notifications"] })
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
     onError: (err) => {
       console.log(err);
@@ -75,6 +80,37 @@ const getLocationName = async (lat, lng) => {
   }
 };
 
+// mutation to logout
+const useLogout = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async () => {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_BASE}/taskopia/u1/api/auth/logout`,
+        {},
+        { withCredentials: true },
+      );
+      return res.data;
+    },
+    onSuccess: async () => {
+      await auth.signOut();
+      await queryClient.invalidateQueries({
+        queryKey: ["authData"],
+        refetchType: "active",
+      });
+      queryClient.clear();
+      toast.success("Logout Successful");
+      navigate("/");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+      return null;
+    },
+  });
+};
+
 const SetupProfile = () => {
   const { currentUser, loading } = useAuth();
   const [locationError, setLocationError] = useState(false);
@@ -82,6 +118,14 @@ const SetupProfile = () => {
     latitude: null,
     longitude: null,
   });
+
+  const createLogout = useLogout();
+
+  const logout = () => {
+    const cfrm = confirm("Are you want to logout ?");
+    if (cfrm) createLogout.mutate();
+    else return;
+  };
 
   // get the location name form the api
   const {
@@ -178,6 +222,7 @@ const SetupProfile = () => {
     setForm((p) => ({ ...p, [name]: value }));
   };
 
+  // function to submit the data to backend
   const submit = (e) => {
     e.preventDefault();
     const err = {};
@@ -248,16 +293,53 @@ const SetupProfile = () => {
       )}
       {
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 py-12 px-4">
-          <form onSubmit={submit} className="max-w-4xl mx-auto mt-20">
-            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-10 space-y-8">
-              <div className="border-b border-slate-200 pb-6">
-                <h1 className="text-3xl font-bold text-slate-900">
-                  User Profile Setup
-                </h1>
-                <p className="text-slate-600 mt-2">
-                  Fill your details carefully — it only takes a minute.
-                </p>
+          <div className="max-w-4xl mx-auto mt-20">
+            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-10">
+              <div className="flex justify-end mb-5">
+                <button
+                  type="button"
+                  disabled={createLogout.isPending}
+                  onClick={logout}
+                  className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-white font-semibold bg-red-600 hover:bg-red-700 disabled:opacity-70 transition-colors shadow-sm cursor-pointer"
+                >
+                  {createLogout.isPending ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Loading...
+                    </span>
+                  ) : (
+                    <>
+                      <LogOut size={18} className="shrink-0" />
+                      <span className="truncate text-white">Logout</span>
+                    </>
+                  )}
+                </button>
               </div>
+
+              <form onSubmit={submit} className="space-y-8">
+                <div className="border-b border-slate-200 pb-6">
+                  <h1 className="text-3xl font-bold text-slate-900">
+                    User Profile Setup
+                  </h1>
+                  <p className="text-slate-600 mt-2">
+                    Fill your details carefully — it only takes a minute.
+                  </p>
+                </div>
 
               {/* PHOTO */}
               <div className="space-y-2">
@@ -418,37 +500,38 @@ const SetupProfile = () => {
                 )}
               </div>
 
-              <button
-                type="submit"
-                disabled={createProfile.isPending}
-                className="w-full cursor-pointer md:w-auto px-8 py-4 rounded-xl text-white font-semibold bg-blue-600 hover:bg-blue-700 disabled:opacity-70"
-              >
-                {createProfile.isPending ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                        fill="none"
-                      />
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      />
-                    </svg>
-                    Saving Profile...
-                  </span>
-                ) : (
-                  "Save Profile"
-                )}
-              </button>
+                <button
+                  type="submit"
+                  disabled={createProfile.isPending}
+                  className="w-full cursor-pointer md:w-auto px-8 py-4 rounded-xl text-white font-semibold bg-blue-600 hover:bg-blue-700 disabled:opacity-70"
+                >
+                  {createProfile.isPending ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                          fill="none"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Saving Profile...
+                    </span>
+                  ) : (
+                    "Save Profile"
+                  )}
+                </button>
+              </form>
             </div>
-          </form>
+          </div>
         </div>
       }
     </>
