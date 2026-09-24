@@ -108,7 +108,7 @@ const HostPublicProfile = () => {
 
   // get the reviews data
   const {data:reviewData,isPending:reviewPending,isFetching:reviewFetching,isError:isReviewError}=useQuery({
-    queryKey:["profileReviewsList",id],
+    queryKey:["hostProfileReviewsList",id],
     queryFn:()=>getRatingReviews(id),
     staleTime:5*60*1000,
     enabled: showReviews // only fetch once the visitor opens the reviews
@@ -177,12 +177,26 @@ const HostPublicProfile = () => {
                 className={`rounded-[2rem] ${glass} p-2 sm:p-3`}
               >
                 {/* Banner Image */}
-                <div className="relative h-44 sm:h-60 rounded-[1.5rem] overflow-hidden bg-[#90CAF9]/40">
-                  <img
-                    src={data?.businessProfilePhotoUrl}
-                    alt="Business Banner"
-                    className="w-full h-full object-cover"
-                  />
+                <div
+                  className={`relative rounded-[1.5rem] overflow-hidden ${
+                    data?.businessProfilePhotoUrl
+                      ? "h-44 sm:h-60 bg-[#90CAF9]/40"
+                      : "h-32 sm:h-44 bg-[#90CAF9]/50"
+                  }`}
+                >
+                  {data?.businessProfilePhotoUrl ? (
+                    <img
+                      src={data.businessProfilePhotoUrl}
+                      alt="Business Banner"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <>
+                      {/* same header band as the ally profile (no banner uploaded) */}
+                      <div className="absolute -top-10 -right-8 w-40 h-40 rounded-full bg-white/40" />
+                      <div className="absolute -bottom-16 left-10 w-44 h-44 rounded-full bg-[#2196F3]/20" />
+                    </>
+                  )}
 
                   {/* Status Badge on Banner */}
                   <span
@@ -251,7 +265,7 @@ const HostPublicProfile = () => {
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
                   businessData.adminVerify
                     ? "bg-green-50 text-green-700"
-                    : "bg-orange-50 text-[#0D47A1]"
+                    : "bg-orange-50 text-orange-700"
                 }`}
               >
                 {businessData.adminVerify ? (
