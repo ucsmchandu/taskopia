@@ -203,7 +203,7 @@ const HostActiveTasks = () => {
                     </Link>
 
                     <Link
-                      to=""
+                      to="/ai/help/center"
                       className="flex gap-3 items-center border border-gray-200 shadow-lg rounded-xl w-full p-2 text-sm cursor-pointer hover:bg-gray-100 transition"
                     >
                       <BotMessageSquare size={18} />{" "}
